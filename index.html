@@ -31,6 +31,12 @@
       scroll-behavior: smooth;
     }
 
+    /* Cố định độ rộng chữ số đồng hồ để không bị thụt ra thụt vào mỗi giây */
+    .tabular-clock {
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum" 1;
+    }
+
     /* Thanh tiến độ ánh sáng (Shimmer Progress Bar) */
     .shimmer-bar {
       position: relative;
@@ -63,14 +69,7 @@
     .question-card:hover {
       transform: translateY(-1px);
     }
-    .anim-correct-glow {
-      animation: correctGlow 0.55s ease;
-    }
-    @keyframes correctGlow {
-      0% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.45); border-color: #16a34a; }
-      60% { box-shadow: 0 0 0 10px rgba(22, 163, 74, 0); border-color: #16a34a; }
-      100% { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); }
-    }
+
     .anim-wrong-shake {
       animation: wrongShake 0.42s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
       border-color: #dc2626 !important;
@@ -90,14 +89,36 @@
       100% { transform: scale(1); }
     }
 
-    /* Hạt lấp lánh khi chọn đúng */
-    .sparkle-particle {
+    /* Hiệu ứng gợn sóng & tia sáng khi click chuột / chạm màn hình */
+    button:not(:disabled):active {
+      transform: scale(0.97);
+    }
+    .click-ripple-ring {
       position: fixed;
-      width: 7px;
-      height: 7px;
+      width: 14px;
+      height: 14px;
+      margin-left: -7px;
+      margin-top: -7px;
+      border-radius: 9999px;
+      border: 2px solid rgba(37, 99, 235, 0.75);
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 95;
+      will-change: transform, opacity;
+    }
+    .dark .click-ripple-ring {
+      border-color: rgba(96, 165, 250, 0.85);
+      background: radial-gradient(circle, rgba(96, 165, 250, 0.28) 0%, transparent 70%);
+    }
+    .click-ripple-dot {
+      position: fixed;
+      width: 5px;
+      height: 5px;
+      margin-left: -2.5px;
+      margin-top: -2.5px;
       border-radius: 9999px;
       pointer-events: none;
-      z-index: 90;
+      z-index: 95;
       will-change: transform, opacity;
     }
 
@@ -130,69 +151,77 @@
   <!-- Canvas hiệu ứng pháo giấy -->
   <canvas id="confetti-canvas"></canvas>
 
-  <!-- Thanh tiêu đề cố định -->
+  <!-- Thanh tiêu đề cố định (gọn gàng) -->
   <header class="sticky top-0 z-40 bg-white/90 dark:bg-[#0f172a]/90 backdrop-blur-md border-b border-[#e2e8f0] dark:border-slate-800">
-    <div class="max-w-5xl mx-auto px-3 sm:px-5 py-3 space-y-2.5">
+    <!-- Thanh Giờ • Thứ • Ngày Tháng Năm ở giữa trên cùng (cố định kích thước số) -->
+    <div class="bg-slate-50/90 dark:bg-slate-900/90 border-b border-slate-200/70 dark:border-slate-800/80 py-0.5 px-2">
+      <div class="max-w-5xl mx-auto flex items-center justify-center">
+        <div id="live-datetime-bar" class="tabular-clock inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] sm:text-xs font-semibold bg-white dark:bg-slate-800 text-[#0f172a] dark:text-slate-100 border border-slate-200/80 dark:border-slate-700 shadow-2xs">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#2563eb] dark:bg-blue-400 animate-pulse shrink-0"></span>
+          <span id="live-datetime-text" class="inline-flex items-center">
+            <span id="live-time-text" class="tabular-clock inline-block w-[52px] sm:w-[56px] text-center">--:--:--</span>
+            <span class="mx-1 text-slate-400 dark:text-slate-500">•</span>
+            <span id="live-date-text" class="tabular-clock whitespace-nowrap">--, --/--/----</span>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="max-w-5xl mx-auto px-3 sm:px-5 py-1.5 sm:py-2 space-y-1.5">
       <!-- Hàng 1: Logo + Tab chuyển chế độ + Nút tiện ích -->
-      <div class="flex flex-wrap items-center justify-between gap-2.5">
-        <div class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#2563eb] to-indigo-600 text-white flex items-center justify-center font-extrabold text-sm shadow-sm">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-[#2563eb] to-indigo-600 text-white flex items-center justify-center font-extrabold text-xs sm:text-sm shadow-sm shrink-0">
             300
           </div>
-          <div>
-            <h1 class="text-sm sm:text-base font-extrabold tracking-tight text-[#0f172a] dark:text-white leading-tight">
-              Triết Học Mác - Lênin
-            </h1>
-            <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
-              Ôn thi cuối kỳ • 300 câu kèm giải thích
-            </p>
-          </div>
+          <h1 class="text-xs sm:text-sm font-extrabold tracking-tight text-[#0f172a] dark:text-white leading-tight">
+            Triết Học Mác - Lênin
+          </h1>
         </div>
 
         <!-- Nút chuyển 3 Tab chính -->
-        <nav class="flex items-center p-1 rounded-xl bg-slate-100 dark:bg-slate-800/90 border border-slate-200/70 dark:border-slate-700/70">
+        <nav class="flex items-center p-0.5 rounded-lg bg-slate-100 dark:bg-slate-800/90 border border-slate-200/70 dark:border-slate-700/70">
           <button id="tab-study" type="button" onclick="switchMode('study')"
-            class="px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg transition-all bg-white dark:bg-slate-900 text-[#2563eb] dark:text-blue-400 shadow-sm">
+            class="px-2.5 py-1 text-xs font-semibold rounded-md transition-all bg-white dark:bg-slate-900 text-[#2563eb] dark:text-blue-400 shadow-sm">
             Ôn tập
           </button>
           <button id="tab-exam" type="button" onclick="switchMode('exam')"
-            class="px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg transition-all text-slate-600 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white">
+            class="px-2.5 py-1 text-xs font-semibold rounded-md transition-all text-slate-600 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white">
             Thi thử
           </button>
           <button id="tab-history" type="button" onclick="switchMode('history')"
-            class="px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg transition-all text-slate-600 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white inline-flex items-center gap-1.5">
+            class="px-2.5 py-1 text-xs font-semibold rounded-md transition-all text-slate-600 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white inline-flex items-center gap-1">
             <span>Lịch sử</span>
-            <span id="history-count-badge" class="px-1.5 py-0.5 text-[10px] font-bold rounded-md bg-blue-100 dark:bg-blue-950 text-[#2563eb] dark:text-blue-300">0</span>
+            <span id="history-count-badge" class="px-1.5 py-0 text-[10px] font-bold rounded bg-blue-100 dark:bg-blue-950 text-[#2563eb] dark:text-blue-300">0</span>
           </button>
         </nav>
 
         <!-- Tiện ích: Mèo bay / Dark Mode -->
-        <div class="flex items-center gap-1.5">
+        <div class="flex items-center gap-1">
           <button id="btn-toggle-cat" type="button" onclick="toggleCatFeature()" title="Bật/tắt mèo 'time to lock in.' bay quanh màn hình"
-            class="px-2.5 py-1.5 rounded-xl text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+            class="px-2 py-1 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
             🐱 Bật
           </button>
           <button id="btn-toggle-dark" type="button" onclick="toggleDarkMode()" title="Chuyển chế độ Sáng / Tối"
-            class="px-2.5 py-1.5 rounded-xl text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+            class="px-2 py-1 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
             🌙
           </button>
         </div>
       </div>
 
       <!-- Hàng 2: Thanh thống kê nhanh & Shimmer Progress Bar -->
-      <div class="space-y-1.5">
-        <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
-          <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+      <div class="space-y-1">
+        <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] sm:text-xs">
+          <div class="tabular-clock flex flex-wrap items-center gap-x-2.5 gap-y-0.5">
             <span class="text-slate-600 dark:text-slate-300">Đã làm: <strong id="stat-done" class="text-[#0f172a] dark:text-white">0/300</strong></span>
-            <span class="text-[#16a34a] dark:text-emerald-400">Đúng: <strong id="stat-correct">0</strong> <span id="stat-accuracy" class="text-[11px] opacity-85">(0%)</span></span>
+            <span class="text-[#16a34a] dark:text-emerald-400">Đúng: <strong id="stat-correct">0</strong> <span id="stat-accuracy" class="text-[10px] sm:text-[11px] opacity-85">(0%)</span></span>
             <span class="text-[#dc2626] dark:text-rose-400">Sai: <strong id="stat-wrong">0</strong></span>
             <span id="stat-star" class="text-amber-600 dark:text-amber-400 font-semibold">⭐ 0</span>
           </div>
-          <div id="combo-badge" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+          <div id="combo-badge" class="tabular-clock inline-flex items-center gap-1 px-2 py-0 rounded-full text-[11px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
             🔥 <span id="stat-combo">0</span>
           </div>
         </div>
-        <div class="w-full h-2 rounded-full bg-slate-200/80 dark:bg-slate-800 overflow-hidden">
+        <div class="w-full h-1.5 rounded-full bg-slate-200/80 dark:bg-slate-800 overflow-hidden">
           <div id="progress-bar" class="shimmer-bar h-full rounded-full bg-gradient-to-r from-[#2563eb] via-sky-500 to-emerald-500" style="width: 0%"></div>
         </div>
       </div>
@@ -961,31 +990,72 @@
     // 3. ÂM THANH WEB AUDIO API, HẠT LẤP LÁNH, PHÁO GIẤY & ĐẾM ĐIỂM
     // =========================================================================
 
-    // Hiệu ứng hạt nhỏ bung ra khi chọn đúng
-    function spawnParticles(x, y, colors) {
-      const count = 12;
-      for (let i = 0; i < count; i++) {
+    // Cập nhật đồng hồ Giờ : Phút : Giây • Thứ, Ngày/Tháng/Năm ở giữa trên cùng (cố định độ rộng số)
+    function updateLiveDateTime() {
+      const timeEl = document.getElementById('live-time-text');
+      const dateEl = document.getElementById('live-date-text');
+      const fallbackEl = document.getElementById('live-datetime-text');
+      const now = new Date();
+      const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+      const pad = (n) => String(n).padStart(2, '0');
+      const timeStr = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+      const dayName = days[now.getDay()];
+      const dateStr = `${pad(now.getDate())}/${pad(now.getMonth() + 1)}/${now.getFullYear()}`;
+      if (timeEl && dateEl) {
+        timeEl.textContent = timeStr;
+        dateEl.textContent = `${dayName}, ${dateStr}`;
+      } else if (fallbackEl) {
+        fallbackEl.textContent = `${timeStr} • ${dayName}, ${dateStr}`;
+      }
+    }
+
+    // Hiệu ứng gợn sóng + tia hạt khi click chuột ở bất kỳ đâu
+    function spawnGlobalClickEffect(x, y) {
+      if (typeof x !== 'number' || typeof y !== 'number') return;
+
+      const ring = document.createElement('span');
+      ring.className = 'click-ripple-ring';
+      ring.style.left = `${x}px`;
+      ring.style.top = `${y}px`;
+      document.body.appendChild(ring);
+
+      ring.animate([
+        { transform: 'scale(0.4)', opacity: 0.95 },
+        { transform: 'scale(3.4)', opacity: 0 }
+      ], {
+        duration: 460,
+        easing: 'cubic-bezier(0.22, 1, 0.36, 1)'
+      }).onfinish = () => ring.remove();
+
+      const colors = ['#2563eb', '#38bdf8', '#818cf8', '#f59e0b'];
+      const dotCount = 6;
+      for (let i = 0; i < dotCount; i++) {
         const dot = document.createElement('span');
-        dot.className = 'sparkle-particle';
+        dot.className = 'click-ripple-dot';
         dot.style.left = `${x}px`;
         dot.style.top = `${y}px`;
         dot.style.backgroundColor = colors[i % colors.length];
         document.body.appendChild(dot);
 
-        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.4;
-        const dist = 28 + Math.random() * 36;
+        const angle = (Math.PI * 2 * i) / dotCount + (Math.random() - 0.5) * 0.35;
+        const dist = 16 + Math.random() * 18;
         const dx = Math.cos(angle) * dist;
         const dy = Math.sin(angle) * dist;
 
         dot.animate([
-          { transform: 'translate(0, 0) scale(1)', opacity: 1 },
-          { transform: `translate(${dx}px, ${dy}px) scale(0.2)`, opacity: 0 }
+          { transform: 'translate(0, 0) scale(1)', opacity: 0.9 },
+          { transform: `translate(${dx}px, ${dy}px) scale(0.15)`, opacity: 0 }
         ], {
-          duration: 480 + Math.random() * 180,
+          duration: 380 + Math.random() * 120,
           easing: 'cubic-bezier(0.22, 1, 0.36, 1)'
         }).onfinish = () => dot.remove();
       }
     }
+
+    document.addEventListener('pointerdown', (e) => {
+      if (e.button !== undefined && e.button !== 0) return;
+      spawnGlobalClickEffect(e.clientX, e.clientY);
+    }, { passive: true });
 
     // Hiệu ứng pháo giấy trên Canvas
     let confettiAnimId = null;
@@ -1160,8 +1230,8 @@
       if (catBtn) {
         catBtn.textContent = prefs.catEnabled ? '🐱 Bật' : '🐱 Tắt';
         catBtn.className = prefs.catEnabled
-          ? 'px-2.5 py-1.5 rounded-xl text-xs font-semibold border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 hover:opacity-90 transition-colors'
-          : 'px-2.5 py-1.5 rounded-xl text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors';
+          ? 'px-2 py-1 rounded-lg text-xs font-semibold border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 hover:opacity-90 transition-colors'
+          : 'px-2 py-1 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors';
       }
     }
 
@@ -1203,13 +1273,13 @@
         history: document.getElementById('tab-history')
       };
 
-      const activeTabCls = 'px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg transition-all bg-white dark:bg-slate-900 text-[#2563eb] dark:text-blue-400 shadow-sm';
-      const inactiveTabCls = 'px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg transition-all text-slate-600 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white';
+      const activeTabCls = 'px-2.5 py-1 text-xs font-semibold rounded-md transition-all bg-white dark:bg-slate-900 text-[#2563eb] dark:text-blue-400 shadow-sm';
+      const inactiveTabCls = 'px-2.5 py-1 text-xs font-semibold rounded-md transition-all text-slate-600 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white';
 
       Object.keys(views).forEach((key) => {
         if (views[key]) views[key].classList.toggle('hidden', key !== targetMode);
         if (tabs[key]) {
-          tabs[key].className = (key === targetMode ? activeTabCls : inactiveTabCls) + (key === 'history' ? ' inline-flex items-center gap-1.5' : '');
+          tabs[key].className = (key === targetMode ? activeTabCls : inactiveTabCls) + (key === 'history' ? ' inline-flex items-center gap-1' : '');
         }
       });
 
@@ -1271,13 +1341,13 @@
       if (comboBadge && comboText) {
         if (state.comboStreak >= 3) {
           comboText.textContent = `${state.comboStreak} câu thông suốt!`;
-          comboBadge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-sm anim-combo-pop';
+          comboBadge.className = 'tabular-clock inline-flex items-center gap-1 px-2 py-0 rounded-full text-[11px] font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-sm anim-combo-pop';
         } else if (state.comboStreak > 0) {
           comboText.textContent = String(state.comboStreak);
-          comboBadge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800';
+          comboBadge.className = 'tabular-clock inline-flex items-center gap-1 px-2 py-0 rounded-full text-[11px] font-bold bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800';
         } else {
           comboText.textContent = '0';
-          comboBadge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700';
+          comboBadge.className = 'tabular-clock inline-flex items-center gap-1 px-2 py-0 rounded-full text-[11px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700';
         }
       }
 
@@ -1400,7 +1470,6 @@
         const reveal = hasChosen || state.showAllAnswers;
 
         let cardAnimCls = '';
-        if (highlightId === q.id && effectType === 'correct') cardAnimCls = 'anim-correct-glow';
         if (highlightId === q.id && effectType === 'wrong') cardAnimCls = 'anim-wrong-shake';
 
         const optionsHtml = q.opts.map((optText, idx) => {
@@ -1498,9 +1567,6 @@
       const isCorrect = optionIndex === q.ans;
       if (isCorrect) {
         state.comboStreak += 1;
-        if (event && typeof event.clientX === 'number') {
-          spawnParticles(event.clientX, event.clientY, ['#16a34a', '#22c55e', '#38bdf8', '#facc15']);
-        }
       } else {
         state.comboStreak = 0;
       }
@@ -1592,7 +1658,7 @@
       state.page = Math.ceil(num / PAGE_SIZE);
       savePracticeState();
       renderFilterButtons();
-      renderQuestions(num, 'correct');
+      renderQuestions(num, null);
 
       setTimeout(() => {
         const card = document.getElementById(`q-card-${num}`);
@@ -2142,6 +2208,8 @@
     // 10. KHỞI TẠO ỨNG DỤNG
     // =========================================================================
     window.addEventListener('DOMContentLoaded', () => {
+      updateLiveDateTime();
+      setInterval(updateLiveDateTime, 1000);
       loadAllFromStorage();
       applyPrefsUI();
 
