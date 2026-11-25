@@ -1,0 +1,1881 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ôn Tập 300 Câu Trắc Nghiệm Triết Học Mác - Lênin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    /* Thanh cuộn mượt và gọn */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+  <!-- Header & Thanh tiến độ -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-5xl mx-auto px-4 py-3">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h1 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
+            Ôn Tập Triết Học Mác - Lênin
+          </h1>
+          <p class="text-xs text-slate-500">Ngân hàng 300 câu trắc nghiệm kèm đáp án &amp; giải thích • Học kỳ I (2026 - 2027)</p>
+        </div>
+
+        <!-- Chuyển chế độ học -->
+        <div class="flex items-center gap-2 bg-slate-100 p-1 rounded-xl self-start sm:self-auto">
+          <button id="tab-study" onclick="switchMode('study')"
+            class="px-3.5 py-2 text-sm font-semibold rounded-lg transition-all bg-white text-indigo-700 shadow-sm">
+            Ôn tập (300 câu)
+          </button>
+          <button id="tab-exam" onclick="switchMode('exam')"
+            class="px-3.5 py-2 text-sm font-semibold rounded-lg transition-all text-slate-600 hover:text-slate-900">
+            Thi thử (40 câu)
+          </button>
+        </div>
+      </div>
+
+      <!-- Thống kê tiến độ -->
+      <div class="mt-3 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
+        <div class="flex flex-wrap items-center gap-3 sm:gap-5">
+          <div class="flex items-center gap-1.5">
+            <span class="text-slate-500">Đã làm:</span>
+            <span id="stat-done" class="font-bold text-slate-900">0/300</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-slate-500">Tỷ lệ đúng:</span>
+            <span id="stat-acc" class="font-bold text-emerald-600">0%</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-slate-500">Đánh dấu:</span>
+            <span id="stat-star" class="font-bold text-amber-500">0</span>
+          </div>
+        </div>
+        <button onclick="openResetModal()"
+          class="text-xs font-medium text-rose-600 hover:text-rose-700 hover:bg-rose-50 px-2.5 py-1.5 rounded-lg transition-colors">
+          Đặt lại tiến độ
+        </button>
+      </div>
+      <!-- Thanh progress bar nhỏ -->
+      <div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden mt-2">
+        <div id="progress-bar" class="h-full bg-indigo-600 transition-all duration-300" style="width: 0%"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Nội dung chính -->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-5">
+
+    <!-- ==================== CHẾ ĐỘ 1: ÔN TẬP ==================== -->
+    <section id="study-view" class="space-y-4">
+      <!-- Bộ lọc & tìm kiếm -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm space-y-3">
+        <!-- Hàng 1: Tìm kiếm + Hiện sẵn đáp án -->
+        <div class="flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
+          <div class="relative flex-1">
+            <input id="search-input" type="text" oninput="handleSearch()"
+              placeholder="Tìm kiếm câu hỏi theo từ khóa hoặc nhập số câu (vd: 125)..."
+              class="w-full pl-9 pr-9 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all" />
+            <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
+            </svg>
+            <button id="clear-search-btn" onclick="clearSearch()" class="hidden absolute right-2.5 top-2 text-slate-400 hover:text-slate-600 p-1">✕</button>
+          </div>
+
+          <label class="inline-flex items-center gap-2.5 cursor-pointer select-none bg-indigo-50/70 border border-indigo-100 px-3.5 py-2 rounded-xl">
+            <input id="show-all-toggle" type="checkbox" onchange="toggleShowAll()" class="w-4 h-4 accent-indigo-600 rounded cursor-pointer" />
+            <span class="text-sm font-medium text-indigo-900">Hiện sẵn đáp án &amp; giải thích</span>
+          </label>
+        </div>
+
+        <!-- Hàng 2: Nút lọc theo phần -->
+        <div id="filter-buttons" class="flex flex-wrap gap-1.5">
+          <!-- Render động bằng JS -->
+        </div>
+
+        <!-- Hàng 3: Thông tin kết quả lọc + nhảy nhanh -->
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 text-xs sm:text-sm text-slate-600">
+          <div id="filter-summary">Đang hiển thị 300 câu hỏi</div>
+          <div class="flex items-center gap-2">
+            <label for="jump-input" class="text-xs text-slate-500">Nhảy tới câu:</label>
+            <input id="jump-input" type="number" min="1" max="300" placeholder="1-300"
+              onkeydown="if(event.key==='Enter') jumpToQuestion()"
+              class="w-20 px-2.5 py-1 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+            <button onclick="jumpToQuestion()"
+              class="px-2.5 py-1 text-xs font-medium bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-colors">
+              Đi
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Danh sách câu hỏi -->
+      <div id="question-list" class="space-y-4">
+        <!-- Render động bằng JS -->
+      </div>
+
+      <!-- Phân trang -->
+      <div id="pagination-bar" class="flex flex-wrap items-center justify-between gap-3 bg-white rounded-2xl border border-slate-200 p-3.5 shadow-sm">
+        <!-- Render động bằng JS -->
+      </div>
+    </section>
+
+    <!-- ==================== CHẾ ĐỘ 2: THI THỬ ==================== -->
+    <section id="exam-view" class="hidden space-y-4">
+      <!-- Màn hình chờ bắt đầu thi -->
+      <div id="exam-intro" class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm max-w-2xl mx-auto text-center space-y-5">
+        <div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto text-2xl font-bold">
+          40
+        </div>
+        <div class="space-y-2">
+          <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Thi Thử Cuối Kỳ Triết Học Mác - Lênin</h2>
+          <p class="text-sm text-slate-600 leading-relaxed">
+            Đề thi được lấy ngẫu nhiên <strong>40 câu</strong> từ ngân hàng 300 câu hỏi, thời gian làm bài <strong>60 phút</strong>, chấm điểm tự động theo thang điểm 10 kèm giải thích chi tiết từng câu sau khi nộp bài.
+          </p>
+        </div>
+        <div class="grid grid-cols-3 gap-3 text-center pt-2">
+          <div class="bg-slate-50 rounded-xl p-3 border border-slate-100">
+            <div class="text-lg font-bold text-slate-900">40 câu</div>
+            <div class="text-xs text-slate-500">Ngẫu nhiên</div>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-3 border border-slate-100">
+            <div class="text-lg font-bold text-slate-900">60 phút</div>
+            <div class="text-xs text-slate-500">Đếm ngược</div>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-3 border border-slate-100">
+            <div class="text-lg font-bold text-slate-900">Thang 10</div>
+            <div class="text-xs text-slate-500">0.25đ / câu</div>
+          </div>
+        </div>
+        <button onclick="startExam()"
+          class="w-full sm:w-auto px-7 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-sm transition-colors">
+          Bắt đầu làm bài thi
+        </button>
+      </div>
+
+      <!-- Màn hình đang làm bài thi -->
+      <div id="exam-active" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+        <!-- Cột trái: Câu hỏi hiện tại -->
+        <div class="lg:col-span-8 space-y-4">
+          <div class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm">
+            <div class="flex items-center justify-between gap-2 pb-3 mb-4 border-b border-slate-100">
+              <span id="exam-q-badge" class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700">
+                Câu 1 / 40
+              </span>
+              <div class="flex items-center gap-2">
+                <span class="text-xs text-slate-500">Thời gian còn lại:</span>
+                <span id="exam-timer" class="font-mono text-sm sm:text-base font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-lg">
+                  60:00
+                </span>
+              </div>
+            </div>
+
+            <div id="exam-question-container" class="space-y-4">
+              <!-- Render câu hỏi thi hiện tại -->
+            </div>
+
+            <div class="flex items-center justify-between gap-3 pt-5 mt-5 border-t border-slate-100">
+              <button id="exam-prev-btn" onclick="moveExamQuestion(-1)"
+                class="px-4 py-2.5 text-sm font-medium rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 disabled:opacity-40">
+                ← Câu trước
+              </button>
+              <button id="exam-next-btn" onclick="moveExamQuestion(1)"
+                class="px-4 py-2.5 text-sm font-medium rounded-xl bg-slate-900 text-white hover:bg-slate-800 disabled:opacity-40">
+                Câu tiếp →
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cột phải: Bảng số câu 1-40 -->
+        <div class="lg:col-span-4 bg-white rounded-2xl border border-slate-200 p-4 shadow-sm lg:sticky lg:top-28 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-slate-900">Danh sách câu hỏi</h3>
+            <span id="exam-answered-count" class="text-xs font-medium text-slate-500">Đã làm 0/40</span>
+          </div>
+          <div id="exam-nav-grid" class="grid grid-cols-8 sm:grid-cols-10 lg:grid-cols-5 gap-1.5">
+            <!-- Render 40 ô số -->
+          </div>
+          <div class="flex items-center gap-3 text-xs text-slate-500 pt-1">
+            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-indigo-600 inline-block"></span> Đã làm</span>
+            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-slate-100 border border-slate-300 inline-block"></span> Chưa làm</span>
+          </div>
+          <button onclick="openSubmitExamModal()"
+            class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-colors">
+            Nộp bài thi
+          </button>
+        </div>
+      </div>
+
+      <!-- Màn hình kết quả thi -->
+      <div id="exam-result" class="hidden space-y-4">
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h2 class="text-xl font-bold text-slate-900">Kết Quả Bài Thi Thử</h2>
+              <p id="exam-result-time" class="text-sm text-slate-500 mt-0.5">Thời gian làm bài: --</p>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="text-center bg-indigo-50 border border-indigo-100 rounded-2xl px-5 py-2.5">
+                <div id="exam-score-10" class="text-2xl font-bold text-indigo-700">0.0</div>
+                <div class="text-xs text-indigo-600 font-medium">Thang điểm 10</div>
+              </div>
+              <div class="text-center bg-emerald-50 border border-emerald-100 rounded-2xl px-5 py-2.5">
+                <div id="exam-score-raw" class="text-2xl font-bold text-emerald-700">0/40</div>
+                <div class="text-xs text-emerald-600 font-medium">Số câu đúng</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 mt-5 pt-4 border-t border-slate-100">
+            <div class="flex items-center gap-2">
+              <button id="review-all-btn" onclick="setExamReviewFilter('all')"
+                class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-slate-900 text-white">
+                Xem tất cả (40)
+              </button>
+              <button id="review-wrong-btn" onclick="setExamReviewFilter('wrong')"
+                class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200">
+                Chỉ xem câu sai
+              </button>
+            </div>
+            <button onclick="startExam()"
+              class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white">
+              Thi thử đề mới
+            </button>
+          </div>
+        </div>
+
+        <div id="exam-review-list" class="space-y-4">
+          <!-- Render chi tiết kết quả -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="text-center text-xs text-slate-400 py-6 border-t border-slate-200 bg-white mt-8">
+    Bộ đề ôn tập 300 câu Triết học Mác - Lênin • Chúc bạn ôn tập hiệu quả và thi cuối kỳ đạt điểm cao!
+  </footer>
+
+  <!-- Modal xác nhận dùng chung (thay thế confirm/alert) -->
+  <div id="modal-backdrop" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-5 shadow-xl space-y-4 border border-slate-200">
+      <h3 id="modal-title" class="text-lg font-bold text-slate-900">Xác nhận</h3>
+      <p id="modal-message" class="text-sm text-slate-600 leading-relaxed"></p>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeModal()" class="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl">
+          Hủy
+        </button>
+        <button id="modal-confirm-btn" class="px-4 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl">
+          Xác nhận
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast thông báo gọn nhẹ -->
+  <div id="toast" class="hidden fixed bottom-5 right-5 z-50 bg-slate-900 text-white text-sm px-4 py-2.5 rounded-xl shadow-lg"></div>
+
+  <script>
+    // =========================================================================
+    // DỮ LIỆU 300 CÂU HỎI TRẮC NGHIỆM TRIẾT HỌC MÁC - LÊNIN
+    // Cấu trúc mỗi phần tử: [id, part, question, [A, B, C, D], correctIndex, explanation]
+    // part: 'goc' (58 câu), 'p1' (50 câu), 'p2' (50 câu), 'p3' (65 câu), 'p4' (77 câu)
+    // =========================================================================
+    const PART_META = {
+      all: { label: 'Tất cả', count: 300 },
+      goc: { label: 'Đề cương gốc', badge: 'Đề cương gốc', count: 58 },
+      p1:  { label: 'Phần 1: Ch.1 & Vật chất - Ý thức', badge: 'Phần 1', count: 50 },
+      p2:  { label: 'Phần 2: Phép biện chứng DV', badge: 'Phần 2', count: 50 },
+      p3:  { label: 'Phần 3: Nhận thức & CNDVLS', badge: 'Phần 3', count: 65 },
+      p4:  { label: 'Phần 4: Tổng hợp 3 chương', badge: 'Phần 4', count: 77 }
+    };
+
+    const RAW_QUESTIONS = [
+      // ==================== ĐỀ CƯƠNG GỐC (58 CÂU: 1 - 58) ====================
+      [1,'goc','Triết học ra đời vào khoảng thời gian nào?',
+        ['Thế kỷ X đến thế kỷ VIII TCN','Thế kỷ I sau CN','Thế kỷ VIII đến thế kỷ VI TCN','Thế kỷ II đến thế kỷ I TCN'],2,
+        'Khái niệm “Triết học” ra đời khoảng từ thế kỷ thứ VIII đến thế kỷ thứ VI trước Công nguyên ở cả phương Đông và phương Tây.'],
+      [2,'goc','Vai trò của Triết học Mác - Lênin:',
+        ['Giúp con người nhận thức và cải tạo thế giới','Cung cấp hệ thống tri thức khoa học cụ thể cho từng lĩnh vực','Giúp con người giải thích các hiện tượng siêu nhiên','Là công cụ duy nhất để phát triển kinh tế và khoa học kỹ thuật'],0,
+        'Triết học Mác - Lênin là thế giới quan, phương pháp luận khoa học và cách mạng cho con người trong nhận thức và cải tạo thế giới.'],
+      [3,'goc','Triết học Mác - Lênin giúp định hướng và đưa ra các giải pháp tổng thể cho hoạt động của con người là nhờ vào:',
+        ['Chức năng giáo dục tư tưởng và đạo đức','Chức năng dự báo khoa học và hướng dẫn thực tiễn','Chức năng nhận thức xã hội và cải tạo tự nhiên','Chức năng thế giới quan và chức năng phương pháp luận'],3,
+        'Hai chức năng cơ bản nhất của triết học Mác - Lênin là chức năng thế giới quan và chức năng phương pháp luận.'],
+      [4,'goc','Trong tác phẩm nào, C. Mác và Ph. Ăngghen đưa ra khẩu hiệu: “Vô sản tất cả các nước, đoàn kết lại”?',
+        ['Gia đình thần thánh','Tuyên ngôn của Đảng Cộng sản','Sự khốn khổ của triết học','Tình cảnh giai cấp công nhân Anh'],1,
+        'Khẩu hiệu nổi tiếng “Vô sản tất cả các nước, đoàn kết lại” kết thúc tác phẩm Tuyên ngôn của Đảng Cộng sản (1848).'],
+      [5,'goc','Có bao nhiêu câu hỏi lớn (mặt) trong vấn đề cơ bản của triết học?',
+        ['1','2','3','4'],1,
+        'Vấn đề cơ bản của triết học có 1 vấn đề (quan hệ giữa vật chất và ý thức) nhưng gồm 2 mặt (2 câu hỏi lớn): mặt bản thể luận và mặt nhận thức luận.'],
+      [6,'goc','Đối tượng nghiên cứu của triết học Mác là gì?',
+        ['Các quy luật kinh tế chi phối sự phát triển của xã hội loài người','Quá trình tiến hóa của các sự vật, hiện tượng trong giới tự nhiên','Mối quan hệ giữa con người với môi trường tự nhiên xung quanh','Mối quan hệ biện chứng giữa vật chất và ý thức và các quy luật chung nhất'],3,
+        'Đối tượng của triết học Mác - Lênin là giải quyết mối quan hệ giữa vật chất và ý thức trên lập trường duy vật biện chứng và nghiên cứu các quy luật vận động, phát triển chung nhất của tự nhiên, xã hội, tư duy.'],
+      [7,'goc','Đặc trưng của tri thức triết học có tính:',
+        ['Cụ thể, chi tiết, đo lường được','Hệ thống, lý luận, chung nhất','Cảm tính, kinh nghiệm, thực tiễn','Đa dạng, ngẫu nhiên, rời rạc'],1,
+        'Triết học là hệ thống quan điểm lý luận chung nhất về thế giới và vị trí con người trong thế giới đó.'],
+      [8,'goc','Nguồn gốc lý luận trực tiếp hình thành tư tưởng triết học Mác là:',
+        ['Kinh tế chính trị học cổ điển Anh','Chủ nghĩa xã hội không tưởng Pháp','Triết học cổ điển Đức','Triết học khai sáng Pháp'],2,
+        'Cả ba đều là nguồn gốc lý luận của chủ nghĩa Mác, nhưng nguồn gốc lý luận trực tiếp của triết học Mác là Triết học cổ điển Đức (phép biện chứng của Hêghen và chủ nghĩa duy vật của Phoiơbắc).'],
+      [9,'goc','Thế giới quan nào được coi là đỉnh cao của các loại thế giới quan đã từng có trong lịch sử tư duy nhân loại?',
+        ['Thế giới quan duy vật siêu hình','Thế giới quan tôn giáo','Thế giới quan thần thoại','Thế giới quan duy vật biện chứng'],3,
+        'Thế giới quan duy vật biện chứng được coi là đỉnh cao vì xem xét thế giới dựa trên nguyên lý về mối liên hệ phổ biến và nguyên lý về sự phát triển.'],
+      [10,'goc','Cho rằng vật chất có trước, ý thức có sau, vật chất quyết định ý thức là lập trường của:',
+        ['Chủ nghĩa duy tâm chủ quan','Chủ nghĩa duy tâm khách quan','Chủ nghĩa duy vật','Nhị nguyên luận'],2,
+        'Chủ nghĩa duy vật là trường phái thừa nhận tính thứ nhất của vật chất và tính thứ hai của ý thức.'],
+      [11,'goc','Triết học giai đoạn Lênin ra đời khi có:',
+        ['Sự bùng nổ của cuộc cách mạng công nghiệp lần thứ nhất','Sự chuyển biến của chủ nghĩa tư bản thành chủ nghĩa đế quốc','Sự ra đời và bước đầu phát triển của giai cấp vô sản','Sự suy tàn và sụp đổ của chế độ phong kiến ở châu Âu'],1,
+        'V.I. Lênin phát triển sáng tạo triết học Mác trong thời đại mới: thời đại đế quốc chủ nghĩa và quá độ lên chủ nghĩa xã hội.'],
+      [12,'goc','Mặt thứ hai trong vấn đề cơ bản của triết học trả lời cho câu hỏi:',
+        ['Giữa vật chất và ý thức thì cái nào có trước, cái nào có sau?','Bản thể của thế giới là vật chất hay tinh thần?','Con người có khả năng nhận thức được thế giới hay không?','Vật chất có quyết định ý thức hay không?'],2,
+        'Mặt thứ hai (mặt nhận thức luận) trả lời câu hỏi: Con người có khả năng nhận thức được thế giới hay không? (hình thành thuyết khả tri và bất khả tri).'],
+      [13,'goc','Hình thức nào là cao nhất của chủ nghĩa duy vật?',
+        ['Chủ nghĩa duy vật chất phác','Chủ nghĩa duy vật siêu hình','Chủ nghĩa duy vật tầm thường','Chủ nghĩa duy vật biện chứng'],3,
+        'Chủ nghĩa duy vật trải qua 3 hình thức: chất phác, siêu hình và biện chứng; trong đó chủ nghĩa duy vật biện chứng là hình thức phát triển cao nhất.'],
+      [14,'goc','Mặt thứ nhất trong vấn đề cơ bản của triết học trả lời cho câu hỏi:',
+        ['Con người có khả năng nhận thức được thế giới hay không?','Giữa ý thức và vật chất, cái nào có trước, cái nào quyết định?','Sự vật vận động theo hình thức nào?','Nhận thức có vai trò gì trong thực tiễn?'],1,
+        'Mặt thứ nhất (mặt bản thể luận) giải quyết câu hỏi giữa vật chất và ý thức cái nào có trước, cái nào có sau, cái nào quyết định cái nào.'],
+      [15,'goc','Quan điểm nào sau đây là của chủ nghĩa duy tâm khách quan?',
+        ['Ý thức (tinh thần khách quan) tồn tại độc lập và chi phối sự vận động của thế giới vật chất','Vật chất chỉ là ảo ảnh của tư duy chủ quan cá nhân','Vật chất quyết định ý thức và phản ánh vào bộ óc con người','Ý thức là hình thức tổ chức kinh nghiệm cá nhân'],0,
+        'Chủ nghĩa duy tâm khách quan thừa nhận một thực thể tinh thần khách quan tồn tại độc lập bên ngoài con người và sinh ra, chi phối thế giới vật chất.'],
+      [16,'goc','Ba tiền đề khoa học tự nhiên nào được coi là cơ sở quan trọng nhất cho sự ra đời của triết học Mác vào giữa thế kỷ XIX?',
+        ['Thuyết tương đối, cơ học lượng tử và học thuyết di truyền hiện đại','Học thuyết tế bào, học thuyết tiến hóa và định luật bảo toàn, chuyển hóa năng lượng','Thuyết nhật tâm, học thuyết về sự lưu thông máu và máy hơi nước','Thuyết nguyên tử, định luật vạn vật hấp dẫn và hình học Euclid'],1,
+        'Ba tiền đề khoa học tự nhiên trực tiếp là: Định luật bảo toàn và chuyển hóa năng lượng, Thuyết tế bào và Thuyết tiến hóa của Đácuyn.'],
+      [17,'goc','Nguồn gốc xã hội dẫn đến sự ra đời của triết học là khi nào?',
+        ['Con người mới bắt đầu biết sử dụng công cụ lao động','Thế giới quan thần thoại hoàn toàn biến mất','Sản xuất vật chất đã phát triển, xã hội có sự phân chia giai cấp và tách lao động trí óc khỏi lao động chân tay','Xã hội cộng sản nguyên thủy đạt đến đỉnh cao phát triển'],2,
+        'Nguồn gốc xã hội của triết học xuất hiện khi xã hội có giai cấp và lao động phân chia thành lao động trí óc với lao động chân tay.'],
+      [18,'goc','Đặc điểm nào dưới đây mô tả đúng phương pháp luận siêu hình?',
+        ['Coi thế giới như một cỗ máy khổng lồ, các bộ phận biệt lập','Nhấn mạnh quá trình tiến hóa lịch sử của xã hội','Khẳng định sự chuyển hóa giữa các mặt đối lập','Thừa nhận mọi sự vật đều nằm trong mối liên hệ phổ biến'],0,
+        'Phương pháp siêu hình nhận thức đối tượng trong trạng thái cô lập, tách rời khỏi các mối liên hệ và ở trạng thái tĩnh.'],
+      [19,'goc','Khả tri luận khẳng định điều gì?',
+        ['Bản chất sự vật luôn nằm ngoài phạm vi hiểu biết của con người','Nhận thức chỉ là sự ảo tưởng của các giác quan','Tri thức khoa học hoàn toàn không đáng tin cậy','Con người có khả năng hiểu được bản chất của sự vật'],3,
+        'Khả tri luận (thuyết có thể biết) khẳng định con người về nguyên tắc có khả năng nhận thức được thế giới và bản chất sự vật.'],
+      [20,'goc','Câu tục ngữ “Thầy bói xem voi” phê phán phương pháp nhận thức nào trong triết học?',
+        ['Phương pháp biện chứng','Phương pháp siêu hình','Chủ nghĩa duy vật','Khả tri luận'],1,
+        '“Thầy bói xem voi” chỉ nhìn thấy từng bộ phận rời rạc, phiến diện mà không đặt trong tổng thể các mối liên hệ — đặc trưng của phương pháp siêu hình.'],
+      [21,'goc','Yếu tố nào sau đây KHÔNG thuộc về nguồn gốc ra đời của triết học?',
+        ['Nguồn gốc nhận thức','Nguồn gốc xã hội','Nguồn gốc tâm lý cá nhân','Sự phát triển của tư duy trừu tượng, khái quát hóa'],2,
+        'Triết học ra đời từ hai nguồn gốc là nguồn gốc nhận thức (khả năng khái quát hóa, hệ thống hóa) và nguồn gốc xã hội, không phải tâm lý cá nhân.'],
+      [22,'goc','Trong lịch sử, phép biện chứng đã trải qua mấy hình thức cơ bản?',
+        ['3 hình thức','4 hình thức','1 hình thức','2 hình thức'],0,
+        'Phép biện chứng đã trải qua 3 hình thức cơ bản: phép biện chứng tự phát (chất phác), phép biện chứng duy tâm và phép biện chứng duy vật.'],
+      [23,'goc','Trong các nhận định sau đây về sự ra đời của triết học Mác, nhận định nào là SAI?',
+        ['Sự củng cố và phát triển của phương thức sản xuất tư bản chủ nghĩa là điều kiện kinh tế - xã hội dẫn đến sự ra đời của triết học Mác','Triết học Mác ra đời hoàn toàn dựa trên tư duy sáng tạo độc lập của C. Mác và Ph. Ăngghen mà không cần kế thừa các di sản tư tưởng trước đó','Tiền đề khoa học tự nhiên cho sự ra đời của triết học Mác bao gồm: Học thuyết tiến hóa, Định luật bảo toàn & chuyển hóa năng lượng và Học thuyết tế bào','Kinh tế chính trị học tư sản cổ điển Anh và Chủ nghĩa xã hội không tưởng Pháp là hai trong ba nguồn gốc lý luận trực tiếp của Chủ nghĩa Mác - Lênin'],1,
+        'Triết học Mác không ra đời từ hư vô mà kế thừa có phê phán tinh hoa tư tưởng nhân loại (đặc biệt là Triết học cổ điển Đức).'],
+      [24,'goc','Thế giới quan của Triết học Mác - Lênin là gì?',
+        ['Duy vật sơ khai','Duy vật biện chứng','Duy vật siêu hình','Duy tâm chủ quan'],1,
+        'Triết học Mác - Lênin mang thế giới quan duy vật biện chứng.'],
+      [25,'goc','Đâu là tiền đề khoa học tự nhiên hình thành triết học Mác vào thế kỷ XVIII - XIX?',
+        ['Định lý Pythagore','Thuyết tiến hóa','Tiên đề Euclid','Học thuyết Nho giáo'],1,
+        'Thuyết tiến hóa (cùng Thuyết tế bào và Định luật bảo toàn, chuyển hóa năng lượng) là tiền đề khoa học tự nhiên của triết học Mác.'],
+      [26,'goc','Chức năng của Triết học Mác - Lênin được thể hiện ở các phương diện nào?',
+        ['Phương pháp duy vật siêu hình','Phương pháp định lượng, định tính','Thế giới quan, nhân sinh quan','Thế giới quan, phương pháp luận'],3,
+        'Triết học Mác - Lênin có hai chức năng cơ bản: chức năng thế giới quan và chức năng phương pháp luận.'],
+      [27,'goc','Đâu là tiền đề lý luận hình thành triết học Mác vào thế kỷ XVIII - XIX?',
+        ['Triết học kinh viện','Thuyết tế bào','Chủ nghĩa xã hội dân chủ','Chủ nghĩa xã hội không tưởng'],3,
+        'Ba nguồn gốc lý luận của chủ nghĩa Mác gồm: Triết học cổ điển Đức, Kinh tế chính trị học Anh và Chủ nghĩa xã hội không tưởng Pháp.'],
+      [28,'goc','“Triết” (哲) trong quan điểm của người Trung Quốc cổ đại mang hàm nghĩa gì?',
+        ['Những quy luật, nguyên lý cô đọng nhất, khái quát nhất','Truy tìm nội dung, bản chất của đối tượng nhận thức','Con đường suy ngẫm dẫn con người đi đến lẽ phải','Thế giới quan, phương pháp luận của đối tượng nhận thức'],1,
+        'Trong văn hóa Trung Quốc cổ đại, “Triết” (哲) mang nghĩa là trí tuệ, sự truy tìm bản chất của đối tượng nhận thức.'],
+      [29,'goc','Những thành phần chủ yếu của thế giới quan là gì?',
+        ['Lý tưởng, quan niệm, suy nghĩ','Suy nghĩ, cảm nhận, cảm giác','Tri thức, ý chí, lý tưởng','Tri thức, niềm tin, lý tưởng'],3,
+        'Theo đề cương, những thành phần chủ yếu của thế giới quan là tri thức, niềm tin và lý tưởng.'],
+      [30,'goc','Thế giới quan duy vật biện chứng bao gồm:',
+        ['Tri thức kinh nghiệm, niềm tin tôn giáo, lý tưởng cách mạng','Tri thức kinh nghiệm, niềm tin khoa học, lý tưởng cách mạng','Tri thức khoa học, niềm tin khoa học, lý tưởng cách mạng','Tri thức khoa học, niềm tin tôn giáo, lý tưởng cách mạng'],2,
+        'Thế giới quan duy vật biện chứng được cấu thành từ tri thức khoa học, niềm tin khoa học và lý tưởng cách mạng.'],
+      [31,'goc','Khái niệm triết học Mác - Lênin là:',
+        ['Hệ thống quan điểm duy vật siêu hình về tự nhiên, xã hội và tư duy','Hệ thống quan điểm duy tâm chủ quan về tự nhiên, xã hội và tư duy','Hệ thống quan điểm ý thức về tự nhiên, xã hội và tư duy','Hệ thống quan điểm duy vật biện chứng về tự nhiên, xã hội và tư duy'],3,
+        'Triết học Mác - Lênin là hệ thống quan điểm duy vật biện chứng về tự nhiên, xã hội và tư duy.'],
+      [32,'goc','“Triết” (Dar’sana) trong quan điểm của người Ấn Độ cổ đại mang hàm nghĩa gì?',
+        ['Những quy luật, nguyên lý cô đọng nhất, khái quát nhất','Truy tìm nội dung, bản chất của đối tượng nhận thức','Con đường suy ngẫm dẫn con người đi đến lẽ phải','Thế giới quan, phương pháp luận của đối tượng nhận thức'],2,
+        'Ở Ấn Độ cổ đại, thuật ngữ Dar’sana (chiêm ngưỡng) hàm nghĩa là tri thức dựa trên lý trí, là con đường suy ngẫm dẫn con người đến lẽ phải.'],
+      [33,'goc','Câu hỏi “Giữa ý thức và vật chất thì cái nào có trước, cái nào có sau, cái nào quyết định cái nào?” hình thành nên các trường phái triết học nào?',
+        ['Chủ nghĩa siêu hình, chủ nghĩa duy tâm','Chủ nghĩa duy vật, chủ nghĩa hoài nghi','Chủ nghĩa duy tâm, chủ nghĩa duy vật','Chủ nghĩa duy vật, chủ nghĩa tư bản'],2,
+        'Việc giải quyết mặt thứ nhất vấn đề cơ bản của triết học chia các nhà triết học thành hai trường phái lớn: chủ nghĩa duy vật và chủ nghĩa duy tâm.'],
+      [34,'goc','Đặc trưng của phương pháp tư duy siêu hình là gì?',
+        ['Nhận thức đối tượng ở trạng thái cô lập, tách rời đối tượng ra khỏi các mối liên hệ','Nhận thức đối tượng ở trạng thái luôn vận động','Nhận thức đối tượng ở trạng thái bao quát, cụ thể, phát triển','Nhận thức đối tượng ở trạng thái động, kết nối đối tượng trong các mối liên hệ'],0,
+        'Phương pháp siêu hình xem xét đối tượng trong trạng thái cô lập, tách rời khỏi các mối liên hệ và ở trạng thái tĩnh.'],
+      [35,'goc','Quy vật chất về một hay một vài dạng cụ thể và xem chúng là khởi nguyên của thế giới, tức là quy vật chất về những vật thể hữu hình, cảm tính là quan điểm của:',
+        ['Duy vật biện chứng','Duy vật khách quan','Duy vật chất phác','Duy vật siêu hình'],2,
+        'Chủ nghĩa duy vật chất phác thời cổ đại thường đồng nhất vật chất với một hay một vài dạng vật thể cụ thể, hữu hình (như nước, lửa, không khí...).'],
+      [36,'goc','Ai đã nêu định nghĩa kinh điển: “Vật chất là một phạm trù triết học dùng để chỉ thực tại khách quan được đem lại cho con người trong cảm giác, được cảm giác của chúng ta chép lại, chụp lại, phản ánh, và tồn tại không lệ thuộc vào cảm giác”?',
+        ['C. Mác','Ph. Ăngghen','V.I. Lênin','Heraclitus'],2,
+        'V.I. Lênin nêu định nghĩa này trong tác phẩm “Chủ nghĩa duy vật và chủ nghĩa kinh nghiệm phê phán”.'],
+      [37,'goc','Theo quan điểm của chủ nghĩa duy vật biện chứng, phương thức tồn tại của vật chất là:',
+        ['Cách thức tồn tại và hình thức tồn tại của vật chất','Bản chất tồn tại và hình thức tồn tại của vật chất','Đặc trưng tồn tại và hình thức tồn tại của vật chất','Cách thức tồn tại và phương pháp tồn tại của vật chất'],0,
+        'Đề cương nêu rõ: Phương thức tồn tại của vật chất tức là cách thức tồn tại và hình thức tồn tại của vật chất.'],
+      [38,'goc','Điền từ thích hợp: Chủ nghĩa duy vật biện chứng khẳng định ...(1)... là cách thức tồn tại, đồng thời là hình thức tồn tại của vật chất; không gian, ...(2)... là hình thức tồn tại của vật chất.',
+        ['(1) Không gian, (2) Thời gian','(1) Thời gian, (2) Phạm trù','(1) Quy luật, (2) Thời gian','(1) Vận động, (2) Thời gian'],3,
+        'Vận động là cách thức tồn tại đồng thời là hình thức tồn tại của vật chất; không gian và thời gian là hình thức tồn tại của vật chất.'],
+      [39,'goc','Với tư cách là một khái niệm triết học, vận động theo nghĩa chung nhất là mọi sự ...... nói chung.',
+        ['Phát triển','Tuần hoàn','Biến đổi','Tiến hóa'],2,
+        'Theo nghĩa chung nhất trong triết học Mác - Lênin, vận động là mọi sự biến đổi nói chung.'],
+      [40,'goc','Những hình thức vận động cơ bản của vật chất là gì?',
+        ['Cơ học, hình học, hóa học, sinh học và xã hội','Cơ học, vật lý, hình học, tự nhiên và xã hội','Cơ học, vật lý, hóa học, sinh học và chính trị','Cơ học, vật lý, hóa học, sinh học và xã hội'],3,
+        '5 hình thức vận động cơ bản của vật chất theo Ph. Ăngghen từ thấp đến cao: cơ học, vật lý, hóa học, sinh học và xã hội.'],
+      [41,'goc','Theo quan điểm của chủ nghĩa duy vật biện chứng, ...... là trạng thái ổn định về chất của sự vật, hiện tượng trong những mối quan hệ và điều kiện cụ thể, là điều kiện cho sự vận động chuyển hóa của vật chất.',
+        ['Vận động','Biến động','Đứng im','Bất biến'],2,
+        'Đứng im là trạng thái ổn định tương đối về chất của sự vật trong những điều kiện cụ thể, nằm ngay trong quá trình vận động không ngừng.'],
+      [42,'goc','...(1)... là hình thức tồn tại của vật chất xét về mặt quảng tính, sự cùng tồn tại, trật tự, kết cấu và sự tác động lẫn nhau. ...(2)... là hình thức tồn tại của vật chất vận động xét về mặt độ dài diễn biến, sự kế tiếp của các quá trình.',
+        ['(1) Không gian, (2) Thời gian','(1) Đứng im, (2) Vận động','(1) Vận động, (2) Đứng im','(1) Ý thức, (2) Vật chất'],0,
+        'Không gian phản ánh quảng tính, trật tự, kết cấu; thời gian phản ánh độ dài diễn biến và sự kế tiếp của các quá trình.'],
+      [43,'goc','Vật chất có ba chiều không gian và một chiều thời gian. Ba chiều không gian đó là:',
+        ['Chiều dài, chiều rộng, chiều cao','Chiều lên, chiều trên, chiều rộng','Chiều dài, chiều rộng, chiều trên','Chiều dài, chiều dưới, chiều cao'],0,
+        'Không gian vật chất có 3 chiều cơ bản: chiều dài, chiều rộng và chiều cao.'],
+      [44,'goc','Trong những nhận định bên dưới, nhận định nào CHƯA ĐÚNG?',
+        ['Không gian và thời gian là hai thuộc tính, hai hình thức tồn tại khác nhau của vật chất vận động, nhưng chúng không tách rời nhau','Vật chất có ba chiều không gian và một chiều thời gian','Vận động là thuộc tính cố hữu và là phương thức tồn tại của vật chất; do đó, nó hữu hạn, không thể tạo ra và không bị tiêu diệt','Không gian và thời gian của vật chất nói chung là vô tận, xét về cả phạm vi lẫn tính chất'],2,
+        'Nhận định C sai ở từ “hữu hạn” — vận động của vật chất là tuyệt đối, vĩnh viễn và vô hạn.'],
+      [45,'goc','Vật chất có ba chiều không gian và một chiều thời gian. Một chiều thời gian đó là:',
+        ['Từ chiều rộng đến chiều cao','Từ quá khứ đến tương lai','Từ không gian đến thời gian','Từ tương lai đến hiện tại'],1,
+        'Thời gian có tính một chiều không đảo ngược: đi từ quá khứ đến hiện tại và tương lai.'],
+      [46,'goc','Trong những nhận định bên dưới, nhận định nào CHƯA ĐÚNG theo quan điểm của chủ nghĩa duy vật biện chứng?',
+        ['Tồn tại là phạm trù dùng để chỉ tính có thực của thế giới xung quanh con người','Tồn tại của thế giới là tiền đề cho sự thống nhất của thế giới','Bản chất của thế giới là vật chất, thế giới thống nhất ở tính vật chất','Tồn tại là phạm trù dùng để chỉ tính hư ảo, không có thực của thế giới xung quanh con người'],3,
+        'Theo nghĩa chung nhất, tồn tại chỉ tính có thực của thế giới xung quanh con người, không phải tính hư ảo.'],
+      [47,'goc','“Thế giới vật chất không do ai sinh ra và cũng không tự mất đi, tồn tại vĩnh viễn, vô hạn và vô tận. Trong thế giới, các sự vật luôn vận động, biến đổi và chuyển hóa lẫn nhau” là quan niệm về:',
+        ['Bản chất của thế giới là vật chất, thế giới thống nhất ở tính vật chất','Bản chất của thế giới là ý thức, thế giới thống nhất ở tính ý thức','Bản chất của thế giới là tinh thần, thế giới thống nhất ở tinh thần','Bản chất của thế giới là ý niệm, thế giới thống nhất ở ý niệm'],0,
+        'Đây là nội dung cốt lõi khẳng định tính thống nhất vật chất của thế giới trong chủ nghĩa duy vật biện chứng.'],
+      [48,'goc','Chọn nhận định CHƯA ĐÚNG:',
+        ['Xã hội loài người suy cho cùng cũng là cấp độ đặc biệt của tổ chức vật chất và là cấp độ cao nhất của cấu trúc vật chất','Ý thức là chức năng của bộ óc người hoạt động bình thường; sinh lý và ý thức là hai mặt của một quá trình','Sự xuất hiện con người và hình thành bộ óc của con người có năng lực phản ánh hiện thực khách quan là nguồn gốc xã hội của ý thức','Ý thức là hình thức phản ánh đặc trưng chỉ có ở con người và là hình thức phản ánh cao nhất của thế giới vật chất'],2,
+        'Sự xuất hiện con người và bộ óc người là nguồn gốc TỰ NHIÊN của ý thức; còn lao động và ngôn ngữ mới là nguồn gốc xã hội.'],
+      [49,'goc','Đâu KHÔNG PHẢI là đặc trưng cơ bản của nhà nước?',
+        ['Nhà nước quản lý cư dân trên một vùng lãnh thổ nhất định','Nhà nước có hệ thống các cơ quan quyền lực chuyên nghiệp mang tính cưỡng chế đối với mọi thành viên','Nhà nước được sự công nhận bởi các cơ quan, các tổ chức quốc tế','Nhà nước có hệ thống thuế khóa để nuôi bộ máy chính quyền'],2,
+        'Ba đặc trưng cơ bản của nhà nước gồm: quản lý cư dân theo lãnh thổ, có bộ máy quyền lực cưỡng chế chuyên nghiệp và có hệ thống thuế khóa.'],
+      [50,'goc','Phạm trù hình thái kinh tế - xã hội chỉ ra kết cấu xã hội trong mỗi giai đoạn lịch sử nhất định bao gồm ba yếu tố cơ bản, phổ biến, đó là:',
+        ['Lực lượng sản xuất, quan hệ sản xuất, tồn tại xã hội','Lực lượng sản xuất, quan hệ sản xuất (cơ sở hạ tầng), kiến trúc thượng tầng','Lực lượng sản xuất, giai cấp, kiến trúc thượng tầng','Tồn tại xã hội, ý thức xã hội, kiến trúc thượng tầng'],1,
+        'Kết cấu của hình thái kinh tế - xã hội gồm 3 yếu tố cơ bản: lực lượng sản xuất, quan hệ sản xuất (cơ sở hạ tầng) và kiến trúc thượng tầng.'],
+      [51,'goc','Trong tác phẩm Đạo đức kinh, Lão Tử quan niệm “Thiên lý chi hành, thủy vu túc hạ” (Hành trình vạn dặm khởi đầu từ một bước chân). Điều này thể hiện quy luật gì?',
+        ['Quy luật chuyển hóa từ những thay đổi về lượng dẫn đến những thay đổi về chất và ngược lại','Quy luật thống nhất và đấu tranh của các mặt đối lập','Định luật bảo toàn và chuyển hóa năng lượng','Quy luật phủ định của phủ định'],0,
+        'Tích lũy từng bước chân nhỏ (lượng) sẽ hoàn thành cả hành trình vạn dặm (chất) — biểu hiện của quy luật lượng - chất.'],
+      [52,'goc','Theo quan điểm của chủ nghĩa duy vật lịch sử, trong lịch sử xã hội nhân loại có hai cuộc cách mạng xã hội mang tính điển hình, có quy mô rộng lớn và tính chất triệt để, đó là:',
+        ['Cách mạng nông dân và cách mạng công nhân','Cách mạng tư sản và cách mạng khoa học - công nghệ','Cách mạng tư sản và cách mạng vô sản','Cách mạng xã hội chủ nghĩa và cách mạng dân chủ tư sản kiểu mới'],2,
+        'Đề cương nêu rõ hai cuộc cách mạng xã hội điển hình, quy mô rộng lớn và triệt để trong lịch sử là cách mạng tư sản và cách mạng vô sản.'],
+      [53,'goc','Điền từ còn thiếu vào định nghĩa giai cấp của V.I. Lênin: “...khác nhau về địa vị của họ trong một hệ thống sản xuất xã hội nhất định trong lịch sử, về quan hệ của họ đối với những ......, về vai trò của họ trong tổ chức lao động xã hội...”',
+        ['Công cụ lao động','Đối tượng lao động','Quan hệ sản xuất','Tư liệu sản xuất'],3,
+        'Sự khác nhau cơ bản nhất giữa các giai cấp là quan hệ sở hữu của họ đối với những tư liệu sản xuất.'],
+      [54,'goc','Lịch sử phát triển của xã hội loài người cho đến nay là lịch sử phát triển của các hình thức cộng đồng người từ thấp đến cao:',
+        ['Thị tộc → Bộ lạc → Bộ tộc → Dân tộc','Bộ lạc → Bộ tộc → Dân tộc → Thân tộc','Dân tộc → Bộ lạc → Bộ tộc → Thân tộc','Thị tộc → Bộ tộc → Bộ lạc → Dân tộc'],0,
+        'Thứ tự phát triển từ thấp đến cao của các hình thức cộng đồng người là: Thị tộc → Bộ lạc → Bộ tộc → Dân tộc.'],
+      [55,'goc','Nguyên nhân trực tiếp dẫn đến sự xuất hiện nhà nước là gì?',
+        ['Mâu thuẫn giai cấp trong xã hội gay gắt không thể điều hòa được','Sự phát triển của lực lượng sản xuất dẫn đến sự dư thừa của cải','Xuất hiện chế độ tư hữu về tư liệu sản xuất và về của cải','Con người phát hiện và ứng dụng công cụ lao động bằng kim loại trong sản xuất'],0,
+        'Nguyên nhân sâu xa là phát triển LLSX và xuất hiện tư hữu; còn nguyên nhân trực tiếp ra đời nhà nước là mâu thuẫn giai cấp gay gắt không thể điều hòa.'],
+      [56,'goc','Lịch sử xã hội loài người là một tiến trình nối tiếp nhau từ thấp đến cao của các hình thái kinh tế - xã hội, đó là:',
+        ['Cộng sản nguyên thủy - phong kiến - chiếm hữu nô lệ - tư bản chủ nghĩa - xã hội chủ nghĩa','Cộng sản nguyên thủy - chiếm hữu nô lệ - phong kiến - tư bản chủ nghĩa - xã hội chủ nghĩa','Chiếm hữu nô lệ - cộng sản nguyên thủy - phong kiến - tư bản chủ nghĩa - xã hội chủ nghĩa','Cộng sản nguyên thủy - chiếm hữu nô lệ - tư bản chủ nghĩa - phong kiến - xã hội chủ nghĩa'],1,
+        '5 hình thái kinh tế - xã hội nối tiếp nhau từ thấp đến cao: Cộng sản nguyên thủy → Chiếm hữu nô lệ → Phong kiến → Tư bản chủ nghĩa → Xã hội chủ nghĩa (Cộng sản chủ nghĩa).'],
+      [57,'goc','Câu thơ trong Truyện Kiều của Nguyễn Du: “Ngẫm hay muôn sự tại trời / Trời kia đã bắt làm người có thân / Bắt phong trần phải phong trần / Cho thanh cao mới được phần thanh cao” thể hiện lập trường triết học nào?',
+        ['Chủ nghĩa duy vật biện chứng','Chủ nghĩa duy vật siêu hình','Chủ nghĩa duy tâm khách quan','Chủ nghĩa duy tâm chủ quan'],2,
+        'Quy mọi số phận con người do “Trời” (một lực lượng tinh thần khách quan siêu nhiên) sắp đặt là biểu hiện của chủ nghĩa duy tâm khách quan.'],
+      [58,'goc','Theo quan điểm của chủ nghĩa duy vật biện chứng, nhận định nào sau đây về sự phát triển là ĐÚNG?',
+        ['Ý muốn của con người quy định sự phát triển của sự vật, hiện tượng','Nguồn gốc của sự phát triển nằm ngay trong bản thân sự vật, hiện tượng','Phát triển chỉ là sự tăng lên về mặt lượng của các sự vật, hiện tượng','Phát triển là sự vận động nói chung'],1,
+        'Phát triển có tính khách quan vì nguồn gốc của nó nằm trong chính bản thân sự vật (giải quyết mâu thuẫn nội tại), không phụ thuộc ý muốn chủ quan.'],
+
+      // ==================== PHẦN 1 (50 CÂU: 59 - 108) ====================
+      [59,'p1','Sự ra đời của triết học vào khoảng thế kỷ VIII đến thế kỷ VI TCN gắn liền với hai nguồn gốc cơ bản nào?',
+        ['Nguồn gốc tự nhiên và nguồn gốc văn hóa','Nguồn gốc nhận thức và nguồn gốc xã hội','Nguồn gốc kinh tế và nguồn gốc tôn giáo','Nguồn gốc tâm lý và nguồn gốc ngôn ngữ'],1,
+        'Triết học ra đời dựa trên hai nguồn gốc cơ bản là nguồn gốc nhận thức và nguồn gốc xã hội.'],
+      [60,'p1','Điều kiện xã hội trực tiếp thúc đẩy sự ra đời của triết học trong lịch sử là gì?',
+        ['Xã hội phân chia giai cấp và tách rời lao động trí óc với lao động chân tay','Con người phát minh ra chữ viết và máy in','Sự ra đời của các tôn giáo lớn trên thế giới','Nền công nghiệp cơ khí bắt đầu phát triển'],0,
+        'Khi xã hội có giai cấp và lao động trí óc tách khỏi lao động chân tay, một tầng lớp trí thức có điều kiện hệ thống hóa tri thức thành triết học.'],
+      [61,'p1','Những thành phần chủ yếu cấu thành thế giới quan của con người bao gồm những yếu tố nào?',
+        ['Tri thức, cảm xúc và thói quen','Kinh nghiệm, niềm tin và đạo đức','Tri thức, niềm tin và lý tưởng','Khoa học, nghệ thuật và tôn giáo'],2,
+        'Đề cương xác định ba thành phần chủ yếu của thế giới quan là tri thức, niềm tin và lý tưởng.'],
+      [62,'p1','Vì sao thế giới quan duy vật biện chứng được coi là đỉnh cao của các loại thế giới quan trong lịch sử?',
+        ['Vì nó là loại thế giới quan xuất hiện sớm nhất trong lịch sử','Vì nó loại bỏ hoàn toàn vai trò của ý thức và tinh thần','Vì nó chỉ tập trung nghiên cứu giới tự nhiên','Vì nó giải thích thế giới dựa trên các nguyên lý về mối liên hệ phổ biến và sự phát triển'],3,
+        'Thế giới quan duy vật biện chứng đòi hỏi xem xét thế giới dựa trên nguyên lý về mối liên hệ phổ biến và nguyên lý về sự phát triển.'],
+      [63,'p1','Mặt thứ nhất của vấn đề cơ bản của triết học tập trung giải quyết câu hỏi nào sau đây?',
+        ['Giữa vật chất và ý thức, cái nào có trước, cái nào có sau và quyết định cái nào?','Con người có khả năng nhận thức được thế giới hay không?','Thế giới vận động theo chiều hướng đi lên hay tuần hoàn?','Nguồn gốc của các giai cấp trong xã hội là gì?'],0,
+        'Mặt thứ nhất giải quyết mối quan hệ bản thể luận: giữa vật chất và ý thức cái nào có trước, cái nào quyết định cái nào.'],
+      [64,'p1','Việc giải quyết mặt thứ hai trong vấn đề cơ bản của triết học dẫn đến sự hình thành hai khuynh hướng đối lập nào?',
+        ['Chủ nghĩa duy vật và chủ nghĩa duy tâm','Phương pháp biện chứng và phương pháp siêu hình','Thuyết khả tri và thuyết bất khả tri','Chủ nghĩa duy lý và chủ nghĩa kinh nghiệm'],2,
+        'Mặt thứ hai hỏi con người có nhận thức được thế giới hay không, từ đó chia thành thuyết khả tri và thuyết bất khả tri.'],
+      [65,'p1','Ba hình thức cơ bản của chủ nghĩa duy vật trong lịch sử phát triển theo đúng trình tự thời gian là gì?',
+        ['Duy vật siêu hình, duy vật chất phác, duy vật biện chứng','Duy vật chất phác, duy vật siêu hình, duy vật biện chứng','Duy vật chất phác, duy vật biện chứng, duy vật siêu hình','Duy vật tự phát, duy vật lịch sử, duy vật cơ học'],1,
+        'Chủ nghĩa duy vật phát triển qua 3 hình thức lịch sử: duy vật chất phác (cổ đại) → duy vật siêu hình (TK XV-XVIII) → duy vật biện chứng (TK XIX).'],
+      [66,'p1','Đặc trưng cốt lõi của phương pháp tư duy siêu hình khi nhận thức sự vật, hiện tượng là gì?',
+        ['Xem xét sự vật trong mối liên hệ chằng chịt với sự vật khác','Thừa nhận mâu thuẫn bên trong là nguồn gốc phát triển','Xem xét đối tượng trong sự cô lập, trạng thái tĩnh và nếu có biến đổi chỉ là tăng giảm về lượng','Coi mọi sự vật đều biến đổi từ thấp đến cao'],2,
+        'Phương pháp siêu hình tách rời đối tượng khỏi các mối liên hệ, nhìn ở trạng thái tĩnh và chỉ thấy biến đổi thuần túy về số lượng.'],
+      [67,'p1','Trong lịch sử triết học, phép biện chứng đã trải qua ba hình thức cơ bản nào?',
+        ['Phép biện chứng tự phát, phép biện chứng duy tâm, phép biện chứng duy vật','Phép biện chứng cổ đại, phép biện chứng siêu hình, phép biện chứng hiện đại','Phép biện chứng duy vật, phép biện chứng cơ học, phép biện chứng chủ quan','Phép biện chứng thần thoại, phép biện chứng tôn giáo, phép biện chứng khoa học'],0,
+        'Ba hình thức lịch sử của phép biện chứng là: tự phát/chất phác, duy tâm và duy vật.'],
+      [68,'p1','Nhân tố chính trị - xã hội quan trọng trực tiếp đánh dấu sự ra đời của triết học Mác vào những năm 40 của thế kỷ XIX là gì?',
+        ['Sự thắng lợi hoàn toàn của cách mạng tư sản trên toàn thế giới','Sự ra đời của các tổ chức quốc tế liên chính phủ','Sự suy yếu của các đế quốc thực dân phương Tây','Sự xuất hiện của giai cấp vô sản trên vũ đài lịch sử với tư cách lực lượng chính trị độc lập'],3,
+        'Giai cấp vô sản bước lên vũ đài lịch sử với tư cách lực lượng chính trị - xã hội độc lập đòi hỏi một lý luận cách mạng dẫn đường.'],
+      [69,'p1','Cơ sở chủ yếu nhất cho sự ra đời của triết học Mác xét về điều kiện kinh tế - xã hội là yếu tố nào?',
+        ['Sự mở rộng thương mại hàng hải quốc tế','Thực tiễn cách mạng của giai cấp vô sản','Sự phát triển của nền nông nghiệp phong kiến','Sự ra đời của hệ thống ngân hàng tư bản'],1,
+        'Đề cương khẳng định: Thực tiễn cách mạng của giai cấp vô sản là cơ sở chủ yếu nhất cho sự ra đời triết học Mác.'],
+      [70,'p1','Ba nguồn gốc lý luận trực tiếp dẫn tới sự ra đời của chủ nghĩa Mác (trong đó có triết học Mác) là gì?',
+        ['Triết học Hy Lạp cổ đại, Kinh tế học Mỹ, Chủ nghĩa xã hội khoa học','Triết học Khai sáng Pháp, Kinh tế học Đức, Chủ nghĩa nhân văn Ý','Triết học cổ điển Đức, Kinh tế chính trị học Anh, Chủ nghĩa xã hội không tưởng Pháp','Triết học Ấn Độ cổ đại, Kinh tế chính trị học Anh, Chủ nghĩa duy vật siêu hình'],2,
+        'Ba nguồn gốc lý luận trực tiếp: Triết học cổ điển Đức, Kinh tế chính trị học cổ điển Anh và Chủ nghĩa xã hội không tưởng Pháp.'],
+      [71,'p1','Ba phát minh khoa học tự nhiên nào vào thế kỷ XIX là tiền đề trực tiếp cho sự ra đời của chủ nghĩa duy vật biện chứng?',
+        ['Định luật bảo toàn và chuyển hóa năng lượng, Thuyết tế bào, Thuyết tiến hóa','Thuyết tương đối, Cơ học lượng tử, Phát hiện ra tia X','Định luật vạn vật hấp dẫn, Thuyết nhật tâm, Định luật bảo toàn khối lượng','Phát hiện ra điện tử, Hiện tượng phóng xạ, Thuyết Big Bang'],0,
+        'Ba phát minh lớn thế kỷ XIX đã chứng minh tính thống nhất vật chất và sự vận động, chuyển hóa biện chứng của giới tự nhiên.'],
+      [72,'p1','Thời kỳ 1844 - 1848 trong quá trình hình thành và phát triển triết học Mác mang đặc điểm chủ yếu nào?',
+        ['Bước quá độ từ chủ nghĩa duy tâm sang chủ nghĩa duy vật','Thời kỳ đề xuất những nguyên lý triết học duy vật biện chứng và duy vật lịch sử','Thời kỳ bổ sung và hoàn thiện toàn diện lý luận triết học','Thời kỳ bảo vệ triết học Mác trong thời đại đế quốc chủ nghĩa'],1,
+        '1841–1844 là bước quá độ; 1844–1848 là thời kỳ đề xuất những nguyên lý duy vật biện chứng và duy vật lịch sử; 1848–1895 là thời kỳ bổ sung, phát triển toàn diện.'],
+      [73,'p1','Nội dung chủ yếu tạo nên bước ngoặt cách mạng trong triết học do C. Mác và Ph. Ăngghen thực hiện là gì?',
+        ['Phủ nhận hoàn toàn mọi thành tựu triết học trước đó','Thu hẹp đối tượng triết học vào nghiên cứu khoa học tự nhiên','Vận dụng và mở rộng quan điểm duy vật biện chứng vào nghiên cứu lịch sử xã hội, sáng tạo ra chủ nghĩa duy vật lịch sử','Khôi phục lại chủ nghĩa duy vật chất phác thời cổ đại'],2,
+        'Sáng tạo ra chủ nghĩa duy vật lịch sử là nội dung chủ yếu của bước ngoặt cách mạng trong triết học do Mác và Ăngghen thực hiện.'],
+      [74,'p1','Giai đoạn 1917 - 1924 trong sự nghiệp phát triển triết học Mác của V.I. Lênin gắn liền với nhiệm vụ trọng tâm nào?',
+        ['Thành lập đảng mácxít ở Nga và chuẩn bị cách mạng dân chủ tư sản lần thứ nhất','Lãnh đạo phong trào công nhân chuẩn bị cách mạng xã hội chủ nghĩa','Chống lại chủ nghĩa phát xít trong Thế chiến thứ hai','Tổng kết kinh nghiệm thực tiễn cách mạng, bổ sung triết học Mác gắn với xây dựng chủ nghĩa xã hội'],3,
+        'Sau Cách mạng Tháng Mười (1917–1924), Lênin tổng kết thực tiễn cách mạng, bổ sung triết học Mác gắn liền với xây dựng CNXH.'],
+      [75,'p1','Đối tượng nghiên cứu của triết học Mác - Lênin được xác định chính xác là gì?',
+        ['Giải quyết mối quan hệ vật chất - ý thức trên lập trường duy vật biện chứng và nghiên cứu các quy luật vận động, phát triển chung nhất của tự nhiên, xã hội và tư duy','Nghiên cứu các quy luật riêng biệt của vật lý, hóa học và sinh học','Chỉ nghiên cứu lịch sử phát triển của các hình thái kinh tế - xã hội','Nghiên cứu cấu trúc tâm lý cá nhân và hành vi tiêu dùng'],0,
+        'Triết học Mác - Lênin giải quyết quan hệ vật chất - ý thức trên lập trường duy vật biện chứng và nghiên cứu các quy luật chung nhất của tự nhiên, xã hội, tư duy.'],
+      [76,'p1','Hai chức năng cơ bản nhất của triết học Mác - Lênin đối với nhận thức và hoạt động thực tiễn là gì?',
+        ['Chức năng kinh tế và chức năng chính trị','Chức năng thế giới quan và chức năng phương pháp luận','Chức năng mô tả và chức năng thống kê','Chức năng thẩm mỹ và chức năng đạo đức'],1,
+        'Triết học Mác - Lênin thực hiện hai chức năng cơ bản: chức năng thế giới quan và chức năng phương pháp luận.'],
+      [77,'p1','Chức năng phương pháp luận của triết học Mác - Lênin giúp con người phát triển loại tư duy nào sau đây?',
+        ['Tư duy kinh nghiệm cảm tính','Tư duy siêu hình, máy móc','Tư duy khoa học ở cấp độ phạm trù và quy luật','Tư duy trực giác thuần túy'],2,
+        'Triết học Mác - Lênin trang bị hệ thống khái niệm, phạm trù, quy luật giúp phát triển tư duy khoa học ở cấp độ phạm trù, quy luật.'],
+      [78,'p1','Quan điểm cho rằng “ý thức con người quyết định sự tồn tại của mọi sự vật xung quanh, không có cái gì tồn tại ngoài cảm giác của ta” thuộc trường phái nào?',
+        ['Chủ nghĩa duy vật chất phác','Chủ nghĩa duy tâm khách quan','Nhị nguyên luận','Chủ nghĩa duy tâm chủ quan'],3,
+        'Chủ nghĩa duy tâm chủ quan thừa nhận tính thứ nhất của ý thức con người (cảm giác, tri giác cá nhân) và phủ nhận sự tồn tại khách quan của sự vật.'],
+      [79,'p1','Khi xem xét vai trò của triết học Mác - Lênin ở Việt Nam hiện nay, luận điểm nào sau đây phản ánh đúng nội dung đề cương?',
+        ['Là cơ sở lý luận khoa học của sự nghiệp đổi mới theo định hướng xã hội chủ nghĩa ở Việt Nam','Chỉ có giá trị nghiên cứu lịch sử, không còn gắn với thực tiễn đổi mới','Thay thế hoàn toàn các môn khoa học chuyên ngành trong quản lý kinh tế','Chỉ áp dụng trong lĩnh vực văn hóa, nghệ thuật'],0,
+        'Triết học Mác - Lênin là cơ sở lý luận khoa học của công cuộc xây dựng CNXH trên thế giới và sự nghiệp đổi mới theo định hướng XHCN ở Việt Nam.'],
+      [80,'p1','Điểm khác biệt căn bản giữa phương pháp biện chứng và phương pháp siêu hình khi nhìn nhận sự biến đổi của sự vật là gì?',
+        ['Phương pháp siêu hình phủ nhận mọi sự thay đổi về số lượng','Phương pháp biện chứng coi sự biến đổi nằm trong khuynh hướng phát triển, còn phương pháp siêu hình coi đó thuần túy là biến đổi về số lượng','Phương pháp biện chứng chỉ thừa nhận trạng thái đứng im','Không có sự khác biệt nào về cách nhìn nhận sự biến đổi'],1,
+        'Phương pháp siêu hình nếu có thừa nhận biến đổi thì chỉ là biến đổi thuần túy về lượng; còn phương pháp biện chứng nhìn sự vật vận động theo khuynh hướng phát triển.'],
+      [81,'p1','Điểm chung hạn chế trong quan niệm về vật chất của phần lớn các nhà triết học duy vật thời cổ đại là gì?',
+        ['Phủ nhận sự tồn tại khách quan của giới tự nhiên','Coi ý thức là cái sinh ra thế giới vật chất','Quy vật chất về một hay một vài dạng vật thể cụ thể, hữu hình, cảm tính','Tách rời không gian khỏi vật chất'],2,
+        'Các nhà duy vật cổ đại đồng nhất vật chất nói chung với một hay vài dạng cụ thể như nước, lửa, không khí, ngũ hành...'],
+      [82,'p1','Trong triết học cổ đại phương Tây, nhà triết học nào đã coi “lửa” là bản nguyên vật chất của thế giới?',
+        ['Thales','Anaximenes','Democritus','Heraclitus'],3,
+        'Thales coi nước là khởi nguyên; Anaximenes coi không khí; còn Heraclitus coi lửa là khởi nguyên vật chất của thế giới.'],
+      [83,'p1','Học thuyết “Tứ đại” (đất, nước, lửa, gió) quan niệm về khởi nguyên thế giới xuất hiện ở nền triết học cổ đại nào?',
+        ['Triết học Ấn Độ cổ đại','Triết học Trung Quốc cổ đại','Triết học Hy Lạp cổ đại','Triết học Ai Cập cổ đại'],0,
+        'Tứ đại (đất, nước, lửa, gió) thuộc triết học Ấn Độ cổ đại; Ngũ hành thuộc Trung Quốc cổ đại.'],
+      [84,'p1','Phát minh khoa học nào năm 1897 đã trực tiếp bác bỏ quan niệm siêu hình coi nguyên tử là phần tử nhỏ nhất không thể phân chia?',
+        ['Ronghen phát hiện ra tia X','Tômxơn phát hiện ra điện tử','Béccơren phát hiện hiện tượng phóng xạ','Anhxtanh công bố thuyết tương đối hẹp'],1,
+        'Năm 1897, J.J. Thomson (Tômxơn) phát hiện ra điện tử — chứng tỏ nguyên tử có cấu tạo phức tạp và có thể phân chia.'],
+      [85,'p1','Nhà vật lý nào vào năm 1901 đã chứng minh khối lượng của điện tử không bất biến mà thay đổi theo vận tốc vận động?',
+        ['Henri Becquerel','Pierre Curie','Kaufman','Albert Einstein'],2,
+        'Năm 1901, Kaufman chứng minh khối lượng điện tử thay đổi theo vận tốc vận động, bác bỏ quan niệm khối lượng bất biến.'],
+      [86,'p1','Thuyết tương đối hẹp (1905) và thuyết tương đối tổng quát (1916) của A. Anhxtanh đã chứng minh luận điểm triết học quan trọng nào?',
+        ['Không gian và thời gian tồn tại tuyệt đối, tách rời vật chất','Khối lượng của mọi vật thể là hằng số vĩnh viễn','Vật chất chỉ là tổ hợp các cảm giác của con người','Không gian, thời gian và khối lượng luôn biến đổi cùng với sự vận động của vật chất'],3,
+        'Thuyết tương đối của Anhxtanh chứng minh không gian, thời gian, khối lượng gắn bó chặt chẽ và luôn biến đổi cùng sự vận động của vật chất.'],
+      [87,'p1','V.I. Lênin đã đưa ra định nghĩa kinh điển về phạm trù vật chất trong tác phẩm nào sau đây?',
+        ['Chủ nghĩa duy vật và chủ nghĩa kinh nghiệm phê phán','Nhà nước và cách mạng','Bút ký triết học','Làm gì?'],0,
+        'Định nghĩa vật chất của V.I. Lênin được nêu trong tác phẩm “Chủ nghĩa duy vật và chủ nghĩa kinh nghiệm phê phán” (1909).'],
+      [88,'p1','Theo định nghĩa vật chất của V.I. Lênin, thuộc tính cơ bản nhất, phổ biến nhất để phân biệt vật chất với ý thức là gì?',
+        ['Có khối lượng và trọng lượng đo được','Tồn tại dưới dạng thực tại khách quan, không lệ thuộc vào cảm giác','Có thể nhìn thấy trực tiếp bằng mắt thường','Cấu tạo từ các nguyên tử không thể phân chia'],1,
+        'Thuộc tính duy nhất của vật chất mà chủ nghĩa duy vật biện chứng gắn liền việc thừa nhận nó là thuộc tính tồn tại khách quan, độc lập với ý thức.'],
+      [89,'p1','Luận điểm “vật chất là cái mà khi tác động vào các giác quan con người thì đem lại cho con người cảm giác” trong định nghĩa của Lênin khẳng định điều gì?',
+        ['Cảm giác là cái có trước và tạo ra vật chất','Con người không thể nhận thức được thế giới vật chất','Vật chất có trước, là nguồn gốc khách quan của cảm giác và con người có khả năng nhận thức được nó','Chỉ những gì mắt thường thấy được mới là vật chất'],2,
+        'Luận điểm này vừa khẳng định tính thứ nhất của vật chất, vừa bác bỏ thuyết bất khả tri (khẳng định con người nhận thức được thế giới).'],
+      [90,'p1','Theo chủ nghĩa duy vật biện chứng, phạm trù “vận động” được hiểu theo nghĩa chung nhất là gì?',
+        ['Chỉ sự dịch chuyển vị trí cơ học trong không gian','Chỉ sự biến đổi hóa học của các nguyên tố','Chỉ sự tiến hóa sinh học của sinh vật','Mọi sự biến đổi nói chung của các sự vật, hiện tượng'],3,
+        'Vận động theo nghĩa triết học chung nhất là mọi sự biến đổi nói chung của thế giới vật chất.'],
+      [91,'p1','Năm hình thức vận động cơ bản của vật chất được sắp xếp theo trình tự từ thấp đến cao là gì?',
+        ['Cơ học, vật lý, hóa học, sinh học, xã hội','Vật lý, cơ học, hóa học, sinh học, xã hội','Cơ học, hóa học, vật lý, sinh học, xã hội','Sinh học, cơ học, vật lý, hóa học, xã hội'],0,
+        'Các hình thức vận động xếp từ thấp đến cao: Cơ học → Vật lý → Hóa học → Sinh học → Xã hội.'],
+      [92,'p1','Trong mối quan hệ giữa vận động và đứng im, chủ nghĩa duy vật biện chứng khẳng định điều nào sau đây?',
+        ['Đứng im là tuyệt đối, vận động là tương đối','Vận động không ngừng của vật chất bao hàm trong nó sự đứng im tương đối','Vận động và đứng im hoàn toàn loại trừ nhau','Vật chất có thể tồn tại mà không cần vận động'],1,
+        'Vận động là tuyệt đối, vĩnh viễn; sự vận động không ngừng của vật chất không loại trừ mà bao hàm trong đó sự đứng im tương đối.'],
+      [93,'p1','Phạm trù “không gian” với tư cách là hình thức tồn tại của vật chất phản ánh phương diện nào của sự vật?',
+        ['Độ dài diễn biến và sự kế tiếp của các quá trình','Tốc độ biến đổi nhanh hay chậm của sự vật','Quảng tính, sự cùng tồn tại, trật tự, kết cấu và sự tác động lẫn nhau','Bản chất tinh thần của sự vật'],2,
+        'Không gian phản ánh quảng tính, sự cùng tồn tại, trật tự, kết cấu và sự tác động lẫn nhau của vật chất.'],
+      [94,'p1','Đặc điểm về số chiều của không gian và thời gian trong thế giới vật chất là gì?',
+        ['Không gian có một chiều và thời gian có ba chiều','Không gian và thời gian đều có hai chiều','Không gian có bốn chiều và thời gian có hai chiều','Không gian có ba chiều và thời gian có một chiều'],3,
+        'Vật chất tồn tại trong ba chiều không gian (dài, rộng, cao) và một chiều thời gian (quá khứ → tương lai).'],
+      [95,'p1','Luận điểm nào sau đây thể hiện đúng nhất quan điểm duy vật biện chứng về tính thống nhất vật chất của thế giới?',
+        ['Chỉ có một thế giới duy nhất và thống nhất là thế giới vật chất, tồn tại vĩnh viễn, vô hạn và vô tận','Thế giới thống nhất ở tính tồn tại trừu tượng do tư duy con người tạo ra','Thế giới bao gồm hai thực thể song song độc lập là vật chất và tinh thần','Thế giới vật chất có điểm khởi đầu do một lực lượng siêu nhiên sáng tạo'],0,
+        'Chủ nghĩa duy vật biện chứng khẳng định bản chất thế giới là vật chất, chỉ có một thế giới duy nhất tồn tại khách quan, vĩnh viễn, vô hạn, vô tận.'],
+      [96,'p1','Hạn chế cơ bản của chủ nghĩa duy vật siêu hình khi lý giải nguồn gốc của ý thức là gì?',
+        ['Thừa nhận ý thức là nguyên thể đầu tiên sinh ra vật chất','Tuy xuất phát từ thế giới hiện thực nhưng do bị phương pháp siêu hình chi phối nên còn mắc nhiều sai lầm','Phủ nhận hoàn toàn sự tồn tại của bộ óc người','Cho rằng ý thức do Thượng đế ban tặng'],1,
+        'Các nhà duy vật siêu hình phủ nhận tính siêu tự nhiên của ý thức nhưng do hạn chế khoa học và phương pháp siêu hình nên lý giải còn máy móc, sai lầm.'],
+      [97,'p1','Theo chủ nghĩa duy vật biện chứng, nguồn gốc tự nhiên của ý thức bao gồm những yếu tố nào?',
+        ['Lao động và ngôn ngữ của con người','Tri thức, tình cảm và ý chí của cá nhân','Bộ óc con người và thế giới hiện thực khách quan tác động vào bộ óc','Hệ thống pháp luật và đạo đức xã hội'],2,
+        'Nguồn gốc tự nhiên của ý thức là sự xuất hiện con người với bộ óc có năng lực phản ánh hiện thực khách quan tác động vào nó.'],
+      [98,'p1','Hai yếu tố giữ vai trò kích thích chủ yếu làm chuyển biến bộ óc vượn người thành bộ óc người và tâm lý động vật thành ý thức con người là gì?',
+        ['Di truyền và chọn lọc tự nhiên','Khí hậu và nguồn thức ăn','Tôn giáo và nghệ thuật','Lao động và ngôn ngữ'],3,
+        'Lao động và ngôn ngữ là hai nhân tố xã hội quyết định sự hình thành và phát triển của ý thức con người.'],
+      [99,'p1','Nếu chỉ có thế giới khách quan và bộ óc con người nhưng tách rời hoàn toàn khỏi thực tiễn xã hội thì điều gì sẽ xảy ra theo quan điểm duy vật biện chứng?',
+        ['Không thể hình thành ý thức con người đúng nghĩa','Ý thức vẫn phát triển bình thường và hoàn thiện','Con người vẫn tự nhiên biết nói ngôn ngữ phức tạp','Bộ óc người tự sinh ra tri thức khoa học'],0,
+        'Đề cương nhấn mạnh: không phải cứ có thế giới khách quan và bộ óc người là có ý thức, mà phải đặt trong mối quan hệ với thực tiễn xã hội.'],
+      [100,'p1','Bản chất của ý thức theo quan điểm của chủ nghĩa duy vật biện chứng được khái quát chính xác nhất là gì?',
+        ['Là bản sao chép thụ động, nguyên xi thế giới bên ngoài','Là hình ảnh chủ quan của thế giới khách quan, là quá trình phản ánh tích cực, sáng tạo hiện thực khách quan của óc người','Là một dạng vật chất đặc biệt do bộ óc tiết ra','Là thực thể tinh thần độc lập hoàn toàn với vật chất'],1,
+        'Bản chất của ý thức là hình ảnh chủ quan của thế giới khách quan, mang tính tích cực và sáng tạo.'],
+      [101,'p1','Trong kết cấu của ý thức, yếu tố nào giữ vai trò là nội dung và phương thức tồn tại cơ bản nhất?',
+        ['Tình cảm','Ý chí','Tri thức','Vô thức'],2,
+        'Muốn cải tạo sự vật trước hết phải hiểu biết về nó; do đó tri thức là nội dung và phương thức tồn tại cơ bản của ý thức.'],
+      [102,'p1','Theo đề cương, sự hòa quyện giữa tri thức, tình cảm và trải nghiệm thực tiễn sẽ tạo nên yếu tố nào thôi thúc con người vươn lên trong mọi hoàn cảnh?',
+        ['Tiềm thức','Vô thức','Bản năng','Niềm tin'],3,
+        'Sự hòa quyện giữa tri thức với tình cảm và trải nghiệm thực tiễn tạo nên tính bền vững của niềm tin.'],
+      [103,'p1','Khi xem xét ý thức theo chiều sâu nội tâm, hiện tượng “ý thức hướng về nhận thức bản thân mình trong mối quan hệ với thế giới bên ngoài” được gọi là gì?',
+        ['Tự ý thức','Tiềm thức','Vô thức','Tâm lý xã hội'],0,
+        'Tự ý thức là ý thức hướng về nhận thức bản thân mình trong mối quan hệ với ý thức về thế giới bên ngoài.'],
+      [104,'p1','Dựa trên quan điểm triết học Mác - Lênin về vấn đề “trí tuệ nhân tạo”, vì sao máy móc dù hiện đại đến đâu cũng không thể có ý thức hoàn thiện như bộ óc con người?',
+        ['Vì máy móc không có khả năng tính toán nhanh bằng con người','Vì ý thức mang bản chất xã hội và khả năng phản ánh sáng tạo chỉ có ở con người là thực thể xã hội','Vì máy móc không thể thay thế bất kỳ phần lao động trí óc nào','Vì khoa học công nghệ hiện đại không còn phát triển nữa'],1,
+        'Máy móc chỉ là kết cấu kỹ thuật do con người lập trình; chỉ con người với tư cách thực thể xã hội mới có khả năng phản ánh sáng tạo hiện thực dưới dạng tinh thần.'],
+      [105,'p1','Trong mối quan hệ biện chứng giữa vật chất và ý thức, vai trò quyết định của vật chất đối với ý thức KHÔNG thể hiện ở phương diện nào sau đây?',
+        ['Vật chất quyết định nguồn gốc của ý thức','Vật chất quyết định nội dung và bản chất của ý thức','Vật chất trực tiếp làm thay đổi ý thức một cách máy móc mà không có tính độc lập tương đối','Vật chất quyết định sự vận động, phát triển của ý thức'],2,
+        'Vật chất quyết định nguồn gốc, nội dung, bản chất và sự phát triển của ý thức, nhưng ý thức có tính độc lập tương đối, không lệ thuộc máy móc vào vật chất.'],
+      [106,'p1','Sự tác động trở lại của ý thức đối với thế giới vật chất nhất thiết phải được thực hiện thông qua con đường nào?',
+        ['Chỉ cần suy nghĩ và mong muốn chủ quan của con người','Sự truyền dẫn tâm linh giữa các cá nhân','Sự biến đổi tự phát của tự nhiên','Hoạt động thực tiễn của con người'],3,
+        'Ý thức tự nó không trực tiếp làm thay đổi hiện thực; nó chỉ tác động trở lại vật chất thông qua hoạt động thực tiễn của con người.'],
+      [107,'p1','Ý thức tác động trở lại vật chất có thể dẫn đến kết quả như thế nào đối với hoạt động của con người?',
+        ['Có thể làm cho hoạt động của con người đúng hay sai, thành công hay thất bại','Luôn luôn thúc đẩy hoạt động thực tiễn thành công','Chỉ kìm hãm sự phát triển của vật chất','Không gây ra bất kỳ ảnh hưởng nào đến kết quả thực tiễn'],0,
+        'Ý thức chỉ đạo hành động của con người: nếu phản ánh đúng quy luật sẽ thúc đẩy thành công; nếu sai lệch sẽ dẫn đến thất bại.'],
+      [108,'p1','Trong thời đại kinh tế tri thức và cách mạng khoa học - công nghệ hiện đại ngày nay, vai trò của ý thức biểu hiện nổi bật nhất ở điểm nào?',
+        ['Vai trò của ý thức ngày càng giảm sút trước máy móc','Tri thức khoa học đã trở thành lực lượng sản xuất trực tiếp, vai trò của ý thức ngày càng to lớn','Ý thức thay thế hoàn toàn điều kiện vật chất','Con người không cần hoạt động thực tiễn nữa'],1,
+        'Xã hội càng phát triển, vai trò của ý thức càng to lớn, nhất là khi tri thức khoa học đã trở thành lực lượng sản xuất trực tiếp.'],
+
+      // ==================== PHẦN 2 (50 CÂU: 109 - 158) ====================
+      [109,'p2','Trong phép biện chứng duy vật, khái niệm “biện chứng khách quan” dùng để chỉ điều gì?',
+        ['Biện chứng của quá trình tư duy logic trong đầu óc con người','Biện chứng của bản thân thế giới tồn tại độc lập với ý thức con người','Sự tranh luận giữa các trường phái triết học','Phương pháp phân tích ngôn ngữ học'],1,
+        'Biện chứng khách quan là biện chứng của bản thân thế giới vật chất tồn tại khách quan, độc lập với ý thức con người.'],
+      [110,'p2','Mối quan hệ giữa biện chứng chủ quan và biện chứng khách quan được xác định như thế nào?',
+        ['Biện chứng chủ quan quyết định và tạo ra biện chứng khách quan','Hai loại biện chứng này tồn tại hoàn toàn tách rời nhau','Biện chứng chủ quan là sự phản ánh biện chứng khách quan vào đầu óc con người','Biện chứng khách quan là sản phẩm của tư duy con người'],2,
+        'Biện chứng chủ quan chính là sự phản ánh biện chứng khách quan vào đầu óc con người (biện chứng của tư duy và nhận thức).'],
+      [111,'p2','Nhà kinh điển nào đã định nghĩa: “Phép biện chứng chẳng qua chỉ là môn khoa học về những quy luật phổ biến của sự vận động và sự phát triển của tự nhiên, của xã hội loài người và của tư duy”?',
+        ['C. Mác','V.I. Lênin','Hêghen','Ph. Ăngghen'],3,
+        'Đây là định nghĩa kinh điển của Ph. Ăngghen về phép biện chứng duy vật được trích dẫn trong đề cương.'],
+      [112,'p2','V.I. Lênin nhấn mạnh đặc trưng nào khi định nghĩa phép biện chứng là “học thuyết về sự phát triển, dưới hình thức hoàn bị nhất, sâu sắc nhất và không phiến diện”?',
+        ['Tính tương đối của nhận thức con người phản ánh vật chất luôn phát triển không ngừng','Tính bất biến tuyệt đối của mọi khái niệm khoa học','Sự vận động lặp lại y nguyên theo vòng tròn khép kín','Tính tách rời giữa tự nhiên và tư duy'],0,
+        'V.I. Lênin xác định phép biện chứng là học thuyết về tính tương đối của nhận thức con người, phản ánh vật chất luôn phát triển không ngừng.'],
+      [113,'p2','Phép biện chứng duy vật được hình thành từ sự thống nhất hữu cơ giữa những yếu tố nào sau đây?',
+        ['Chủ nghĩa duy tâm và phương pháp siêu hình','Thế giới quan duy vật và phương pháp luận biện chứng; lý luận nhận thức và lôgích biện chứng','Triết học tôn giáo và khoa học thực nghiệm','Kinh nghiệm cảm tính và tư duy thần thoại'],1,
+        'Đặc điểm cốt lõi của phép biện chứng duy vật là sự thống nhất hữu cơ giữa thế giới quan duy vật với phương pháp luận biện chứng, giữa lý luận nhận thức với lôgích biện chứng.'],
+      [114,'p2','Theo phép biện chứng duy vật, khái niệm “mối liên hệ” dùng để chỉ điều gì?',
+        ['Sự tồn tại biệt lập, không tác động qua lại giữa các sự vật','Sự sắp xếp ngẫu nhiên các đối tượng theo ý muốn con người','Các mối ràng buộc tương hỗ, quy định và ảnh hưởng lẫn nhau giữa các yếu tố hoặc giữa các đối tượng','Chỉ mối quan hệ giao tiếp giữa con người trong xã hội'],2,
+        'Mối liên hệ là phạm trù triết học chỉ các mối ràng buộc tương hỗ, quy định và ảnh hưởng lẫn nhau giữa các yếu tố trong một đối tượng hoặc giữa các đối tượng.'],
+      [115,'p2','Mối liên hệ phổ biến trong phép biện chứng duy vật mang những tính chất cơ bản nào?',
+        ['Tính chủ quan, tính ngẫu nhiên và tính đơn giản','Tính tuyệt đối, tính cố định và tính khép kín','Tính trừu tượng, tính siêu nhiên và tính bất biến','Tính khách quan, tính phổ biến và tính đa dạng, phong phú'],3,
+        'Mối liên hệ phổ biến có 3 tính chất cơ bản: tính khách quan, tính phổ biến và tính đa dạng, phong phú.'],
+      [116,'p2','Tính khách quan của mối liên hệ phổ biến được hiểu chính xác là gì?',
+        ['Mối liên hệ vốn có của bản thân các sự vật, hiện tượng, tồn tại độc lập với ý thức con người','Mối liên hệ do con người tưởng tượng ra để dễ phân loại sự vật','Mối liên hệ chỉ tồn tại trong phòng thí nghiệm khoa học','Mối liên hệ phụ thuộc vào ý chí của chủ thể nhận thức'],0,
+        'Các mối liên hệ là cái vốn có của bản thân thế giới vật chất, không phụ thuộc vào ý muốn chủ quan của con người.'],
+      [117,'p2','Sự phân chia thành mối liên hệ bên trong và bên ngoài, chủ yếu và thứ yếu, trực tiếp và gián tiếp thể hiện tính chất nào của mối liên hệ phổ biến?',
+        ['Tính khách quan','Tính đa dạng, phong phú','Tính bất biến','Tính chủ quan'],1,
+        'Các sự vật, hiện tượng có vô vàn kiểu liên hệ khác nhau về vị trí, vai trò, không gian, thời gian — thể hiện tính đa dạng, phong phú.'],
+      [118,'p2','Khi xem xét một sự vật nhưng chỉ chú trọng đến mối liên hệ thứ yếu, ngẫu nhiên mà bỏ qua mối liên hệ bản chất, chủ yếu thì sẽ rơi vào sai lầm phương pháp luận nào?',
+        ['Chủ nghĩa duy vật biện chứng','Quan điểm toàn diện khoa học','Chủ nghĩa chiết trung hoặc ngụy biện','Quan điểm lịch sử - cụ thể'],2,
+        'Lắp ghép vô nguyên tắc các mối liên hệ (chiết trung) hoặc đánh tráo mối liên hệ bản chất bằng thứ yếu (ngụy biện) đều vi phạm quan điểm toàn diện.'],
+      [119,'p2','Theo phép biện chứng duy vật, điểm khác biệt cơ bản giữa khái niệm “phát triển” và khái niệm “vận động” là gì?',
+        ['Vận động và phát triển là hai khái niệm hoàn toàn đồng nhất','Vận động chỉ có ở tự nhiên, còn phát triển chỉ có ở xã hội','Phát triển là sự đứng im tương đối của sự vật','Phát triển là một trường hợp đặc biệt của vận động, chỉ khuynh hướng vận động đi lên từ thấp đến cao'],3,
+        'Phát triển là vận động nhưng không phải mọi vận động đều là phát triển; chỉ vận động theo khuynh hướng đi lên từ thấp đến cao mới là phát triển.'],
+      [120,'p2','Trong đề cương, khái niệm “tiến hóa” được phân biệt với khái niệm “phát triển” ở đặc điểm nổi bật nào?',
+        ['Tiến hóa là một dạng của phát triển diễn ra từ từ, biến đổi hình thức từ đơn giản đến phức tạp','Tiến hóa là sự thay đổi đột ngột, phá vỡ hoàn toàn cái cũ','Tiến hóa luôn đi xuống từ phức tạp về đơn giản','Tiến hóa chỉ áp dụng trong lĩnh vực kinh tế học'],0,
+        'Tiến hóa là một dạng của phát triển, diễn ra theo cách từ từ và thường là sự biến đổi hình thức từ đơn giản đến phức tạp.'],
+      [121,'p2','Khái niệm “tiến bộ” gắn với nguyên lý về sự phát triển đề cập đến nội dung nào sau đây?',
+        ['Mọi sự biến đổi cơ học của vật thể trong không gian','Sự phát triển có giá trị tích cực, hướng tới cải thiện thực trạng xã hội từ chưa hoàn thiện đến hoàn thiện hơn','Quá trình lặp lại các hình thái xã hội cũ','Sự tăng trưởng đơn thuần về mặt số lượng'],1,
+        'Tiến bộ đề cập đến sự phát triển có giá trị tích cực, cải thiện thực trạng xã hội từ chưa hoàn thiện đến hoàn thiện hơn.'],
+      [122,'p2','Thực chất của quá trình phát triển theo quan điểm của chủ nghĩa duy vật biện chứng là gì?',
+        ['Sự tăng giảm tuần hoàn lặp lại cái cũ','Sự loại bỏ hoàn toàn mọi dấu vết của quá khứ','Sự phát sinh đối tượng mới phù hợp với quy luật tiến hóa và sự diệt vong của đối tượng cũ đã lỗi thời','Sự kết hợp cơ học giữa các yếu tố bên ngoài'],2,
+        'Thực chất của phát triển là sự phát sinh cái mới phù hợp quy luật tiến hóa và sự diệt vong của cái cũ đã lỗi thời.'],
+      [123,'p2','Tính kế thừa của sự phát triển trong phép biện chứng duy vật được thể hiện như thế nào?',
+        ['Phủ định sạch trơn, đoạn tuyệt hoàn toàn với sự vật cũ','Giữ nguyên toàn bộ mọi yếu tố của sự vật cũ không cần cải tạo','Cái mới ra đời hoàn toàn từ hư vô','Sự vật mới giữ lại có chọn lọc và cải tạo các yếu tố còn thích hợp, gạt bỏ mặt tiêu cực, lỗi thời của cái cũ'],3,
+        'Sự vật mới ra đời từ cái cũ, giữ lại có chọn lọc và cải tạo các yếu tố tích cực còn thích hợp, đồng thời gạt bỏ yếu tố lạc hậu.'],
+      [124,'p2','Phạm trù triết học được định nghĩa chính xác là gì?',
+        ['Hình thức hoạt động trí óc phổ biến của con người, phản ánh những thuộc tính và mối liên hệ vốn có ở tất cả đối tượng hiện thực','Những khái niệm riêng chỉ dùng trong một ngành khoa học cụ thể','Những quy ước ngôn ngữ ngẫu nhiên không có cơ sở thực tế','Những hình ảnh cảm tính trực tiếp về một sự vật đơn lẻ'],0,
+        'Phạm trù triết học là những mô hình tư tưởng phổ biến phản ánh những thuộc tính và mối liên hệ vốn có ở tất cả đối tượng hiện thực.'],
+      [125,'p2','Trong phép biện chứng duy vật, phạm trù “cái riêng” dùng để chỉ điều gì?',
+        ['Những thuộc tính lặp lại ở nhiều sự vật khác nhau','Một sự vật, một hiện tượng nhất định tồn tại độc lập tương đối','Chỉ những nét khác biệt không lặp lại ở bất kỳ sự vật nào','Mối liên hệ nhân quả giữa hai quá trình'],1,
+        'Cái riêng dùng để chỉ một sự vật, hiện tượng nhất định (bao gồm cả cái chung và cái đơn nhất).'],
+      [126,'p2','Phạm trù “cái chung” được định nghĩa như thế nào trong phép biện chứng duy vật?',
+        ['Một sự vật cụ thể tồn tại tách rời khỏi sự vật khác','Đặc điểm duy nhất chỉ xuất hiện ở một cá thể','Những mặt, những thuộc tính không những có ở một sự vật mà còn lặp lại trong nhiều sự vật, hiện tượng khác','Tổng số các sự vật cộng lại một cách cơ học'],2,
+        'Cái chung chỉ những mặt, thuộc tính không những có ở một sự vật mà còn lặp lại trong nhiều sự vật, hiện tượng khác.'],
+      [127,'p2','Dấu vân tay hoặc cấu trúc ADN đặc thù chỉ có ở một cá nhân mà không trùng lặp với bất kỳ người nào khác là biểu hiện của phạm trù nào?',
+        ['Cái chung','Cái riêng','Bản chất','Cái đơn nhất'],3,
+        'Cái đơn nhất chỉ các mặt, các đặc điểm chỉ vốn có ở một sự vật, hiện tượng nào đó mà không lặp lại ở sự vật, hiện tượng nào khác.'],
+      [128,'p2','Trong cặp phạm trù nguyên nhân và kết quả, “nguyên nhân” được hiểu chính xác là gì?',
+        ['Sự tương tác lẫn nhau giữa các mặt trong một sự vật hoặc giữa các sự vật với nhau gây nên biến đổi nhất định','Mọi sự vật xuất hiện trước một sự vật khác về mặt thời gian','Chỉ những điều kiện môi trường bên ngoài sự vật','Kết quả cuối cùng của một quá trình vận động'],0,
+        'Nguyên nhân là sự tương tác lẫn nhau giữa các mặt trong một sự vật hoặc giữa các sự vật với nhau gây ra những biến đổi nhất định.'],
+      [129,'p2','Phạm trù “kết quả” trong phép biện chứng duy vật chỉ điều gì?',
+        ['Sự tác động ban đầu giữa các yếu tố của sự vật','Những biến đổi xuất hiện do sự tương tác giữa các yếu tố mang tính nguyên nhân gây nên','Mọi hiện tượng xảy ra sau về mặt thời gian','Bản chất bên trong bất biến của sự vật'],1,
+        'Kết quả là những biến đổi xuất hiện do sự tương tác giữa các yếu tố mang tính nguyên nhân gây nên.'],
+      [130,'p2','Việc nhận thức sự tác động tương tác giữa các mặt dẫn đến xuất hiện các yếu tố mới về chất là khâu quyết định để phát hiện ra điều gì?',
+        ['Tính ngẫu nhiên thuần túy của thế giới','Tính bất biến của các sự vật','Tính nhân quả như một yếu tố quan trọng của mối liên hệ phổ biến','Sự tách rời giữa nội dung và hình thức'],2,
+        'Nhận thức sự tương tác tạo ra biến đổi mới về chất là khâu quyết định dẫn đến việc phát hiện ra tính nhân quả trong mối liên hệ phổ biến.'],
+      [131,'p2','Phạm trù “tất nhiên” dùng để chỉ mối liên hệ có đặc điểm nào sau đây?',
+        ['Do hoàn cảnh bên ngoài ngẫu hợp tạo nên','Có thể xảy ra hoặc không xảy ra trong cùng một điều kiện','Không gắn với bản chất của sự vật','Mối liên hệ bản chất, do nguyên nhân cơ bản bên trong sự vật quy định và trong điều kiện nhất định phải xảy ra đúng như thế'],3,
+        'Tất nhiên là mối liên hệ bản chất, do nguyên nhân cơ bản bên trong quy định và trong điều kiện nhất định phải xảy ra đúng như thế.'],
+      [132,'p2','Theo phép biện chứng duy vật, “ngẫu nhiên” là phạm trù chỉ mối liên hệ như thế nào?',
+        ['Mối liên hệ không bản chất, do nguyên nhân, hoàn cảnh bên ngoài quy định nên có thể xuất hiện thế này hoặc thế khác','Mối liên hệ hoàn toàn không có nguyên nhân','Mối liên hệ bên trong quyết định sự tồn tại của sự vật','Mối liên hệ chắc chắn phải xảy ra không thể khác được'],0,
+        'Ngẫu nhiên không phải là không có nguyên nhân, mà do nguyên nhân, hoàn cảnh bên ngoài quy định nên có thể xuất hiện thế này hoặc thế khác.'],
+      [133,'p2','Khi gieo một hạt lúa chắc khỏe xuống đất ẩm và đủ ánh sáng thì hạt lúa nảy mầm, nhưng một cơn mưa đá bất ngờ làm gãy một số mầm non. Trong tình huống này, hiện tượng “hạt lúa nảy mầm” thuộc phạm trù nào?',
+        ['Ngẫu nhiên','Tất nhiên','Hiện tượng giả','Cái đơn nhất'],1,
+        'Hạt lúa chắc khỏe gặp điều kiện đất ẩm, ánh sáng thì nảy mầm do bản chất sinh học bên trong quy định → đây là cái tất nhiên (còn mưa đá là ngẫu nhiên).'],
+      [134,'p2','Phạm trù “nội dung” trong phép biện chứng duy vật được xác định là gì?',
+        ['Vẻ bề ngoài dễ quan sát của sự vật','Phương thức liên kết giữa các bộ phận của sự vật','Tổng thể tất cả các mặt, yếu tố tạo nên sự vật, hiện tượng','Các mối liên hệ bên ngoài của sự vật'],2,
+        'Nội dung là phạm trù chỉ tổng thể tất cả các mặt, yếu tố tạo nên sự vật, hiện tượng.'],
+      [135,'p2','Theo đề cương, phạm trù “hình thức” được hiểu đầy đủ như thế nào?',
+        ['Chỉ là lớp vỏ bên ngoài bao bọc sự vật','Chỉ là tên gọi của sự vật trong ngôn ngữ','Tổng số các yếu tố cấu thành sự vật','Phương thức tồn tại, biểu hiện và phát triển của sự vật; là hệ thống các mối liên hệ tương đối bền vững giữa các yếu tố cấu thành nội dung'],3,
+        'Hình thức không chỉ là biểu hiện bên ngoài mà còn là cấu trúc bên trong, hệ thống mối liên hệ tương đối bền vững giữa các yếu tố cấu thành nội dung.'],
+      [136,'p2','Xét một phân tử nước (H₂O), hai nguyên tử Hydro và một nguyên tử Oxy đóng vai trò là gì, còn cách thức liên kết hóa học giữa chúng đóng vai trò là gì?',
+        ['Các nguyên tử là nội dung; cách thức liên kết hóa học giữa chúng là hình thức','Các nguyên tử là hình thức; cách thức liên kết hóa học là nội dung','Cả hai đều thuộc phạm trù nội dung','Cả hai đều thuộc phạm trù hiện tượng'],0,
+        'Các yếu tố tạo thành (nguyên tử H, O) là nội dung; phương thức liên kết cấu trúc giữa chúng là hình thức.'],
+      [137,'p2','Phạm trù “bản chất” trong phép biện chứng duy vật dùng để chỉ điều gì?',
+        ['Những biểu hiện bề ngoài dễ thay đổi của sự vật','Tổng thể các mối liên hệ khách quan, tất nhiên, tương đối ổn định bên trong, quy định sự vận động, phát triển của đối tượng','Những ấn tượng cảm tính ban đầu của con người','Những yếu tố ngẫu nhiên từ môi trường bên ngoài'],1,
+        'Bản chất chỉ tổng thể các mối liên hệ khách quan, tất nhiên, tương đối ổn định bên trong quy định sự vận động, phát triển của đối tượng.'],
+      [138,'p2','Khi so sánh giữa “hiện tượng” và “bản chất”, nhận định nào sau đây là chính xác theo đề cương?',
+        ['Hiện tượng sâu sắc và ổn định hơn bản chất','Hiện tượng và bản chất hoàn toàn tách rời nhau','Hiện tượng là biểu hiện bên ngoài của bản chất, dễ biến đổi hơn và là hình thức thể hiện của bản chất','Bản chất luôn bộc lộ trực tiếp, trùng khớp hoàn toàn với hiện tượng'],2,
+        'Hiện tượng là biểu hiện ra bên ngoài của các mặt, mối liên hệ thuộc bản chất; nó phong phú, dễ biến đổi hơn bản chất.'],
+      [139,'p2','Phạm trù “khả năng” trong phép biện chứng duy vật được định nghĩa ngắn gọn là gì?',
+        ['Cái đang tồn tại khách quan trong thực tế hiện tại','Cái không bao giờ có thể xảy ra trong thực tế','Cái đã xảy ra và kết thúc trong quá khứ','Cái hiện chưa xảy ra, nhưng nhất định sẽ xảy ra khi có điều kiện thích hợp'],3,
+        'Khả năng phản ánh tổng thể các tiền đề của sự hình thành hiện thực mới — cái hiện chưa xảy ra nhưng sẽ xảy ra khi có điều kiện thích hợp.'],
+      [140,'p2','Theo đề cương, phạm trù “hiện thực” bao gồm những gì?',
+        ['Tất cả các sự vật, hiện tượng vật chất đang tồn tại khách quan và các hiện tượng chủ quan đang tồn tại trong ý thức','Chỉ những vật thể rắn có thể sờ thấy bằng tay','Chỉ những dự định tương lai chưa thực hiện','Chỉ các hiện tượng tự nhiên không bao gồm xã hội'],0,
+        'Hiện thực là cái đang có, đang tồn tại, gồm cả sự vật vật chất tồn tại khách quan và các hiện tượng chủ quan tồn tại trong ý thức.'],
+      [141,'p2','Cặp phạm trù “hiện thực” và “khả năng” phản ánh trực tiếp biện chứng của mối liên hệ giữa các chiều thời gian nào?',
+        ['Chỉ giữa quá khứ và hiện tại','Giữa quá khứ, hiện tại và tương lai','Chỉ giữa hiện tại và không gian','Không liên quan đến yếu tố thời gian'],1,
+        'Đề cương nêu rõ: Biện chứng của sự liên hệ lẫn nhau giữa quá khứ, hiện tại và tương lai được phản ánh trong các phạm trù “hiện thực” và “khả năng”.'],
+      [142,'p2','Trong phép biện chứng duy vật, “quy luật” được định nghĩa là gì?',
+        ['Những quy định pháp lý do nhà nước ban hành','Những mối liên hệ ngẫu nhiên, tạm thời giữa các sự vật','Mối liên hệ phổ biến, khách quan, bản chất, bền vững, tất yếu giữa các đối tượng và nhất định tác động khi có điều kiện phù hợp','Những giả thuyết chủ quan chưa được kiểm chứng'],2,
+        'Quy luật là mối liên hệ phổ biến, khách quan, bản chất, bền vững, tất yếu giữa các đối tượng và nhất định tác động khi có điều kiện phù hợp.'],
+      [143,'p2','Quy luật chuyển hóa từ những thay đổi về lượng dẫn đến những thay đổi về chất và ngược lại chỉ ra phương diện nào của sự vận động và phát triển?',
+        ['Nguồn gốc và động lực của sự phát triển','Khuynh hướng đi lên theo hình xoáy ốc của sự phát triển','Bản chất của quá trình nhận thức chân lý','Cách thức chung nhất và tính chất của sự vận động và phát triển'],3,
+        'Quy luật lượng - chất chỉ ra cách thức chung nhất và tính chất (tuần tự kết hợp nhảy vọt) của sự vận động và phát triển.'],
+      [144,'p2','Phạm trù “chất” trong quy luật lượng - chất dùng để chỉ điều gì?',
+        ['Tính quy định khách quan vốn có, là sự thống nhất hữu cơ các thuộc tính làm cho sự vật là nó mà không phải cái khác','Kích thước dài ngắn, số lượng nhiều ít của sự vật','Tốc độ vận động nhanh hay chậm của sự vật','Chỉ một thuộc tính riêng lẻ bất kỳ của sự vật'],0,
+        'Chất là sự thống nhất hữu cơ của các thuộc tính cơ bản tạo nên sự vật, giúp phân biệt nó với sự vật khác.'],
+      [145,'p2','Yếu tố nào sau đây KHÔNG phải là biểu hiện của phạm trù “lượng” theo đề cương?',
+        ['Kích thước dài hay ngắn, số lượng lớn hay nhỏ','Sự thống nhất hữu cơ của các thuộc tính cơ bản làm cho sự vật là chính nó','Trình độ phát triển cao hay thấp, tốc độ vận động nhanh hay chậm','Màu sắc đậm hay nhạt, tổng số các bộ phận'],1,
+        '“Sự thống nhất hữu cơ các thuộc tính cơ bản làm cho sự vật là chính nó” là định nghĩa của CHẤT, không phải của lượng.'],
+      [146,'p2','Trong quy luật lượng - chất, khái niệm “độ” dùng để chỉ điều gì?',
+        ['Thời điểm xảy ra sự chuyển hóa sang chất mới','Giai đoạn chuyển hóa cơ bản về chất của sự vật','Giới hạn tồn tại của sự vật mà trong đó sự thay đổi về lượng chưa dẫn đến sự thay đổi về chất','Sự tăng lên không giới hạn của lượng'],2,
+        'Độ là khoảng giới hạn tồn tại của sự vật mà trong đó lượng đổi nhưng chất căn bản chưa đổi.'],
+      [147,'p2','Điểm giới hạn mà tại đó sự thay đổi về lượng đạt tới chỗ phá vỡ độ cũ, làm cho chất của sự vật thay đổi và bắt đầu xảy ra bước nhảy được gọi là gì?',
+        ['Độ','Chất mới','Lượng mới','Điểm nút'],3,
+        'Điểm nút là thời điểm giới hạn mà sự tích lũy về lượng đủ để phá vỡ độ cũ và bắt đầu thực hiện bước nhảy sang chất mới.'],
+      [148,'p2','Nhận định nào sau đây mô tả đúng bản chất của “bước nhảy” trong quy luật lượng - chất?',
+        ['Là giai đoạn chuyển hóa cơ bản về chất của sự vật do những thay đổi về lượng trước đó gây ra','Là quá trình tích lũy từ từ về lượng trong giới hạn độ','Là sự phủ định sạch trơn không cần tích lũy về lượng','Là trạng thái đứng im tuyệt đối của sự vật'],0,
+        'Bước nhảy là bước ngoặt cơ bản chuyển hóa về chất của sự vật, kết thúc một giai đoạn biến đổi về lượng.'],
+      [149,'p2','Yếu tố trực tiếp tạo thành một mâu thuẫn biện chứng là gì?',
+        ['Những yếu tố hoàn toàn giống nhau và không có sự khác biệt','Các mặt đối lập có khuynh hướng biến đổi trái ngược nhau nhưng cùng tồn tại khách quan trong một sự vật','Sự xung đột chủ quan trong lời nói của con người','Những sự vật nằm tách rời hoàn toàn không liên hệ với nhau'],1,
+        'Mâu thuẫn biện chứng được tạo thành từ các mặt đối lập có khuynh hướng biến đổi trái ngược nhau nhưng cùng tồn tại khách quan trong một chỉnh thể.'],
+      [150,'p2','Sự “thống nhất giữa các mặt đối lập” trong quy luật mâu thuẫn KHÔNG bao gồm biểu hiện nào sau đây?',
+        ['Các mặt đối lập cần đến nhau, nương tựa vào nhau làm tiền đề tồn tại','Các mặt đối lập tác động ngang nhau, cân bằng nhau','Các mặt đối lập hoàn toàn triệt tiêu mọi sự khác biệt và hòa tan thành một thể bất biến vĩnh viễn','Giữa các mặt đối lập có sự tương đồng, đồng nhất để có thể chuyển hóa vào nhau'],2,
+        'Thống nhất của các mặt đối lập không triệt tiêu sự khác biệt hay đấu tranh; ngược lại, trong thống nhất luôn bao hàm sự khác nhau và đối lập.'],
+      [151,'p2','Khái niệm “đấu tranh giữa các mặt đối lập” được hiểu chính xác là gì?',
+        ['Sự hòa hợp tuyệt đối không có xung đột','Sự cùng tồn tại thụ động bên cạnh nhau','Chỉ các cuộc chiến tranh vũ trang giữa các quốc gia','Sự tác động qua lại theo hướng bài trừ, phủ định lẫn nhau giữa các mặt đối lập'],3,
+        'Đấu tranh giữa các mặt đối lập là sự tác động qua lại theo hướng bài trừ, phủ định lẫn nhau giữa chúng trong một mâu thuẫn.'],
+      [152,'p2','So sánh tính chất giữa “thống nhất” và “đấu tranh” của các mặt đối lập, luận điểm nào sau đây là đúng?',
+        ['Thống nhất có tính tạm thời, tương đối, có điều kiện; còn đấu tranh có tính tuyệt đối','Thống nhất có tính tuyệt đối; còn đấu tranh có tính tạm thời, tương đối','Cả thống nhất và đấu tranh đều chỉ có tính tạm thời','Cả thống nhất và đấu tranh đều có tính tuyệt đối như nhau'],0,
+        'Thống nhất gắn với đứng im tương đối nên có tính tạm thời, tương đối; đấu tranh gắn với vận động tự thân không ngừng nên có tính tuyệt đối.'],
+      [153,'p2','Quy luật thống nhất và đấu tranh của các mặt đối lập giữ vị trí như thế nào trong phép biện chứng duy vật?',
+        ['Chỉ là quy luật phụ ít quan trọng nhất','Là hạt nhân của phép biện chứng, chỉ ra nguồn gốc và động lực bên trong của sự vận động, phát triển','Chỉ ra hình thức xoáy ốc của sự phát triển','Chỉ ra cách thức tích lũy từ từ về lượng'],1,
+        'Quy luật mâu thuẫn được V.I. Lênin coi là hạt nhân của phép biện chứng, vạch ra nguồn gốc, động lực bên trong của sự phát triển.'],
+      [154,'p2','Quy luật phủ định của phủ định chỉ ra phương diện nào của sự phát triển?',
+        ['Nguồn gốc bên trong của sự phát triển','Cách thức chuyển hóa từ lượng sang chất','Khuynh hướng đi lên, hình thức xoáy ốc và kết quả của sự phát triển','Mối liên hệ nhân quả đơn lẻ'],2,
+        'Quy luật phủ định của phủ định chỉ ra khuynh hướng (đi lên), hình thức (xoáy ốc) và kết quả (cái mới ra đời từ cái cũ) của sự phát triển.'],
+      [155,'p2','Đặc điểm cơ bản nhất của “phủ định biện chứng” là gì?',
+        ['Sự xóa bỏ sạch trơn hoàn toàn cái cũ do tác động phá hủy từ bên ngoài','Sự duy trì nguyên vẹn cái cũ không thay đổi','Sự quay ngược trở lại trạng thái ban đầu thấp hơn','Sự tự phủ định, tự phát triển làm tiền đề và tạo điều kiện cho sự phát triển của sự vật'],3,
+        'Phủ định biện chứng mang tính khách quan (tự phủ định) và tính kế thừa, tạo điều kiện cho cái mới tiến bộ hơn ra đời.'],
+      [156,'p2','Đặc điểm của “kế thừa biện chứng” trong quy luật phủ định của phủ định được thể hiện như thế nào?',
+        ['Duy trì các yếu tố tích cực của cái cũ dưới dạng vượt bỏ, cải tạo cho phù hợp với cái mới và loại bỏ yếu tố lỗi thời','Sao chép nguyên xi toàn bộ cái cũ sang cái mới','Loại bỏ sạch trơn mọi giá trị truyền thống của cái cũ','Chỉ giữ lại những yếu tố lạc hậu của cái cũ'],0,
+        'Kế thừa biện chứng là giữ lại có chọn lọc, cải tạo các yếu tố còn thích hợp của cái cũ và loại bỏ những yếu tố lạc hậu gây cản trở.'],
+      [157,'p2','Vì sao quy luật phủ định của phủ định khái quát hình thức phát triển của sự vật là đường “xoáy ốc”?',
+        ['Vì sự phát triển diễn ra hoàn toàn theo một đường thẳng tắp không bao giờ quanh co','Vì sau một chu kỳ phủ định, sự vật dường như lặp lại một số đặc điểm của cái ban đầu nhưng trên cơ sở cao hơn','Vì sự vật luôn quay lại đúng vị trí ban đầu theo vòng tròn khép kín','Vì sự phát triển luôn đi thụt lùi về quá khứ'],1,
+        'Đường xoáy ốc diễn tả tính kế thừa, tính lặp lại dường như quay về cái ban đầu nhưng ở trình độ cao hơn, tiến lên không ngừng.'],
+      [158,'p2','Trong xây dựng nền văn hóa mới hiện nay, việc phê phán tư tưởng “bài trừ sạch trơn truyền thống cũ” đồng thời chống lại “bảo thủ, giữ nguyên hủ tục lạc hậu” là sự vận dụng trực tiếp quy luật nào?',
+        ['Quy luật lượng - chất','Quy luật quan hệ sản xuất phù hợp lực lượng sản xuất','Quy luật phủ định của phủ định','Quy luật bảo toàn năng lượng'],2,
+        'Đây là sự vận dụng trực tiếp nguyên tắc kế thừa biện chứng trong quy luật phủ định của phủ định.'],
+
+      // ==================== PHẦN 3 (65 CÂU: 159 - 223) ====================
+      [159,'p3','Thuật ngữ “Lý luận nhận thức” có nguồn gốc từ tiếng Hy Lạp cổ được ghép từ hai từ nào sau đây?',
+        ['Philo (yêu mến) và Sophia (thông thái)','Gnosis (tri thức) và Logos (lời nói, học thuyết)','Practica (thực tiễn) và Ethos (đạo đức)','Demos (nhân dân) và Kratos (quyền lực)'],1,
+        'Lý luận nhận thức (Gnoseology) ghép từ tiếng Hy Lạp cổ “Gnosis” (tri thức) và “Logos” (lời nói, học thuyết).'],
+      [160,'p3','Trong vấn đề cơ bản của triết học, lý luận nhận thức tập trung giải quyết khía cạnh nào?',
+        ['Giữa vật chất và ý thức cái nào có trước','Thế giới có thống nhất hay không','Con người có khả năng nhận thức được thế giới hay không','Bản chất của giai cấp và nhà nước là gì'],2,
+        'Lý luận nhận thức là khía cạnh thứ hai của vấn đề cơ bản của triết học, trả lời câu hỏi con người có nhận thức được thế giới hay không.'],
+      [161,'p3','Nguyên tắc nào sau đây KHÔNG thuộc ba nguyên tắc xây dựng lý luận nhận thức của chủ nghĩa duy vật biện chứng?',
+        ['Thừa nhận sự vật khách quan tồn tại bên ngoài và độc lập với ý thức con người','Cảm giác, tri giác, ý thức nói chung là hình ảnh của thế giới khách quan','Thực tiễn là tiêu chuẩn để kiểm tra hình ảnh đúng, sai của cảm giác, ý thức','Cảm giác chủ quan của con người là thước đo duy nhất của chân lý'],3,
+        'Lấy cảm giác chủ quan làm thước đo chân lý là quan điểm duy tâm chủ quan, trái với nguyên tắc lấy thực tiễn làm tiêu chuẩn chân lý.'],
+      [162,'p3','Theo triết học Mác - Lênin, nguồn gốc “duy nhất và cuối cùng” của nhận thức là gì?',
+        ['Thế giới vật chất tồn tại khách quan, độc lập với ý thức con người','Những ý niệm bẩm sinh sẵn có trong đầu óc con người','Sự mặc khải của lực lượng siêu nhiên','Các sách giáo khoa và tài liệu lịch sử'],0,
+        'Thế giới vật chất tồn tại độc lập với con người là đối tượng và là nguồn gốc duy nhất, cuối cùng của nhận thức.'],
+      [163,'p3','Nhận định nào sau đây phản ánh đúng bản chất của nhận thức theo quan điểm duy vật biện chứng?',
+        ['Là quá trình sao chép thụ động, bất biến một lần là xong','Là quá trình tác động biện chứng giữa chủ thể và khách thể thông qua hoạt động thực tiễn','Là hoạt động thuần túy trong tư duy không cần thực tiễn','Là quá trình tự ý thức tìm về ý niệm tuyệt đối'],1,
+        'Nhận thức là sự phản ánh hiện thực khách quan vào bộ óc người — một quá trình biện chứng giữa chủ thể và khách thể thông qua thực tiễn.'],
+      [164,'p3','Theo quan điểm của triết học Mác - Lênin, phạm trù “thực tiễn” được định nghĩa như thế nào?',
+        ['Toàn bộ mọi hoạt động vật chất và tinh thần của con người','Hoạt động suy tư trừu tượng của các nhà khoa học','Toàn bộ những hoạt động vật chất - cảm tính, có tính lịch sử - xã hội của con người nhằm cải tạo tự nhiên và xã hội phục vụ nhân loại tiến bộ','Hoạt động bản năng tìm kiếm thức ăn của mọi loài sinh vật'],2,
+        'Thực tiễn không phải toàn bộ hoạt động mà chỉ là những hoạt động vật chất - cảm tính, mang tính lịch sử - xã hội nhằm cải tạo tự nhiên và xã hội.'],
+      [165,'p3','Đặc trưng “vật chất - cảm tính” của hoạt động thực tiễn được hiểu chính xác là gì?',
+        ['Hoạt động chỉ diễn ra trong trí tưởng tượng của con người','Hoạt động thuần túy dựa trên cảm xúc yêu ghét','Hoạt động không sử dụng bất kỳ công cụ vật chất nào','Con người sử dụng lực lượng vật chất, công cụ vật chất tác động vào đối tượng vật chất để làm biến đổi chúng'],3,
+        'Hoạt động vật chất - cảm tính là hoạt động vật chất có thể quan sát trực quan, dùng công cụ vật chất tác động làm biến đổi đối tượng vật chất.'],
+      [166,'p3','Đặc trưng nào của hoạt động thực tiễn giúp phân biệt căn bản hoạt động của con người với hoạt động bản năng thích nghi thụ động của động vật?',
+        ['Tính mục đích tự giác cao nhằm cải tạo tự nhiên và xã hội phục vụ con người','Việc sử dụng các giác quan để tiếp xúc với môi trường','Sự di chuyển cơ thể trong không gian','Nhu cầu duy trì sự sống sinh học'],0,
+        'Động vật thích nghi thụ động bằng bản năng, còn con người chủ động cải tạo thế giới có mục đích, tính tự giác cao thông qua thực tiễn.'],
+      [167,'p3','Vai trò của thực tiễn đối với nhận thức được khái quát đầy đủ qua những phương diện nào?',
+        ['Chỉ là nơi kiểm tra kết quả của các bài thí nghiệm','Là cơ sở, động lực; là mục đích của nhận thức và là tiêu chuẩn của chân lý','Là yếu tố phụ thuộc hoàn toàn vào lý luận trừu tượng','Là kết quả cuối cùng không tác động lại quá trình nhận thức'],1,
+        'Thực tiễn đóng 3 vai trò cốt lõi: cơ sở & động lực của nhận thức, mục đích của nhận thức và tiêu chuẩn kiểm nghiệm chân lý.'],
+      [168,'p3','V.I. Lênin đã khái quát con đường biện chứng của sự nhận thức chân lý, của sự nhận thức thực tại khách quan như thế nào?',
+        ['Từ tư duy trừu tượng đến trực quan sinh động và dừng lại ở đó','Từ lý luận sách vở đến niềm tin tuyệt đối','Từ trực quan sinh động đến tư duy trừu tượng, và từ tư duy trừu tượng đến thực tiễn','Từ thực tiễn đến cảm giác và kết thúc ở cảm giác'],2,
+        'Câu nói kinh điển của V.I. Lênin: “Từ trực quan sinh động đến tư duy trừu tượng, và từ tư duy trừu tượng đến thực tiễn”.'],
+      [169,'p3','Giai đoạn nhận thức cảm tính (trực quan sinh động) diễn ra dưới ba hình thức nào theo trình tự từ thấp đến cao?',
+        ['Khái niệm, phán đoán, suy lý','Tri giác, cảm giác, biểu tượng','Biểu tượng, khái niệm, tri giác','Cảm giác, tri giác, biểu tượng'],3,
+        'Nhận thức cảm tính phản ánh trực tiếp sự vật qua các giác quan với 3 hình thức từ thấp đến cao: cảm giác → tri giác → biểu tượng.'],
+      [170,'p3','Điểm khác biệt cơ bản giữa “cảm giác” và “tri giác” trong giai đoạn nhận thức cảm tính là gì?',
+        ['Cảm giác phản ánh một thuộc tính riêng lẻ của sự vật, còn tri giác phản ánh sự vật một cách trọn vẹn nhờ sự tác động đồng thời lên nhiều giác quan','Cảm giác thuộc nhận thức lý tính, còn tri giác thuộc nhận thức cảm tính','Tri giác không cần sự tác động trực tiếp của sự vật lên giác quan','Cảm giác phức tạp và đầy đủ hơn tri giác'],0,
+        'Cảm giác đem lại thông tin về một thuộc tính riêng lẻ; tri giác tổng hợp tác động lên nhiều giác quan tạo hình ảnh trọn vẹn hơn về sự vật.'],
+      [171,'p3','Vì sao “biểu tượng” được coi là khâu trung gian chuyển từ nhận thức cảm tính lên nhận thức lý tính?',
+        ['Vì biểu tượng đã là một hình thức của tư duy trừu tượng','Vì biểu tượng là hình ảnh cảm tính tương đối hoàn chỉnh được tái hiện trong óc ngay cả khi sự vật không trực tiếp tác động vào giác quan','Vì biểu tượng không liên quan đến các giác quan','Vì biểu tượng luôn phản ánh chính xác bản chất sâu xa của sự vật'],1,
+        'Biểu tượng vẫn là hình ảnh cảm tính nhưng có khả năng lưu giữ, tái hiện khi không có sự vật trước mắt, làm cầu nối sang tư duy trừu tượng.'],
+      [172,'p3','Trong nhận thức lý tính, hình thức tư duy trừu tượng nào liên kết các khái niệm lại với nhau để khẳng định hoặc phủ định một thuộc tính nào đó của sự vật?',
+        ['Cảm giác','Biểu tượng','Phán đoán','Suy lý'],2,
+        'Phán đoán là hình thức liên kết các khái niệm lại nhằm khẳng định hay phủ định một thuộc tính, mối liên hệ nào đó của sự vật.'],
+      [173,'p3','Hình thức suy lý (suy luận) trong nhận thức lý tính bao gồm hai loại chính nào sau đây?',
+        ['Trực tiếp và gián tiếp','Cảm tính và lý tính','Khách quan và chủ quan','Quy nạp và diễn dịch'],3,
+        'Suy lý liên kết các phán đoán tiền đề để rút ra kết luận, gồm hai loại chính là suy lý quy nạp và suy lý diễn dịch.'],
+      [174,'p3','Theo quan điểm của triết học Mác - Lênin, “chân lý” được định nghĩa chính xác là gì?',
+        ['Tri thức phù hợp với hiện thực khách quan và được thực tiễn kiểm nghiệm','Bản thân hiện thực khách quan tồn tại bên ngoài con người','Quan điểm được số đông đồng tình bất kể đúng hay sai','Những định đề bất biến không bao giờ cần kiểm nghiệm'],0,
+        'Chân lý là tri thức (không phải bản thân sự vật) phản ánh đúng hiện thực khách quan và đã được thực tiễn kiểm nghiệm.'],
+      [175,'p3','Tính khách quan của chân lý trong triết học Mác - Lênin được hiểu như thế nào?',
+        ['Chân lý không cần có chủ thể nhận thức là con người','Nội dung phản ánh của chân lý phù hợp với hiện thực khách quan chứ không phụ thuộc vào ý muốn chủ quan của con người','Mỗi người đều có một chân lý riêng hoàn toàn đúng theo cảm xúc của mình','Chân lý là bất biến vĩnh viễn trong mọi điều kiện'],1,
+        'Chân lý do con người nhận thức nhưng nội dung của nó là khách quan, phù hợp hiện thực khách quan chứ không tùy thuộc ý muốn chủ quan.'],
+      [176,'p3','Luận điểm “Không có chân lý trừu tượng, chung chung, chân lý luôn gắn với những điều kiện lịch sử cụ thể trong một không gian và thời gian xác định” thể hiện tính chất nào của chân lý?',
+        ['Tính khách quan','Tính tuyệt đối','Tính cụ thể','Tính tương đối'],2,
+        'Mọi chân lý đều phản ánh sự vật trong những điều kiện lịch sử, không gian và thời gian xác định — đó là tính cụ thể của chân lý.'],
+      [177,'p3','Tính tương đối của chân lý được giải thích chính xác là do nguyên nhân nào?',
+        ['Do chân lý luôn phản ánh sai lệch hiện thực khách quan','Do con người hoàn toàn không thể nhận thức được sự vật','Do thế giới vật chất không có quy luật nào cả','Do điều kiện lịch sử chế ước nên tri thức mới phản ánh đúng một mặt, một bộ phận của hiện thực khách quan'],3,
+        'Tính tương đối không phải là phản ánh sai, mà do giới hạn lịch sử nên tri thức đúng nhưng chưa hoàn toàn đầy đủ, trọn vẹn.'],
+      [178,'p3','Nếu một người chỉ dừng lại ở các số liệu thống kê bề ngoài mà không phân tích bản chất, quy luật bên trong của hiện tượng kinh tế thì người đó mới dừng lại ở giai đoạn nhận thức nào?',
+        ['Nhận thức cảm tính','Nhận thức lý tính','Suy lý diễn dịch','Chân lý tuyệt đối'],0,
+        'Nhận thức cảm tính mới phản ánh trực tiếp vẻ bề ngoài, chưa đi sâu vạch ra bản chất và quy luật bên trong như nhận thức lý tính.'],
+      [179,'p3','Theo chủ nghĩa duy vật lịch sử, quá trình sản xuất xã hội (sản xuất và tái sản xuất ra đời sống hiện thực) bao gồm ba phương diện không tách rời nhau nào?',
+        ['Sản xuất nông nghiệp, sản xuất công nghiệp và dịch vụ','Sản xuất vật chất, sản xuất tinh thần và sản xuất ra bản thân con người','Sản xuất cá nhân, sản xuất tập thể và sản xuất nhà nước','Sản xuất tư liệu sản xuất, sản xuất hàng tiêu dùng và xuất khẩu'],1,
+        'Sự sản xuất xã hội gồm 3 phương diện: sản xuất vật chất, sản xuất tinh thần và sản xuất ra bản thân con người.'],
+      [180,'p3','Trong ba phương diện của sản xuất xã hội, phương diện nào giữ vai trò là cơ sở của sự tồn tại và phát triển của xã hội loài người?',
+        ['Sản xuất tinh thần','Sản xuất ra bản thân con người','Sản xuất vật chất','Cả ba giữ vai trò ngang nhau tuyệt đối'],2,
+        'Sản xuất vật chất là nền tảng, cơ sở trực tiếp tạo ra tư liệu sinh hoạt và xét đến cùng quyết định toàn bộ sự vận động của xã hội.'],
+      [181,'p3','Nhận định nào sau đây KHÔNG phản ánh đúng vai trò của sản xuất vật chất đối với sự tồn tại và phát triển xã hội?',
+        ['Là tiền đề trực tiếp tạo ra tư liệu sinh hoạt duy trì sự tồn tại của con người','Là cơ sở hình thành nên quan hệ kinh tế và các quan hệ xã hội khác','Là điều kiện chủ yếu sáng tạo ra ngôn ngữ, tư duy, phẩm chất xã hội của con người','Là hoạt động bản năng sinh học giống như ở các loài động vật bậc cao'],3,
+        'Sản xuất vật chất là hoạt động đặc trưng riêng có của con người (sử dụng công cụ lao động cải biến tự nhiên), khác hẳn bản năng động vật.'],
+      [182,'p3','Khái niệm “phương thức sản xuất” trong chủ nghĩa duy vật lịch sử dùng để chỉ điều gì?',
+        ['Cách thức con người tiến hành quá trình sản xuất vật chất ở những giai đoạn lịch sử nhất định, là sự thống nhất giữa lực lượng sản xuất và quan hệ sản xuất','Chỉ trình độ máy móc và công cụ kỹ thuật của xã hội','Chỉ hệ thống pháp luật quản lý kinh tế của nhà nước','Quy trình sản xuất một mặt hàng cụ thể trong nhà máy'],0,
+        'Phương thức sản xuất là cách thức sản xuất vật chất ở từng giai đoạn lịch sử, thống nhất giữa lực lượng sản xuất và quan hệ sản xuất tương ứng.'],
+      [183,'p3','Về mặt cấu trúc, lực lượng sản xuất là sự kết hợp thống nhất giữa hai yếu tố cơ bản nào?',
+        ['Giai cấp thống trị và giai cấp bị trị','Người lao động và tư liệu sản xuất','Cơ sở hạ tầng và kiến trúc thượng tầng','Quan hệ sở hữu và quan hệ phân phối'],1,
+        'Lực lượng sản xuất gồm người lao động (mặt kinh tế - xã hội) và tư liệu sản xuất (mặt kinh tế - kỹ thuật).'],
+      [184,'p3','Khi xem xét cấu trúc của lực lượng sản xuất, “lao động sống” và “lao động vật hóa” lần lượt tương ứng với yếu tố nào?',
+        ['Công cụ lao động và đối tượng lao động','Quan hệ sản xuất và kiến trúc thượng tầng','Người lao động và tư liệu sản xuất','Khoa học và công nghệ'],2,
+        'Lực lượng sản xuất là sự kết hợp giữa “lao động sống” (người lao động) với “lao động vật hóa” (tư liệu sản xuất).'],
+      [185,'p3','Quan hệ sản xuất là tổng hợp các quan hệ kinh tế - vật chất giữa người với người trong quá trình sản xuất vật chất, bao gồm ba mặt nào?',
+        ['Quan hệ chính trị, pháp luật và đạo đức','Quan hệ gia đình, tôn giáo và dân tộc','Quan hệ giữa người lao động với máy móc, đất đai và nguyên liệu','Sở hữu tư liệu sản xuất, tổ chức quản lý và phân phối sản phẩm lao động'],3,
+        'Quan hệ sản xuất gồm 3 mặt: quan hệ sở hữu về tư liệu sản xuất, quan hệ tổ chức quản lý trao đổi hoạt động và quan hệ phân phối sản phẩm.'],
+      [186,'p3','Trong mối quan hệ biện chứng giữa lực lượng sản xuất và quan hệ sản xuất, yếu tố nào đóng vai trò là nội dung năng động, cách mạng và giữ vai trò quyết định?',
+        ['Lực lượng sản xuất','Quan hệ sản xuất','Kiến trúc thượng tầng','Ý thức chính trị'],0,
+        'Lực lượng sản xuất là nội dung năng động, cách mạng thường xuyên biến đổi và quyết định quan hệ sản xuất.'],
+      [187,'p3','Theo đề cương, trạng thái “sự phù hợp của quan hệ sản xuất với trình độ phát triển của lực lượng sản xuất” được biểu hiện như thế nào?',
+        ['Quan hệ sản xuất kìm hãm tốc độ phát triển của công cụ lao động','Quan hệ sản xuất là “hình thức phát triển” của lực lượng sản xuất và “tạo địa bàn đầy đủ” cho lực lượng sản xuất phát triển','Lực lượng sản xuất ngừng phát triển để chờ quan hệ sản xuất','Hai yếu tố này hoàn toàn đồng nhất thành một'],1,
+        'Khi phù hợp, quan hệ sản xuất trở thành “hình thức phát triển” và “tạo địa bàn đầy đủ” thúc đẩy lực lượng sản xuất phát triển mạnh mẽ.'],
+      [188,'p3','Khái niệm “cơ sở hạ tầng” trong chủ nghĩa duy vật lịch sử dùng để chỉ điều gì?',
+        ['Hệ thống đường sá, cầu cống, điện nước, bến cảng của quốc gia','Toàn bộ máy móc, thiết bị và nhà xưởng sản xuất','Toàn bộ những quan hệ sản xuất của một xã hội trong sự vận động hiện thực của chúng hợp thành cơ cấu kinh tế của xã hội đó','Hệ thống cơ quan nhà nước từ trung ương đến địa phương'],2,
+        'Lưu ý tránh nhầm với nghĩa thông thường: trong triết học Mác - Lênin, cơ sở hạ tầng là toàn bộ các quan hệ sản xuất hợp thành cơ cấu kinh tế xã hội.'],
+      [189,'p3','Cấu trúc của cơ sở hạ tầng trong một xã hội có giai cấp thường bao gồm ba loại quan hệ sản xuất nào, và loại nào giữ vai trò đặc trưng?',
+        ['QHSX công nghiệp, nông nghiệp, thương nghiệp; trong đó thương nghiệp đặc trưng','QHSX nhà nước, tư nhân, nước ngoài; trong đó tư nhân đặc trưng','QHSX cổ đại, trung đại, hiện đại; trong đó cổ đại đặc trưng','QHSX thống trị, QHSX tàn dư, QHSX mầm mống; trong đó QHSX thống trị đặc trưng cho cơ sở hạ tầng'],3,
+        'Cơ sở hạ tầng gồm QHSX thống trị, tàn dư và mầm mống; trong đó QHSX thống trị giữ vai trò chi phối, đặc trưng cho cơ sở hạ tầng xã hội đó.'],
+      [190,'p3','Cấu trúc của kiến trúc thượng tầng bao gồm hai bộ phận cơ bản nào?',
+        ['Toàn bộ những quan điểm, tư tưởng xã hội và những thiết chế xã hội tương ứng cùng quan hệ nội tại của chúng','Người lao động và công cụ lao động','Lực lượng sản xuất và quan hệ sản xuất','Kinh tế thị trường và kinh tế kế hoạch'],0,
+        'Kiến trúc thượng tầng gồm hệ thống quan điểm tư tưởng (chính trị, pháp quyền, đạo đức...) và các thiết chế tương ứng (nhà nước, đảng phái, giáo hội...).'],
+      [191,'p3','Trong kiến trúc thượng tầng của xã hội có giai cấp, bộ phận nào có quyền lực mạnh mẽ nhất và tác động trực tiếp nhất trở lại cơ sở hạ tầng?',
+        ['Nghệ thuật và văn học','Nhà nước (công cụ quyền lực chính trị - pháp lý)','Phong tục tập quán địa phương','Tâm lý cộng đồng'],1,
+        'Nhà nước nắm trong tay bộ máy tổ chức thể chế, pháp luật và sức mạnh vật chất cưỡng chế nên tác động mạnh mẽ nhất trở lại cơ sở hạ tầng.'],
+      [192,'p3','Phạm trù “hình thái kinh tế - xã hội” chỉ ra kết cấu xã hội trong mỗi giai đoạn lịch sử nhất định bao gồm ba yếu tố cơ bản nào?',
+        ['Kinh tế, văn hóa và giáo dục','Giai cấp, dân tộc và nhân loại','Lực lượng sản xuất, quan hệ sản xuất (cơ sở hạ tầng) và kiến trúc thượng tầng','Tự nhiên, xã hội và tư duy'],2,
+        'Kết cấu của hình thái kinh tế - xã hội gồm: lực lượng sản xuất, quan hệ sản xuất (cơ sở hạ tầng) và kiến trúc thượng tầng.'],
+      [193,'p3','Trong kết cấu của hình thái kinh tế - xã hội, yếu tố nào là tiêu chuẩn quan trọng nhất để phân biệt bản chất của các chế độ xã hội khác nhau?',
+        ['Điều kiện địa lý và khí hậu','Quy mô dân số của quốc gia','Trình độ nghệ thuật kiến trúc','Quan hệ sản xuất'],3,
+        'Lực lượng sản xuất phân biệt các thời đại kinh tế; còn quan hệ sản xuất là tiêu chuẩn quan trọng nhất để phân biệt bản chất các chế độ xã hội.'],
+      [194,'p3','Vì sao chủ nghĩa duy vật lịch sử khẳng định sự phát triển của các hình thái kinh tế - xã hội là một “quá trình lịch sử - tự nhiên”?',
+        ['Vì sự thay thế các hình thái kinh tế - xã hội diễn ra tuân theo các quy luật khách quan không phụ thuộc vào ý muốn chủ quan của con người','Vì lịch sử xã hội diễn ra hoàn toàn không có sự tham gia hoạt động của con người','Vì mọi quốc gia đều bắt buộc trải qua tuần tự từng hình thái không thể bỏ qua','Vì sự phát triển xã hội hoàn toàn do khí hậu tự nhiên quyết định'],0,
+        '“Lịch sử - tự nhiên” nhấn mạnh tính quy luật khách quan của sự vận động, thay thế các hình thái kinh tế - xã hội (dù có quy luật chung, đặc thù và riêng).'],
+      [195,'p3','Sự vận động, phát triển của một hình thái kinh tế - xã hội suy cho cùng luôn bắt đầu từ sự biến đổi của yếu tố nào?',
+        ['Sự thay đổi của hệ tư tưởng tôn giáo','Sự phát triển của lực lượng sản xuất (trước hết là công cụ sản xuất và kỹ năng người lao động)','Ý muốn chủ quan của các nhà lãnh đạo','Sự thay đổi của hiến pháp'],1,
+        'Mọi biến đổi sâu xa của hình thái kinh tế - xã hội đều bắt nguồn từ sự phát triển của lực lượng sản xuất.'],
+      [196,'p3','Trong định nghĩa kinh điển về giai cấp, V.I. Lênin xác định sự khác nhau cơ bản nhất quyết định địa vị của các tập đoàn người trong hệ thống sản xuất xã hội là gì?',
+        ['Khác nhau về trình độ học vấn và năng khiếu cá nhân','Khác nhau về màu da, chủng tộc và tôn giáo','Khác nhau về quan hệ của họ đối với những tư liệu sản xuất','Khác nhau về độ tuổi và giới tính'],2,
+        'Quan hệ sở hữu đối với tư liệu sản xuất là đặc trưng cơ bản nhất quyết định địa vị kinh tế và sự phân chia giai cấp.'],
+      [197,'p3','Nguyên nhân sâu xa và nguyên nhân trực tiếp dẫn đến sự ra đời của giai cấp trong lịch sử lần lượt là gì?',
+        ['Sâu xa: chiến tranh bộ lạc; Trực tiếp: sự xuất hiện của tiền tệ','Sâu xa: sự gia tăng dân số; Trực tiếp: sự xuất hiện của tôn giáo','Sâu xa: sự phân hóa tôn giáo; Trực tiếp: sự ra đời của chữ viết','Sâu xa: sự phát triển của lực lượng sản xuất làm tăng năng suất lao động và xuất hiện của dư; Trực tiếp: xuất hiện chế độ tư hữu về tư liệu sản xuất'],3,
+        'LLSX phát triển tạo ra “của dư” là nguyên nhân sâu xa; chế độ tư hữu về tư liệu sản xuất là nguyên nhân trực tiếp sinh ra giai cấp.'],
+      [198,'p3','Theo chủ nghĩa Mác - Lênin, giai cấp và đấu tranh giai cấp trong xã hội chỉ hoàn toàn mất đi khi nào?',
+        ['Khi chế độ tư hữu về tư liệu sản xuất hoàn toàn bị xóa bỏ trên cơ sở lực lượng sản xuất phát triển rất cao','Khi nhà nước ban hành luật cấm đấu tranh giai cấp','Khi các giai cấp tự nguyện hòa giải lợi ích với nhau','Khi nền kinh tế quay lại thời kỳ tự cung tự cấp'],0,
+        'Chừng nào còn chế độ tư hữu về tư liệu sản xuất thì còn giai cấp; giai cấp chỉ mất đi khi chế độ tư hữu bị xóa bỏ hoàn toàn.'],
+      [199,'p3','Trong kết cấu xã hội - giai cấp của một xã hội có giai cấp, “giai cấp cơ bản” là những giai cấp như thế nào?',
+        ['Những giai cấp gắn với phương thức sản xuất tàn dư sắp mất đi','Những giai cấp gắn với phương thức sản xuất thống trị, là sản phẩm của phương thức sản xuất thống trị đó','Các tầng lớp trung gian như trí thức, nghệ sĩ','Những giai cấp có số lượng dân cư đông nhất bất kể địa vị kinh tế'],1,
+        'Giai cấp cơ bản gắn với phương thức sản xuất thống trị (như chủ nô - nô lệ; địa chủ - nông dân; tư sản - vô sản).'],
+      [200,'p3','Trong buổi đầu của xã hội tư bản chủ nghĩa, giai cấp địa chủ và nông nô thuộc nhóm nào trong kết cấu xã hội - giai cấp?',
+        ['Giai cấp cơ bản của xã hội tư bản','Giai cấp không cơ bản gắn với phương thức sản xuất mầm mống','Giai cấp không cơ bản gắn với phương thức sản xuất tàn dư','Tầng lớp trí thức trung gian'],2,
+        'Địa chủ và nông nô là sản phẩm của phương thức sản xuất phong kiến còn sót lại đầu thời tư bản → giai cấp không cơ bản gắn với PTSX tàn dư.'],
+      [201,'p3','Thực chất của đấu tranh giai cấp trong lịch sử xã hội có giai cấp là gì?',
+        ['Sự cạnh tranh kinh tế lành mạnh giữa các doanh nghiệp','Cuộc tranh luận học thuật giữa các nhà tư tưởng','Sự xung đột ngẫu nhiên giữa các cá nhân trong đời sống','Cuộc đấu tranh của quần chúng lao động bị áp bức, bóc lột chống lại giai cấp áp bức, bóc lột nhằm lật đổ ách thống trị của chúng'],3,
+        'Đấu tranh giai cấp về thực chất là cuộc đấu tranh của quần chúng bị áp bức, bóc lột chống lại giai cấp thống trị để giải phóng mình.'],
+      [202,'p3','Khái niệm “dân tộc” theo nghĩa rộng (nation) được dùng để chỉ điều gì?',
+        ['Toàn thể quốc gia - dân tộc (như dân tộc Việt Nam, dân tộc Pháp, dân tộc Anh...)','Chỉ một cộng đồng tộc người thiểu số sống ở vùng cao','Một dòng họ có chung huyết thống trực hệ','Một tổ chức liên minh quân sự giữa nhiều nước'],0,
+        'Theo nghĩa rộng (nation), dân tộc chỉ quốc gia - dân tộc; theo nghĩa hẹp (ethnie), dân tộc chỉ cộng đồng tộc người trong một quốc gia.'],
+      [203,'p3','Đặc trưng nào sau đây KHÔNG nằm trong năm đặc trưng cơ bản của một dân tộc (theo nghĩa quốc gia - dân tộc)?',
+        ['Cộng đồng ổn định trên một lãnh thổ thống nhất và có một nhà nước, pháp luật thống nhất','Cộng đồng người có chung một tôn giáo duy nhất và tuyệt đối đồng nhất về huyết thống','Cộng đồng thống nhất về ngôn ngữ và thống nhất về kinh tế','Cộng đồng bền vững về văn hóa, tâm lý và tính cách'],1,
+        'Một quốc gia - dân tộc có thể đa tôn giáo và đa tộc người (không đòi hỏi đồng nhất huyết thống hay chỉ có một tôn giáo).'],
+      [204,'p3','Theo khoa học lịch sử được nêu trong đề cương, quá trình hình thành dân tộc Việt Nam được bắt đầu từ mốc thời gian nào?',
+        ['Từ sau Cách mạng Tháng Tám năm 1945','Từ thế kỷ XIX khi thực dân Pháp xâm lược','Từ khi nước Đại Việt giành được độc lập (cách đây trên 1.000 năm) cho đến thời Lý - Trần','Từ thời kỳ mở cửa đổi mới năm 1986'],2,
+        'Khoa học lịch sử khẳng định quá trình hình thành dân tộc Việt Nam bắt đầu từ khi nước Đại Việt giành độc lập (trên 1.000 năm trước) đến thời Lý - Trần.'],
+      [205,'p3','Nguyên nhân sâu xa dẫn đến sự xuất hiện của nhà nước trong lịch sử xã hội loài người là gì?',
+        ['Do các bộ lạc ký kết thỏa thuận hòa bình tự nguyện','Do nhu cầu xây dựng các công trình tôn giáo lớn','Do ý muốn chủ quan của các vị thủ lĩnh quân sự','Sự phát triển của lực lượng sản xuất dẫn đến dư thừa tương đối của cải và xuất hiện chế độ tư hữu'],3,
+        'Phát triển LLSX dẫn đến dư thừa của cải và chế độ tư hữu là nguyên nhân sâu xa; mâu thuẫn giai cấp không thể điều hòa là nguyên nhân trực tiếp.'],
+      [206,'p3','Bản chất của nhà nước theo quan điểm của chủ nghĩa Mác - Lênin được xác định như thế nào?',
+        ['Là một tổ chức chính trị của một giai cấp thống trị về mặt kinh tế nhằm bảo vệ trật tự hiện hành và đàn áp sự phản kháng của các giai cấp khác','Là tổ chức đứng trên mọi giai cấp, đại diện công bằng tuyệt đối cho mọi tầng lớp','Là cơ quan thuần túy làm công tác từ thiện và quản lý hạ tầng','Là sản phẩm vĩnh cửu có từ khi loài người mới xuất hiện'],0,
+        'Nhà nước về bản chất là công cụ thống trị chính trị của giai cấp thống trị về kinh tế để bảo vệ trật tự và trấn áp sự phản kháng.'],
+      [207,'p3','Ba đặc trưng cơ bản nhất của nhà nước để phân biệt nhà nước với tổ chức thị tộc nguyên thủy là gì?',
+        ['Quản lý theo huyết thống; tự vệ cộng đồng; phân phối bình quân','Quản lý cư dân trên một vùng lãnh thổ nhất định; có hệ thống cơ quan quyền lực chuyên nghiệp mang tính cưỡng chế; có hệ thống thuế khóa để nuôi bộ máy chính quyền','Có chữ viết riêng; có tôn giáo riêng; có nền công nghiệp hiện đại','Được quốc tế công nhận; có ngân hàng trung ương; có mạng lưới truyền thông'],1,
+        'Ba đặc trưng kinh điển của nhà nước: quản lý dân cư theo lãnh thổ, bộ máy quyền lực cưỡng chế chuyên nghiệp và chế độ thuế khóa.'],
+      [208,'p3','Hoạt động nhà nước đầu tư xây dựng hệ thống thủy lợi, giao thông, y tế, giáo dục và bảo vệ môi trường thể hiện chức năng nào của nhà nước?',
+        ['Chức năng thống trị chính trị','Chức năng đối ngoại','Chức năng xã hội','Chức năng trấn áp quân sự'],2,
+        'Chức năng xã hội là việc nhà nước nhân danh xã hội điều hành các công việc chung (thủy lợi, giao thông, y tế, giáo dục, môi trường...).'],
+      [209,'p3','Trong mối quan hệ giữa chức năng thống trị chính trị và chức năng xã hội của nhà nước, chức năng nào giữ vai trò quyết định và chi phối?',
+        ['Chức năng xã hội quyết định chức năng thống trị chính trị','Hai chức năng hoàn toàn độc lập không ảnh hưởng nhau','Chức năng đối ngoại quyết định cả hai chức năng trên','Chức năng thống trị chính trị giữ vai trò quyết định, chi phối việc thực hiện chức năng xã hội'],3,
+        'Vì bản chất nhà nước là công cụ của giai cấp thống trị nên chức năng thống trị chính trị chi phối việc thực hiện chức năng xã hội.'],
+      [210,'p3','Căn cứ vào tính chất giai cấp của nhà nước, lịch sử xã hội loài người đã từng tồn tại bốn kiểu nhà nước nào?',
+        ['Nhà nước chủ nô quý tộc, nhà nước phong kiến, nhà nước tư sản và nhà nước vô sản','Nhà nước cộng sản nguyên thủy, chủ nô, phong kiến và tư sản','Nhà nước quân chủ, cộng hòa, liên bang và đơn nhất','Nhà nước công nghiệp, nông nghiệp, thương mại và dịch vụ'],0,
+        'Chỉ có 4 giai cấp từng nắm bộ máy nhà nước tương ứng 4 kiểu nhà nước: chủ nô quý tộc, phong kiến, tư sản và vô sản.'],
+      [211,'p3','Khái niệm “hình thức nhà nước” dùng để chỉ điều gì?',
+        ['Bản chất giai cấp của giai cấp cầm quyền','Cách thức tổ chức, phương thức thực hiện quyền lực nhà nước của giai cấp thống trị','Quy mô diện tích lãnh thổ của một quốc gia','Trình độ phát triển kinh tế của một dân tộc'],1,
+        'Hình thức nhà nước chỉ cách thức tổ chức và phương thức thực hiện quyền lực nhà nước (hình thức cầm quyền) của giai cấp thống trị.'],
+      [212,'p3','Nguồn gốc sâu xa của cách mạng xã hội trong lịch sử là gì?',
+        ['Sự xung đột ý thức hệ thuần túy giữa các triết gia','Thiên tai, dịch bệnh kéo dài trong xã hội','Mâu thuẫn giữa lực lượng sản xuất tiến bộ đòi hỏi được giải phóng với quan hệ sản xuất đã lỗi thời, lạc hậu','Sự thay đổi người đứng đầu bộ máy chính quyền'],2,
+        'Cách mạng xã hội có nguồn gốc sâu xa từ mâu thuẫn giữa LLSX tiến bộ với QHSX lỗi thời kìm hãm nó.'],
+      [213,'p3','Trong xã hội có giai cấp, nguyên nhân trực tiếp dẫn đến bùng nổ cách mạng xã hội là gì?',
+        ['Sự phát triển của khoa học kỹ thuật','Sự thay đổi khí hậu toàn cầu','Sự gia tăng giao lưu văn hóa','Đấu tranh giai cấp'],3,
+        'Mâu thuẫn LLSX - QHSX biểu hiện thành đấu tranh giai cấp; khi đấu tranh giai cấp lên đến đỉnh cao sẽ trực tiếp dẫn tới cách mạng xã hội.'],
+      [214,'p3','Theo học thuyết hình thái kinh tế - xã hội (nghĩa rộng), bản chất của cách mạng xã hội là gì?',
+        ['Sự thay đổi căn bản về chất của một hình thái kinh tế - xã hội, là bước chuyển từ hình thái kinh tế - xã hội cũ lên hình thái kinh tế - xã hội mới tiến bộ hơn','Một cuộc đảo chính cung đình thay đổi cá nhân lãnh đạo','Một cuộc cải cách hành chính cục bộ trong cùng chế độ cũ','Một cuộc bạo loạn tự phát không có mục tiêu chính trị'],0,
+        'Cách mạng xã hội (nghĩa rộng) là sự thay đổi căn bản về chất toàn bộ đời sống xã hội, chuyển từ HTKTXH cũ sang HTKTXH mới tiến bộ hơn.'],
+      [215,'p3','Trong lý luận về cách mạng xã hội, khái niệm “động lực của cách mạng xã hội” dùng để chỉ bộ phận nào?',
+        ['Những giai cấp phản động cần phải bị đánh đổ','Những giai cấp có lợi ích gắn bó chặt chẽ, lâu dài với cách mạng, có tính tự giác, kiên quyết, triệt để và giữ vai trò quyết định thành công của cách mạng','Mọi người dân sống trên lãnh thổ quốc gia bất kể lập trường','Các thế lực can thiệp từ bên ngoài quốc gia'],1,
+        'Động lực cách mạng là những giai cấp trong lực lượng cách mạng có lợi ích gắn bó chặt chẽ lâu dài, kiên quyết triệt để và quyết định thắng lợi.'],
+      [216,'p3','Giai cấp lãnh đạo cách mạng xã hội phải hội tụ điều kiện căn bản nào sau đây?',
+        ['Là giai cấp giàu có nhất trong xã hội cũ','Là giai cấp có nguồn gốc quý tộc lâu đời','Có hệ tư tưởng tiến bộ, đại diện cho phương thức sản xuất tiến bộ và xu hướng phát triển của xã hội','Là tầng lớp trung gian đứng ngoài mọi xung đột kinh tế'],2,
+        'Giai cấp lãnh đạo cách mạng phải có hệ tư tưởng tiến bộ và đại diện cho phương thức sản xuất mới, tiến bộ của thời đại.'],
+      [217,'p3','Khái niệm “tình thế cách mạng” trong lý luận về cách mạng xã hội được hiểu chính xác là gì?',
+        ['Sự chuẩn bị vũ khí và tổ chức đảng phái của giai cấp cách mạng','Ý chí quyết tâm chủ quan của các nhà lãnh đạo cách mạng','Một giai đoạn kinh tế phát triển ổn định lâu dài','Sự chín muồi của mâu thuẫn LLSX - QHSX và sự phát triển đến đỉnh cao của đấu tranh giai cấp làm đảo lộn nền tảng kinh tế - xã hội khiến việc thay thế thể chế trở thành yêu cầu khách quan không thể đảo ngược'],3,
+        'Tình thế cách mạng là trạng thái đặc biệt của điều kiện khách quan, không phụ thuộc ý chí chủ quan; không có nó thì cách mạng không thể nổ ra.'],
+      [218,'p3','Trong mối quan hệ giữa điều kiện khách quan và nhân tố chủ quan của cách mạng xã hội, khi điều kiện khách quan đã chín muồi thì yếu tố nào giữ vai trò quyết định thành bại của cách mạng?',
+        ['Nhân tố chủ quan (ý chí, niềm tin, trình độ giác ngộ, năng lực tổ chức và tập hợp lực lượng của giai cấp lãnh đạo)','Yếu tố ngẫu nhiên từ thời tiết và địa lý','Sự tự tan rã hoàn toàn của giai cấp thống trị mà không cần đấu tranh','Sự ủng hộ tài chính từ bên ngoài'],0,
+        'Khi điều kiện khách quan (tình thế cách mạng) đã chín muồi, nhân tố chủ quan giữ vai trò quyết định thành bại của cuộc cách mạng.'],
+      [219,'p3','Mục tiêu cơ bản và trực tiếp của mọi cuộc cách mạng xã hội là gì?',
+        ['Chỉ yêu cầu giai cấp thống trị tăng lương và giảm giờ làm','Giành chính quyền bằng cách đập tan chính quyền đã lỗi thời, phản động, thiết lập một trật tự xã hội mới tiến bộ hơn','Duy trì nguyên trạng bộ máy nhà nước cũ','Mở rộng lãnh thổ sang các quốc gia khác'],1,
+        'Vấn đề cơ bản của mọi cuộc cách mạng xã hội là vấn đề chính quyền nhà nước — đập tan chính quyền lỗi thời, thiết lập chính quyền tiến bộ hơn.'],
+      [220,'p3','Phương pháp cách mạng bạo lực được đề cương định nghĩa chính xác là gì?',
+        ['Phương pháp đấu tranh nghị trường bằng lá phiếu bầu cử','Phương pháp thương lượng hòa bình với giai cấp thống trị','Hình thức tiến hành cách mạng thông qua bạo lực để giành chính quyền, vượt qua giới hạn luật pháp của giai cấp thống trị hiện thời để xác lập chính quyền mới','Hành động khủng bố cá nhân đơn lẻ'],2,
+        'Cách mạng bạo lực là hình thức dùng bạo lực cách mạng của quần chúng dưới sự lãnh đạo của giai cấp cách mạng để vượt qua luật pháp cũ, giành chính quyền.'],
+      [221,'p3','Theo đề cương, phương pháp hòa bình để giành chính quyền chỉ có thể xảy ra khi hội tụ đủ hai điều kiện nào?',
+        ['Giai cấp thống trị tự nguyện nhường quyền và nước ngoài bảo trợ','Kinh tế tăng trưởng cao và không còn mâu thuẫn xã hội','Có sự đồng thuận của toàn bộ giới tư bản và quân đội cũ','Một là giai cấp thống trị không còn bộ máy bạo lực đáng kể hoặc đã mất hết ý chí chống lại lực lượng cách mạng; hai là lực lượng cách mạng phát triển mạnh, áp đảo kẻ thù'],3,
+        'Phương pháp hòa bình (đấu tranh nghị trường, bầu cử) chỉ khả thi khi giai cấp thống trị không còn khả năng/ý chí dùng bạo lực và lực lượng cách mạng áp đảo.'],
+      [222,'p3','Trong công cuộc đổi mới ở Việt Nam hiện nay, việc phát triển kinh tế thị trường định hướng xã hội chủ nghĩa và hoàn thiện thể chế pháp luật để giải phóng sức sản xuất là sự vận dụng trực tiếp quy luật nào?',
+        ['Quy luật quan hệ sản xuất phù hợp với trình độ phát triển của lực lượng sản xuất','Quy luật phủ định của phủ định','Quy luật đấu tranh giai cấp tuyệt đối','Quy luật tiến hóa sinh học'],0,
+        'Xây dựng QHSX đa dạng, phù hợp với trình độ phát triển còn nhiều tầng nấc của LLSX ở Việt Nam là vận dụng quy luật QHSX phù hợp LLSX.'],
+      [223,'p3','Luận điểm nào sau đây khái quát chính xác mối quan hệ biện chứng giữa cơ sở hạ tầng và kiến trúc thượng tầng trong sự nghiệp xây dựng chủ nghĩa xã hội?',
+        ['Kiến trúc thượng tầng hoàn toàn quyết định cơ sở hạ tầng','Cơ sở hạ tầng quyết định kiến trúc thượng tầng, đồng thời kiến trúc thượng tầng có tính độc lập tương đối và tác động mạnh mẽ trở lại cơ sở hạ tầng','Cơ sở hạ tầng và kiến trúc thượng tầng tồn tại độc lập không tác động lẫn nhau','Chỉ cần đổi mới kinh tế mà không cần đổi mới hệ thống chính trị'],1,
+        'Cơ sở hạ tầng quyết định kiến trúc thượng tầng; đồng thời kiến trúc thượng tầng (đặc biệt là Đảng, Nhà nước, pháp luật) tác động tích cực trở lại cơ sở hạ tầng.'],
+
+      // ==================== PHẦN 4 (77 CÂU: 224 - 300) ====================
+      [224,'p4','Theo khái niệm trong đề cương, triết học là khoa học về những quy luật vận động, phát triển chung nhất của những lĩnh vực nào?',
+        ['Kinh tế, chính trị và văn hóa','Vật lý, hóa học và sinh học','Tự nhiên, xã hội và tư duy','Lịch sử, địa lý và ngôn ngữ'],2,
+        'Triết học là khoa học về những quy luật vận động, phát triển chung nhất của toàn bộ tự nhiên, xã hội và tư duy.'],
+      [225,'p4','Việc nhận thức của con người đạt đến khả năng khái quát hóa, hệ thống hóa những quan điểm rời rạc thành lý luận, học thuyết là biểu hiện của nguồn gốc nào?',
+        ['Nguồn gốc xã hội','Nguồn gốc kinh tế','Nguồn gốc tôn giáo','Nguồn gốc nhận thức'],3,
+        'Khả năng khái quát hóa, hệ thống hóa các quan điểm rời rạc thành lý luận là nguồn gốc nhận thức của triết học.'],
+      [226,'p4','Trong lịch sử tồn tại và phát triển, chủ nghĩa duy tâm được chia thành hai phái cơ bản nào?',
+        ['Chủ nghĩa duy tâm chủ quan và chủ nghĩa duy tâm khách quan','Chủ nghĩa duy tâm chất phác và chủ nghĩa duy tâm siêu hình','Chủ nghĩa duy tâm cổ đại và chủ nghĩa duy tâm cơ học','Chủ nghĩa duy tâm tự phát và chủ nghĩa duy tâm biện chứng'],0,
+        'Chủ nghĩa duy tâm chia thành hai phái lớn: chủ nghĩa duy tâm chủ quan và chủ nghĩa duy tâm khách quan.'],
+      [227,'p4','Trường phái triết học nào bao hàm những quan điểm thừa nhận tính thứ nhất của ý thức và tính thứ hai của vật chất?',
+        ['Chủ nghĩa duy vật','Chủ nghĩa duy tâm','Thuyết khả tri','Phép biện chứng'],1,
+        'Chủ nghĩa duy tâm thừa nhận ý thức có trước, quyết định vật chất (tính thứ nhất của ý thức, tính thứ hai của vật chất).'],
+      [228,'p4','Về điều kiện kinh tế - xã hội cho sự ra đời triết học Mác, phương thức sản xuất tư bản chủ nghĩa được củng cố và phát triển trong điều kiện nào?',
+        ['Thời kỳ Phục hưng châu Âu','Chiến tranh thế giới thứ nhất','Cuộc cách mạng công nghiệp','Quá trình toàn cầu hóa hiện đại'],2,
+        'Phương thức sản xuất tư bản chủ nghĩa được củng cố và phát triển mạnh mẽ trong điều kiện cuộc cách mạng công nghiệp.'],
+      [229,'p4','Thời kỳ 1841 - 1844 trong quá trình hình thành và phát triển triết học Mác mang đặc điểm chủ yếu nào?',
+        ['Đề xuất những nguyên lý duy vật biện chứng và duy vật lịch sử','Bổ sung và phát triển toàn diện lý luận triết học','Tổng kết thực tiễn xây dựng chủ nghĩa xã hội','Hình thành tư tưởng triết học với bước quá độ từ chủ nghĩa duy tâm và dân chủ cách mạng sang chủ nghĩa duy vật và chủ nghĩa cộng sản'],3,
+        'Giai đoạn 1841–1844 đánh dấu bước chuyển lập trường của Mác và Ăngghen từ duy tâm, dân chủ cách mạng sang duy vật và cộng sản chủ nghĩa.'],
+      [230,'p4','Thời kỳ 1848 - 1895 trong sự phát triển của triết học Mác được đề cương xác định là thời kỳ nào?',
+        ['Thời kỳ C. Mác và Ph. Ăngghen bổ sung và phát triển toàn diện lý luận triết học','Thời kỳ hình thành bước quá độ sang chủ nghĩa duy vật','Thời kỳ mới bắt đầu đề xuất các nguyên lý ban đầu','Thời kỳ V.I. Lênin lãnh đạo cách mạng Nga'],0,
+        'Từ sau 1848 đến 1895 là thời kỳ C. Mác và Ph. Ăngghen bổ sung và phát triển toàn diện hệ thống lý luận triết học.'],
+      [231,'p4','Để sáng tạo ra chủ nghĩa duy vật biện chứng, C. Mác và Ph. Ăngghen đã khắc phục tính trực quan, siêu hình của chủ nghĩa duy vật cũ và khắc phục tính chất nào của phép biện chứng trước đó?',
+        ['Tính máy móc và thô sơ','Tính duy tâm và thần bí','Tính thực nghiệm và cụ thể','Tính ngẫu nhiên và tự phát'],1,
+        'Mác và Ăngghen cải tạo phép biện chứng của Hêghen bằng cách gạt bỏ tính duy tâm, thần bí và kế thừa hạt nhân hợp lý của nó.'],
+      [232,'p4','Trong giai đoạn V.I. Lênin phát triển triết học Mác, thời kỳ 1893 - 1907 gắn liền với nhiệm vụ trọng tâm nào?',
+        ['Tổng kết kinh nghiệm xây dựng chủ nghĩa xã hội ở Liên Xô','Lãnh đạo khởi nghĩa giành chính quyền Tháng Mười','Bảo vệ và phát triển triết học Mác nhằm thành lập đảng mácxít ở Nga và chuẩn bị cho cách mạng dân chủ tư sản lần thứ nhất','Phê phán triết học cổ điển Đức'],2,
+        'Thời kỳ 1893–1907, Lênin tập trung bảo vệ và phát triển triết học Mác để thành lập đảng mácxít ở Nga và chuẩn bị cách mạng 1905–1907.'],
+      [233,'p4','Thời kỳ 1907 - 1917 trong quá trình V.I. Lênin phát triển triết học Mác có nội dung trọng tâm là gì?',
+        ['Thành lập đảng mácxít đầu tiên ở Nga','Tổng kết thực tiễn xây dựng CNXH sau cách mạng','Viết bộ Tư bản cùng C. Mác','Phát triển toàn diện triết học Mác, lãnh đạo phong trào công nhân Nga chuẩn bị cho cách mạng xã hội chủ nghĩa'],3,
+        'Giai đoạn 1907–1917, Lênin phát triển toàn diện triết học Mác (với nhiều tác phẩm lớn) và chuẩn bị cho Cách mạng Tháng Mười Nga.'],
+      [234,'p4','Theo đề cương, từ năm 1924 đến nay, triết học Mác - Lênin tiếp tục được lực lượng nào bổ sung và phát triển?',
+        ['Các đảng cộng sản và công nhân','Các viện hàn lâm phương Tây','Các tổ chức tôn giáo quốc tế','Các tập đoàn kinh tế đa quốc gia'],0,
+        'Từ năm 1924 đến nay, triết học Mác - Lênin tiếp tục được các đảng cộng sản và công nhân trên thế giới vận dụng, bổ sung và phát triển.'],
+      [235,'p4','Trong khái niệm triết học Mác - Lênin, hệ thống quan điểm này là thế giới quan và phương pháp luận khoa học, cách mạng của những lực lượng nào?',
+        ['Chỉ riêng giới trí thức hàn lâm','Giai cấp công nhân, nhân dân lao động và các lực lượng xã hội tiến bộ','Giai cấp tư sản và các nhà quản trị doanh nghiệp','Tầng lớp quý tộc phong kiến'],1,
+        'Triết học Mác - Lênin là vũ khí lý luận của giai cấp công nhân, nhân dân lao động và các lực lượng xã hội tiến bộ.'],
+      [236,'p4','Chức năng thế giới quan của triết học Mác - Lênin có vai trò đặc biệt quan trọng như thế nào đối với con người?',
+        ['Thay thế mọi công cụ tính toán kỹ thuật','Giải thích các hiện tượng siêu nhiên bằng đức tin','Định hướng cho con người nhận thức đúng đắn thế giới hiện thực','Đem lại công thức làm giàu nhanh chóng'],2,
+        'Thế giới quan duy vật biện chứng có vai trò đặc biệt quan trọng trong việc định hướng cho con người nhận thức đúng đắn thế giới hiện thực.'],
+      [237,'p4','Thông qua chức năng phương pháp luận, triết học Mác - Lênin trang bị cho con người công cụ nhận thức khoa học nào?',
+        ['Các thiết bị đo đạc phòng thí nghiệm','Những kinh nghiệm cảm tính rời rạc','Những tín điều bất biến không thay đổi','Hệ thống các khái niệm, phạm trù, quy luật'],3,
+        'Chức năng phương pháp luận trang bị hệ thống khái niệm, phạm trù, quy luật làm công cụ nhận thức khoa học và phát triển tư duy lý luận.'],
+      [238,'p4','Trong bối cảnh cuộc cách mạng khoa học và công nghệ hiện đại phát triển mạnh mẽ, triết học Mác - Lênin giữ vai trò gì?',
+        ['Là cơ sở thế giới quan, phương pháp luận khoa học và cách mạng để phân tích xu hướng phát triển của xã hội','Trở nên lạc hậu không còn phù hợp với thời đại công nghệ số','Thay thế hoàn toàn các ngành khoa học máy tính và sinh học','Chỉ giữ vai trò tham khảo trong nghiên cứu văn học'],0,
+        'Triết học Mác - Lênin là cơ sở thế giới quan, phương pháp luận khoa học giúp phân tích đúng xu hướng phát triển của xã hội trong thời đại KH-CN hiện đại.'],
+      [239,'p4','Từ thời cổ đại đến hiện đại, các nhà triết học duy tâm tuy buộc phải thừa nhận sự tồn tại của các sự vật, hiện tượng nhưng lại phủ nhận đặc trưng nào của chúng?',
+        ['Sự biến đổi trong tâm trí con người','Đặc trưng “tự thân tồn tại” của chúng','Khả năng gọi tên sự vật bằng ngôn ngữ','Mối liên hệ với cảm giác chủ quan'],1,
+        'Các nhà triết học duy tâm phủ nhận đặc trưng “tự thân tồn tại” (tồn tại khách quan độc lập với ý thức) của các sự vật, hiện tượng.'],
+      [240,'p4','Trong chủ nghĩa duy vật thời cổ đại ở phương Tây, nhà triết học nào đã quy vật chất về một dạng cụ thể là “nước”?',
+        ['Heraclitus','Anaximenes','Thales','Aristotle'],2,
+        'Thales (Ta-lét) quan niệm nước là bản nguyên vật chất đầu tiên của mọi sự vật trong thế giới.'],
+      [241,'p4','Nhà triết học duy vật cổ đại nào đã xem “không khí” là dạng vật chất khởi nguyên của thế giới?',
+        ['Thales','Heraclitus','Plato','Anaximenes'],3,
+        'Anaximenes coi không khí là khởi nguyên vật chất của thế giới.'],
+      [242,'p4','Quan niệm về năm yếu tố cơ bản “kim, mộc, thủy, hỏa, thổ” (Ngũ hành) cấu tạo nên thế giới xuất hiện ở nền triết học cổ đại nào?',
+        ['Trung Quốc cổ đại','Ấn Độ cổ đại','Hy Lạp cổ đại','La Mã cổ đại'],0,
+        'Học thuyết Ngũ hành (kim, mộc, thủy, hỏa, thổ) thuộc triết học Trung Quốc cổ đại.'],
+      [243,'p4','Một số trường hợp đặc biệt thời cổ đại quy bản nguyên của thế giới về những cái trừu tượng như “Không” và “Đạo” lần lượt thuộc về hai học thuyết nào?',
+        ['Nho giáo và Pháp gia','Phật giáo và Lão Trang','Ấn Độ giáo và Cơ Đốc giáo','Chủ nghĩa khắc kỷ và Chủ nghĩa hoài nghi'],1,
+        'Đề cương nêu ví dụ: “Không” trong Phật giáo và “Đạo” trong học thuyết Lão Trang.'],
+      [244,'p4','Bắt đầu từ thời kỳ Phục hưng (thế kỷ XV), phương Tây đã có sự bứt phá so với phương Đông chủ yếu nhờ yếu tố nào?',
+        ['Sự quay lại của thế giới quan thần thoại','Sự đóng cửa giao thương với bên ngoài','Khoa học thực nghiệm ra đời, đặc biệt là sự phát triển mạnh của cơ học và công nghiệp','Sự chấm dứt hoàn toàn các hoạt động nghiên cứu triết học'],2,
+        'Từ thế kỷ XV, khoa học thực nghiệm (nhất là cơ học) và công nghiệp phát triển mạnh tạo nên bước bứt phá ở phương Tây, đồng thời hình thành CNDV siêu hình.'],
+      [245,'p4','Trong cuộc cách mạng khoa học tự nhiên cuối thế kỷ XIX, đầu thế kỷ XX, nhà vật lý nào vào năm 1895 đã phát hiện ra tia X?',
+        ['Henri Becquerel','Joseph John Thomson','Albert Einstein','Wilhelm Conrad Rontgen'],3,
+        'Năm 1895, W.C. Rontgen (Rơnghen) phát hiện ra tia X, mở đầu chuỗi phát minh lớn trong vật lý học hiện đại.'],
+      [246,'p4','Năm 1896, nhà khoa học Henri Becquerel (Béccơren) đã có phát minh quan trọng nào góp phần làm phá sản quan điểm duy vật siêu hình về nguyên tử?',
+        ['Phát hiện ra hiện tượng phóng xạ của nguyên tố urani','Phát hiện ra hạt điện tử','Phát minh ra thuyết tương đối tổng quát','Phát hiện ra chất phóng xạ pôlôni'],0,
+        'Năm 1896, H. Becquerel phát hiện hiện tượng phóng xạ tự nhiên của nguyên tố urani, chứng tỏ nguyên tử không bất biến.'],
+      [247,'p4','Trong giai đoạn 1898 - 1902, Marie Sklodowska và Pierre Curie đã khám phá ra hai chất phóng xạ mạnh nào?',
+        ['Urani và thủy ngân','Pôlôni và rađium','Vàng và bạch kim','Cacbon và nitơ'],1,
+        'Vợ chồng nhà bác học Marie và Pierre Curie đã khám phá ra hai nguyên tố phóng xạ mạnh là pôlôni và rađium.'],
+      [248,'p4','Những phát minh vĩ đại trong vật lý học cuối thế kỷ XIX - đầu thế kỷ XX đã rút ra kết luận triết học nào về kết cấu của thế giới vật chất?',
+        ['Vật chất đã hoàn toàn biến mất thành năng lượng tinh thần','Nguyên tử là hạt vật chất cuối cùng không thể phân chia','Không thể có đơn vị cuối cùng, tuyệt đối đơn giản và bất biến để đặc trưng chung cho vật chất','Thế giới vật chất có giới hạn kích thước nhỏ nhất tuyệt đối'],2,
+        'Thế giới vật chất không có vật thể không có kết cấu, tức không có đơn vị cuối cùng tuyệt đối đơn giản và bất biến.'],
+      [249,'p4','Trong ba nội dung cốt lõi của định nghĩa vật chất do V.I. Lênin nêu ra, nội dung thứ ba khẳng định điều gì?',
+        ['Vật chất là tổ hợp của mọi cảm giác chủ quan','Vật chất và ý thức là hai thế giới tồn tại song song độc lập','Ý thức là nguyên nhân sinh ra mọi dạng vật chất','Vật chất là cái mà ý thức chẳng qua chỉ là sự phản ánh của nó'],3,
+        'Ba nội dung của định nghĩa: (1) thực tại khách quan; (2) tác động giác quan gây ra cảm giác; (3) ý thức chẳng qua chỉ là sự phản ánh của vật chất.'],
+      [250,'p4','Theo nghĩa chung nhất trong đề cương, phạm trù “tồn tại” được dùng để chỉ điều gì?',
+        ['Tính có thực của thế giới xung quanh con người','Chỉ những vật thể có thể nhìn thấy bằng kính hiển vi','Tính hư ảo của các hiện tượng tinh thần','Sự đứng im tuyệt đối của sự vật'],0,
+        'Tồn tại là phạm trù chung nhất dùng để chỉ tính có thực của thế giới xung quanh con người (gồm tồn tại vật chất, tinh thần, khách quan, chủ quan...).'],
+      [251,'p4','Theo chủ nghĩa duy vật biện chứng, mọi bộ phận của thế giới có mối quan hệ vật chất thống nhất với nhau được biểu hiện ở điểm cơ bản nào?',
+        ['Chúng đều có cùng hình dáng và kích thước giống hệt nhau','Chúng đều là những dạng cụ thể của vật chất và cùng chịu sự chi phối của các quy luật khách quan, phổ biến','Chúng đều do tư duy con người sắp xếp lại','Chúng tồn tại hoàn toàn biệt lập không chuyển hóa lẫn nhau'],1,
+        'Mọi bộ phận của thế giới đều là những dạng cụ thể của vật chất, là sản phẩm của vật chất và cùng chịu sự chi phối của các quy luật khách quan phổ biến.'],
+      [252,'p4','Khi lý giải nguồn gốc ra đời của ý thức, các nhà triết học duy tâm khẳng định luận điểm nào sau đây?',
+        ['Ý thức là sự phản ánh thế giới vật chất vào bộ óc người','Ý thức hình thành nhờ quá trình lao động và ngôn ngữ','Ý thức là nguyên thể đầu tiên, tồn tại vĩnh viễn, sinh thành và chi phối toàn bộ thế giới vật chất','Ý thức là một dạng vật chất siêu mịn'],2,
+        'Các nhà duy tâm coi ý thức/tinh thần là nguyên thể đầu tiên, tồn tại vĩnh viễn và sinh ra, chi phối thế giới vật chất.'],
+      [253,'p4','Trong các lớp cấu trúc của ý thức, yếu tố nào là hình thái đặc biệt của sự phản ánh tồn tại, phản ánh quan hệ giữa người với người và giữa người với thế giới khách quan?',
+        ['Tri thức','Ý chí','Tiềm thức','Tình cảm'],3,
+        'Tình cảm là hình thái đặc biệt của sự phản ánh tồn tại, biểu thị thái độ của con người và là một động lực quan trọng của hoạt động con người.'],
+      [254,'p4','Trong kết cấu của ý thức, những cố gắng, nỗ lực, khả năng huy động mọi tiềm năng của con người để vượt qua trở ngại, đạt mục đích đề ra được gọi là gì?',
+        ['Ý chí','Cảm giác','Vô thức','Bản năng'],0,
+        'Ý chí là sức mạnh tinh thần giúp chủ thể nỗ lực, huy động mọi tiềm năng để vượt qua khó khăn, trở ngại trên con đường đạt mục đích.'],
+      [255,'p4','Khi xem xét các cấp độ của ý thức theo chiều sâu nội tâm, những hiện tượng tâm lý không phải do lý trí điều khiển, nằm ngoài phạm vi lý trí mà ý thức không kiểm soát được trong một lúc nào đó là gì?',
+        ['Tự ý thức','Vô thức','Tri thức khoa học','Niềm tin lý tưởng'],1,
+        'Vô thức là những hiện tượng tâm lý không do lý trí điều khiển, nằm ngoài phạm vi kiểm soát của ý thức tại một thời điểm nhất định.'],
+      [256,'p4','Trong các cấp độ của ý thức, những hoạt động tâm lý diễn ra bên ngoài sự kiểm soát trực tiếp của ý thức (như những tri thức đã biến thành thói quen, kỹ năng) được gọi là gì?',
+        ['Tự ý thức','Ý chí','Tiềm thức','Phán đoán'],2,
+        'Tiềm thức là những hoạt động tâm lý diễn ra bên ngoài sự kiểm soát trực tiếp của ý thức (thường là tri thức đã nhập tâm thành bản năng, kỹ năng).'],
+      [257,'p4','Theo đề cương, thuật ngữ “biện chứng” thường được hiểu theo hai nghĩa: nghĩa thứ nhất chỉ mối liên hệ, vận động của bản thân sự vật bên ngoài ý thức; nghĩa thứ hai dùng để chỉ điều gì?',
+        ['Trạng thái đứng im tuyệt đối của mọi sự vật','Những quy tắc ngữ pháp trong giao tiếp','Sự đối lập tách rời giữa tự nhiên và xã hội','Những mối liên hệ và sự vận động, biến đổi của chính quá trình phản ánh hiện thực khách quan vào đầu óc con người'],3,
+        'Nghĩa thứ nhất là biện chứng khách quan; nghĩa thứ hai là biện chứng chủ quan (biện chứng của quá trình phản ánh và tư duy).'],
+      [258,'p4','Về vai trò trong lịch sử tư duy, phép biện chứng duy vật đã kế thừa và phát triển phép biện chứng theo bước chuyển căn bản nào?',
+        ['Từ tự phát đến tự giác','Từ duy vật sang duy tâm','Từ khoa học sang thần thoại','Từ toàn diện sang phiến diện'],0,
+        'Phép biện chứng duy vật kế thừa và phát triển phép biện chứng từ trình độ tự phát lên trình độ tự giác, khoa học.'],
+      [259,'p4','Trong nguyên lý về mối liên hệ phổ biến, quan hệ giữa hai đối tượng được gọi là “liên hệ” khi nào?',
+        ['Khi hai đối tượng nằm gần nhau nhưng không ảnh hưởng gì nhau','Khi sự thay đổi của một trong số chúng nhất định làm đối tượng kia thay đổi','Khi hai đối tượng có tên gọi giống nhau','Khi con người tự đặt chúng cạnh nhau trong suy nghĩ'],1,
+        'Liên hệ là quan hệ giữa hai đối tượng mà sự thay đổi của một trong số chúng nhất định làm đối tượng kia thay đổi.'],
+      [260,'p4','Tính phổ biến của các mối liên hệ trong phép biện chứng duy vật được thể hiện ở phương diện nào?',
+        ['Chỉ tồn tại trong các phản ứng hóa học','Chỉ tồn tại trong đời sống kinh tế xã hội','Bất kỳ ở đâu, trong tự nhiên, xã hội và tư duy đều có vô vàn các mối liên hệ đa dạng','Chỉ tồn tại giữa các vật thể hữu hình'],2,
+        'Tính phổ biến thể hiện ở chỗ mối liên hệ có mặt ở khắp mọi nơi trong cả tự nhiên, xã hội và tư duy.'],
+      [261,'p4','Theo nguyên lý về sự phát triển, vận động luôn diễn ra trong không gian và thời gian; nếu thoát ly không gian và thời gian thì điều gì sẽ xảy ra?',
+        ['Sự phát triển vẫn diễn ra nhanh hơn','Sự vật trở thành bất tử','Vận động trở thành tuyệt đối hơn','Không thể có sự phát triển'],3,
+        'Đề cương nêu rõ: Vận động diễn ra trong không gian và thời gian, nếu thoát ly chúng thì không thể có phát triển.'],
+      [262,'p4','Trong nội dung về thực chất của sự phát triển, “đối tượng cũ” được đề cương xác định là cái như thế nào?',
+        ['Cái đã mất vai trò tất yếu lịch sử, ngày càng đi vào xu hướng diệt vong','Cái mới xuất hiện chưa được nhiều người biết đến','Cái tồn tại vĩnh viễn không bao giờ thay đổi','Cái phù hợp với khuynh hướng tiến bộ của lịch sử'],0,
+        'Đối tượng mới là cái phù hợp khuynh hướng tiến bộ, có tiền đồ rộng lớn; đối tượng cũ là cái đã mất vai trò tất yếu lịch sử, đi vào xu hướng diệt vong.'],
+      [263,'p4','Tính khách quan của sự phát triển trong phép biện chứng duy vật được thể hiện ở điểm cốt lõi nào?',
+        ['Phát triển diễn ra do sự thúc đẩy duy nhất từ bên ngoài','Nguồn gốc của sự phát triển nằm trong chính bản thân sự vật, hiện tượng và không phụ thuộc ý muốn chủ quan','Phát triển chỉ diễn ra khi con người mong muốn','Phát triển chỉ xuất hiện trong xã hội loài người'],1,
+        'Tính khách quan thể hiện ở chỗ nguồn gốc phát triển nằm trong chính bản thân sự vật (mâu thuẫn nội tại), không lệ thuộc ý thích chủ quan.'],
+      [264,'p4','Theo đề cương, việc nhận thức nội dung và hình thức của sự vật, hiện tượng được thực hiện trong quá trình nhận thức đi từ đâu?',
+        ['Từ những phỏng đoán cảm tính tách rời thực tế','Từ khái niệm trừu tượng có sẵn trước khi tiếp xúc sự vật','Từ những mối liên hệ nhân quả này sang mối liên hệ nhân quả khác, từ những đặc tính này sang những đặc tính khác','Từ việc bỏ qua hoàn toàn cấu trúc bên trong của sự vật'],2,
+        'Nhận thức nội dung và hình thức được hình thành khi đi từ mối liên hệ nhân quả này sang mối liên hệ nhân quả khác, từ đặc tính này sang đặc tính khác.'],
+      [265,'p4','Khi phân tích cặp phạm trù nội dung và hình thức, phạm trù “hình thức” KHÔNG chỉ là cái biểu hiện ra bên ngoài mà còn thể hiện điều gì?',
+        ['Những yếu tố ngẫu nhiên bên ngoài sự vật','Cảm giác chủ quan của người quan sát','Tổng số lượng các bộ phận rời rạc','Cấu trúc bên trong của sự vật, hiện tượng'],3,
+        'Hình thức không chỉ là vẻ ngoài mà quan trọng hơn là cấu trúc bên trong — hệ thống mối liên hệ tương đối bền vững giữa các yếu tố cấu thành nội dung.'],
+      [266,'p4','Khi đã biết khá nhiều về các mặt và đặc tính riêng lẻ của sự vật, để nhận thức vươn tới phản ánh đầy đủ “bản chất” của nó cần phải làm gì?',
+        ['Đặt các mặt và các mối liên hệ trong sự thống nhất biện chứng, coi chúng là yếu tố của một thể thống nhất hữu cơ','Tách rời từng đặc tính ra nghiên cứu cô lập hoàn toàn','Bỏ qua mọi hiện tượng biểu hiện ra bên ngoài','Chỉ ghi nhớ các đặc tính ngẫu nhiên bên ngoài'],0,
+        'Để nắm bắt bản chất phải nhận thức các mối liên hệ phụ thuộc qua lại giữa các mặt và đặt chúng trong thể thống nhất hữu cơ.'],
+      [267,'p4','Theo đề cương, phạm trù “hiện thực” là sự thống nhất biện chứng của hai phạm trù nào sau đây?',
+        ['Cái chung và cái đơn nhất','Bản chất và các hiện tượng thể hiện bản chất đó','Nguyên nhân và kết quả','Lượng và chất'],1,
+        'Hiện thực là cái đang tồn tại, là sự thống nhất biện chứng của bản chất và các hiện tượng thể hiện bản chất đó.'],
+      [268,'p4','Trong quy luật lượng - chất, “độ” được giới hạn bởi bao nhiêu điểm nút và sự thay đổi về lượng đạt tới điểm nút trên sẽ dẫn đến điều gì?',
+        ['Một điểm nút; giữ nguyên chất cũ vĩnh viễn','Ba điểm nút; sự vật dừng vận động','Hai điểm nút; dẫn đến sự ra đời của chất mới','Không có điểm nút giới hạn'],2,
+        'Độ được giới hạn bởi hai điểm nút (điểm nút dưới và điểm nút trên); lượng đạt tới điểm nút trên sẽ dẫn đến bước nhảy tạo ra chất mới.'],
+      [269,'p4','Sau khi bước nhảy diễn ra và chất mới hình thành, sự thống nhất giữa lượng mới với chất mới sẽ tạo ra điều gì?',
+        ['Sự chấm dứt mọi quá trình biến đổi về lượng','Sự quay lại độ cũ vĩnh viễn','Sự mất đi của mọi mâu thuẫn bên trong','Độ mới và điểm nút mới'],3,
+        'Chất mới ra đời quy định lượng mới, và sự thống nhất giữa lượng mới với chất mới tạo thành độ mới và điểm nút mới.'],
+      [270,'p4','Trong quy luật lượng - chất, “bước nhảy” kết thúc một giai đoạn biến đổi về lượng và có tính chất gì trong quá trình vận động liên tục của sự vật?',
+        ['Là sự gián đoạn trong quá trình vận động liên tục của sự vật, hiện tượng','Là sự liên tục tuyệt đối không có gián đoạn','Là sự đứng im vĩnh viễn của chất cũ','Là sự tăng giảm cơ học thuần túy'],0,
+        'Bước nhảy là sự gián đoạn về chất nằm trong quá trình vận động liên tục không ngừng của sự vật, hiện tượng.'],
+      [271,'p4','Trong quy luật thống nhất và đấu tranh của các mặt đối lập, sự “đồng nhất” giữa các mặt đối lập có ý nghĩa gì?',
+        ['Làm cho hai mặt đối lập không bao giờ đấu tranh với nhau','Do còn tồn tại những yếu tố giống nhau nên khi có điều kiện phù hợp, các mặt đối lập có thể chuyển hóa vào nhau','Xóa bỏ hoàn toàn sự khác nhau giữa các mặt','Làm sự vật đứng im tuyệt đối'],1,
+        'Nhờ có những yếu tố tương đồng, đồng nhất nên trong điều kiện phù hợp các mặt đối lập có thể chuyển hóa lẫn nhau.'],
+      [272,'p4','Trong quy luật mâu thuẫn, tính tuyệt đối của đấu tranh giữa các mặt đối lập gắn liền với đặc tính nào của sự vật, hiện tượng?',
+        ['Trạng thái đứng im tương đối','Sự ổn định tạm thời về chất','Sự tự thân vận động, phát triển diễn ra không ngừng của sự vật, hiện tượng','Sự lệ thuộc hoàn toàn vào tác động bên ngoài'],2,
+        'Tính tuyệt đối của đấu tranh gắn liền với sự tự thân vận động, phát triển diễn ra không ngừng của sự vật, hiện tượng.'],
+      [273,'p4','Trong quy luật phủ định của phủ định, “phủ định biện chứng” đóng vai trò là gì trong tiến trình phát triển của sự vật?',
+        ['Là điểm kết thúc hoàn toàn mọi sự vận động','Là lực lượng phá hủy từ bên ngoài cắt đứt lịch sử','Là sự lặp lại y nguyên trạng thái ban đầu','Là “mắt xích” trong “sợi dây chuyền” liên hệ giữa cái cũ với cái mới, dẫn đến sự ra đời của cái mới tiến bộ hơn'],3,
+        'Phủ định biện chứng vừa loại bỏ cái lỗi thời vừa giữ lại yếu tố tích cực, đóng vai trò là “mắt xích” liên hệ cái cũ với cái mới.'],
+      [274,'p4','Trong lý luận nhận thức, thuật ngữ thực tiễn bắt nguồn từ tiếng Hy Lạp cổ “Practica” có nghĩa đen là gì?',
+        ['Hoạt động tích cực','Suy ngẫm trừu tượng','Quan sát thụ động','Lý thuyết thuần túy'],0,
+        'Theo tiếng Hy Lạp cổ, “Practica” có nghĩa đen là hoạt động tích cực.'],
+      [275,'p4','Đặc trưng “tính lịch sử - xã hội” của hoạt động thực tiễn được thể hiện chính xác ở nội dung nào sau đây?',
+        ['Thực tiễn là hoạt động đơn độc của từng cá nhân tách khỏi cộng đồng','Diễn ra trong xã hội với sự tham gia của đông đảo người, có sự truyền kinh nghiệm qua các thế hệ và bị giới hạn bởi điều kiện lịch sử cụ thể','Thực tiễn không thay đổi qua mọi thời đại lịch sử','Thực tiễn chỉ tồn tại trong thế giới động vật'],1,
+        'Thực tiễn luôn diễn ra trong xã hội với đông đảo con người, truyền nối kinh nghiệm qua các thế hệ và chịu sự chế ước của điều kiện lịch sử cụ thể.'],
+      [276,'p4','Trong con đường biện chứng của sự nhận thức chân lý do V.I. Lênin khái quát, thực tiễn vừa là yếu tố kết thúc một vòng khâu nhận thức, vừa là gì?',
+        ['Điểm dừng cuối cùng của toàn bộ lịch sử nhận thức','Yếu tố đối lập loại trừ tư duy trừu tượng','Điểm bắt đầu của vòng khâu mới của sự nhận thức','Hình thức cao nhất của nhận thức cảm tính'],2,
+        'Thực tiễn vừa kết thúc một vòng khâu kiểm nghiệm chân lý, vừa mở ra vòng khâu nhận thức mới sâu sắc hơn — quá trình nhận thức không có điểm cuối.'],
+      [277,'p4','Trong giai đoạn nhận thức lý tính, hình thức nào phản ánh khái quát, gián tiếp một hoặc một số thuộc tính chung có tính bản chất của một nhóm sự vật, được biểu thị bằng một từ hay cụm từ?',
+        ['Cảm giác','Tri giác','Biểu tượng','Khái niệm'],3,
+        'Khái niệm là hình thức cơ bản của tư duy trừu tượng, phản ánh khái quát thuộc tính chung bản chất của một nhóm sự vật, biểu thị bằng từ hay cụm từ.'],
+      [278,'p4','Trong giai đoạn nhận thức lý tính, hình thức tư duy trừu tượng nào liên kết các phán đoán đã biết làm tiền đề để suy ra phán đoán cuối cùng làm kết luận?',
+        ['Suy lý (suy luận)','Khái niệm','Biểu tượng','Tri giác'],0,
+        'Suy lý liên kết các phán đoán tiền đề theo quy tắc logic để rút ra phán đoán kết luận mới.'],
+      [279,'p4','Theo quan điểm của chủ nghĩa duy vật biện chứng, “tính tuyệt đối của chân lý” được hiểu chính xác là gì?',
+        ['Mọi tri thức hiện tại của con người đều đã hoàn thiện vĩnh viễn không cần phát triển nữa','Những tri thức của chân lý phản ánh đầy đủ, toàn diện hiện thực khách quan ở một giai đoạn lịch sử cụ thể xác định','Những chân lý chỉ đúng với một cá nhân nhất định','Những quan điểm không cần thực tiễn kiểm nghiệm'],1,
+        'Tính tuyệt đối chỉ tri thức phản ánh đầy đủ, toàn diện hiện thực ở một giai đoạn lịch sử xác định; con người ngày càng tiến gần đến chân lý tuyệt đối.'],
+      [280,'p4','Trong ba phương diện của sản xuất xã hội, “sản xuất ra bản thân con người” ở phạm vi cá nhân, gia đình và ở phạm vi xã hội lần lượt là gì?',
+        ['Chỉ là việc xây dựng nhà ở và trường học','Chỉ là việc sản xuất lương thực và quần áo','Sinh đẻ, nuôi dạy con cái để duy trì nòi giống; và sự tăng trưởng dân số, phát triển con người với tư cách thực thể sinh học - xã hội','Sáng tạo các tác phẩm nghệ thuật và khoa học'],2,
+        'Ở phạm vi gia đình là sinh đẻ, nuôi dạy con cái duy trì nòi giống; ở phạm vi xã hội là tăng trưởng dân số, phát triển con người toàn diện.'],
+      [281,'p4','Trong sự sản xuất xã hội, hoạt động sáng tạo ra các giá trị tinh thần nhằm thỏa mãn nhu cầu tồn tại, phát triển của con người và xã hội được gọi là gì?',
+        ['Sản xuất vật chất','Sản xuất công nghiệp','Sản xuất ra bản thân con người','Sản xuất tinh thần'],3,
+        'Sản xuất tinh thần là hoạt động sáng tạo ra các giá trị tinh thần (khoa học, nghệ thuật, đạo đức, tư tưởng...) phục vụ con người và xã hội.'],
+      [282,'p4','Theo định nghĩa trong đề cương, sản xuất vật chất là quá trình con người sử dụng yếu tố nào tác động trực tiếp hoặc gián tiếp vào tự nhiên để tạo ra của cải xã hội?',
+        ['Công cụ lao động','Ý thức thuần túy','Hệ thống pháp luật','Tôn giáo và tín ngưỡng'],0,
+        'Trong sản xuất vật chất, con người dùng công cụ lao động tác động vào giới tự nhiên để cải biến các dạng vật chất thành của cải xã hội.'],
+      [283,'p4','Về mặt cấu trúc, lực lượng sản xuất được xem xét trên cả hai phương diện nào sau đây?',
+        ['Mặt chính trị và mặt tôn giáo','Mặt kinh tế - kỹ thuật (tư liệu sản xuất) và mặt kinh tế - xã hội (người lao động)','Mặt tự nhiên và mặt tâm linh','Mặt nội dung và mặt hiện tượng'],1,
+        'Lực lượng sản xuất gồm mặt kinh tế - kỹ thuật (tư liệu sản xuất) và mặt kinh tế - xã hội (người lao động).'],
+      [284,'p4','Quá trình sản xuất vật chất là tổng thể các yếu tố trong một quá trình thống nhất bao gồm bốn khâu cơ bản nào?',
+        ['Nghiên cứu, thiết kế, quảng cáo và bảo hành','Khởi tạo, tăng trưởng, bão hòa và suy thoái','Sản xuất, phân phối, trao đổi và tiêu dùng','Khai thác, vận chuyển, lưu kho và xuất khẩu'],2,
+        'Quá trình tái sản xuất vật chất thống nhất gồm 4 khâu: sản xuất, phân phối, trao đổi và tiêu dùng.'],
+      [285,'p4','Trong mối quan hệ biện chứng giữa lực lượng sản xuất và quan hệ sản xuất, vì sao quan hệ sản xuất có thể tác động mạnh mẽ trở lại đối với lực lượng sản xuất?',
+        ['Vì quan hệ sản xuất luôn có trước lực lượng sản xuất','Vì quan hệ sản xuất quyết định hoàn toàn trình độ công cụ lao động','Vì quan hệ sản xuất không liên quan gì đến kinh tế','Vì quan hệ sản xuất là hình thức xã hội của quá trình sản xuất, có tính độc lập tương đối'],3,
+        'Do là hình thức xã hội của quá trình sản xuất và có tính độc lập tương đối, QHSX tác động trở lại thúc đẩy (khi phù hợp) hoặc kìm hãm (khi không phù hợp) LLSX.'],
+      [286,'p4','Theo chủ nghĩa duy vật lịch sử, cơ sở hạ tầng của một xã hội được hình thành như thế nào?',
+        ['Được hình thành một cách khách quan trong quá trình sản xuất vật chất của xã hội','Do nhà nước chủ quan quy định bằng sắc lệnh rồi mới có sản xuất','Do các triết gia sáng tạo ra trong sách vở','Do sự áp đặt thuần túy của tôn giáo'],0,
+        'Cơ sở hạ tầng là toàn bộ các QHSX tồn tại thực tế, được hình thành một cách khách quan trong quá trình sản xuất vật chất.'],
+      [287,'p4','Trong cấu trúc của kiến trúc thượng tầng, những yếu tố như chính trị, pháp quyền, đạo đức, tôn giáo, nghệ thuật, triết học thuộc bộ phận nào?',
+        ['Các thiết chế xã hội tương ứng','Toàn bộ những quan điểm, tư tưởng xã hội','Cơ sở hạ tầng kinh tế','Lực lượng sản xuất vật chất'],1,
+        'Chính trị, pháp quyền, đạo đức, tôn giáo, nghệ thuật, triết học... là bộ phận quan điểm, tư tưởng xã hội của kiến trúc thượng tầng.'],
+      [288,'p4','Trong cấu trúc của kiến trúc thượng tầng, các tổ chức như nhà nước, đảng phái, giáo hội, các đoàn thể xã hội thuộc bộ phận nào?',
+        ['Quan hệ sản xuất thống trị','Các quan điểm tư tưởng trừu tượng','Các thiết chế xã hội tương ứng','Tư liệu sản xuất'],2,
+        'Nhà nước, đảng phái, giáo hội, các đoàn thể và tổ chức xã hội là bộ phận thiết chế xã hội tương ứng của kiến trúc thượng tầng.'],
+      [289,'p4','Chủ nghĩa duy vật lịch sử khẳng định cơ sở hạ tầng quyết định kiến trúc thượng tầng xuất phát từ căn nguyên nào?',
+        ['Vì tư tưởng chính trị luôn có trước đời sống kinh tế','Vì nhà nước có quyền lực tối cao chi phối mọi thứ','Vì các thiết chế xã hội không bao giờ thay đổi','Vì quan hệ vật chất quyết định quan hệ tinh thần; tính tất yếu kinh tế xét đến cùng quyết định tính tất yếu chính trị - xã hội'],3,
+        'Trên lập trường duy vật lịch sử, quan hệ vật chất (kinh tế) quyết định quan hệ tinh thần (chính trị - tư tưởng).'],
+      [290,'p4','Trong kết cấu của hình thái kinh tế - xã hội, yếu tố nào là nền tảng vật chất của xã hội và là tiêu chuẩn khách quan để phân biệt các thời đại kinh tế khác nhau?',
+        ['Lực lượng sản xuất','Kiến trúc thượng tầng','Hệ tư tưởng tôn giáo','Hình thức nhà nước'],0,
+        'Lực lượng sản xuất là nền tảng vật chất và tiêu chuẩn khách quan phân biệt các thời đại kinh tế (như thời đại đồ đá, đồ đồng, đại công nghiệp...).'],
+      [291,'p4','Trong kết cấu của hình thái kinh tế - xã hội, yếu tố nào thể hiện các mối quan hệ giữa người với người trong lĩnh vực tinh thần và tiêu biểu cho bộ mặt tinh thần của xã hội?',
+        ['Lực lượng sản xuất','Kiến trúc thượng tầng','Quan hệ sở hữu tư liệu sản xuất','Tư liệu lao động'],1,
+        'Kiến trúc thượng tầng thể hiện các quan hệ tinh thần giữa người với người và tiêu biểu cho bộ mặt tinh thần của đời sống xã hội.'],
+      [292,'p4','Tiến trình lịch sử - tự nhiên của sự thay thế các hình thái kinh tế - xã hội diễn ra thông qua sự tác động tổng hợp của hai quy luật cơ bản nào?',
+        ['Quy luật lượng - chất và quy luật phủ định của phủ định','Quy luật giá trị và quy luật cung cầu','Quy luật QHSX phù hợp với trình độ phát triển của LLSX và quy luật biện chứng giữa CSHT và KTTT','Quy luật chọn lọc tự nhiên và quy luật di truyền'],2,
+        'Hai quy luật cơ bản vận động xã hội là quy luật QHSX phù hợp trình độ phát triển LLSX và quy luật biện chứng giữa CSHT và KTTT.'],
+      [293,'p4','Kết cấu xã hội - giai cấp tồn tại trong một giai đoạn lịch sử nhất định trước hết do yếu tố nào quy định?',
+        ['Phong tục tập quán của địa phương','Ý chí chủ quan của nhà nước','Điều kiện địa lý tự nhiên','Trình độ phát triển của phương thức sản xuất xã hội'],3,
+        'Kết cấu xã hội - giai cấp trước hết do trình độ phát triển của phương thức sản xuất và cơ cấu kinh tế xã hội quy định.'],
+      [294,'p4','Trong giai đoạn cuối của xã hội phong kiến, các giai cấp như tiểu chủ, tiểu thương, tư sản, vô sản thuộc nhóm nào trong kết cấu xã hội - giai cấp?',
+        ['Giai cấp không cơ bản gắn với phương thức sản xuất mầm mống','Giai cấp cơ bản của chế độ phong kiến','Giai cấp không cơ bản gắn với phương thức sản xuất tàn dư','Tầng lớp quý tộc phong kiến'],0,
+        'Cuối thời phong kiến, tư sản, vô sản, tiểu chủ, tiểu thương gắn với mầm mống PTSX tư bản chủ nghĩa đang hình thành → mặt phủ định xã hội cũ.'],
+      [295,'p4','Trong xã hội có giai cấp, các tầng lớp và nhóm xã hội như trí thức, nhân sĩ, giới tu hành có đặc điểm gì nổi bật?',
+        ['Có địa vị kinh tế hoàn toàn độc lập chi phối xã hội','Không có địa vị kinh tế độc lập nhưng có vai trò quan trọng và luôn bị phân hóa dưới tác động của nền sản xuất vật chất','Đứng hoàn toàn ngoài mọi biến động kinh tế - xã hội','Là giai cấp cơ bản trong mọi hình thái kinh tế - xã hội'],1,
+        'Các tầng lớp trung gian không có địa vị kinh tế độc lập nhưng có vai trò quan trọng, tùy điều kiện lịch sử mà phục vụ cho giai cấp này hay giai cấp khác.'],
+      [296,'p4','Trong xã hội có giai cấp, tính tất yếu của đấu tranh giai cấp bắt nguồn trực tiếp từ nguyên nhân căn bản nào?',
+        ['Do một học thuyết triết học kích động tạo ra','Do sự khác biệt về ngôn ngữ và văn hóa','Tính tất yếu kinh tế, do sự đối kháng về lợi ích căn bản không thể điều hòa giữa giai cấp bị trị và giai cấp thống trị','Do ý muốn chủ quan của một số cá nhân lãnh đạo'],2,
+        'Đấu tranh giai cấp là hiện tượng lịch sử khách quan, tất yếu bắt nguồn từ sự đối kháng lợi ích kinh tế căn bản không thể điều hòa.'],
+      [297,'p4','Khái niệm “dân tộc” theo nghĩa hẹp (ethnie, ethnic group) được dùng để chỉ điều gì?',
+        ['Toàn bộ một quốc gia có chủ quyền độc lập','Một liên minh nhiều quốc gia cùng khu vực','Một giai cấp kinh tế trong xã hội','Cộng đồng tộc người gồm các dân tộc đa số và thiểu số trong một quốc gia'],3,
+        'Theo nghĩa hẹp (ethnie), dân tộc chỉ cộng đồng tộc người (như Kinh, Tày, Nùng, Mông, Êđê, Khmer...) cấu thành quốc gia - dân tộc.'],
+      [298,'p4','Cuộc đấu tranh giai cấp đầu tiên mang tính quyết liệt dẫn đến sự ra đời của nhà nước trong lịch sử diễn ra giữa hai giai cấp nào?',
+        ['Giai cấp nô lệ và giai cấp chủ nô thời cổ đại','Giai cấp nông dân và giai cấp địa chủ phong kiến','Giai cấp công nhân và giai cấp tư sản','Giai cấp tiểu tư sản và giai cấp địa chủ'],0,
+        'Cuộc đấu tranh giai cấp quyết liệt đầu tiên trong lịch sử là giữa nô lệ và chủ nô, dẫn đến sự ra đời của kiểu nhà nước đầu tiên (nhà nước chủ nô).'],
+      [299,'p4','Chức năng đối ngoại của nhà nước được triển khai thực hiện nhằm giải quyết nhiệm vụ trọng tâm nào?',
+        ['Ban hành luật pháp quản lý trật tự nội bộ trong nước','Giải quyết quan hệ với các nhà nước và tổ chức quốc tế khác nhằm bảo vệ lãnh thổ và đáp ứng nhu cầu trao đổi kinh tế, văn hóa, khoa học - kỹ thuật','Thu thuế và duy trì lực lượng cảnh sát nội địa','Chỉ nhằm mở rộng lãnh thổ bằng chiến tranh'],1,
+        'Chức năng đối ngoại giải quyết quan hệ với các nhà nước và tổ chức quốc tế để bảo vệ lãnh thổ và hợp tác kinh tế, văn hóa, khoa học - kỹ thuật...'],
+      [300,'p4','Trong lý luận về cách mạng xã hội, khái niệm “đối tượng của cách mạng xã hội” dùng để chỉ lực lượng nào?',
+        ['Những giai cấp tiên tiến lãnh đạo phong trào cách mạng','Quần chúng nhân dân lao động tham gia đấu tranh','Những giai cấp và những lực lượng đối lập cần phải đánh đổ của cách mạng','Các lực lượng trung lập không tham gia chính trị'],2,
+        'Đối tượng của cách mạng xã hội là những giai cấp thống trị lỗi thời và các lực lượng đối lập cản trở tiến bộ xã hội cần phải đánh đổ.']
+    ];
+
+    // Chuyển sang mảng đối tượng chuẩn để dễ xử lý
+    const QUESTIONS = RAW_QUESTIONS.map(([id, part, q, opts, ans, exp]) => ({
+      id, part, q, opts, ans, exp
+    }));
+
+    // =========================================================================
+    // TRẠNG THÁI ỨNG DỤNG & LƯU TRỮ LOCALSTORAGE
+    // =========================================================================
+    const STORAGE_KEY = 'triet_hoc_300_progress_v1';
+    const PAGE_SIZE = 20;
+    const LETTERS = ['A', 'B', 'C', 'D'];
+
+    let state = {
+      mode: 'study',          // 'study' | 'exam'
+      filter: 'all',          // 'all' | 'goc' | 'p1' | 'p2' | 'p3' | 'p4' | 'wrong' | 'star'
+      search: '',
+      showAllAnswers: false,
+      page: 1,
+      userAnswers: {},        // { [questionId]: selectedIndex }
+      bookmarks: []           // [questionId, ...]
+    };
+
+    // Trạng thái bài thi thử
+    let exam = {
+      status: 'intro',        // 'intro' | 'active' | 'result'
+      questions: [],          // 40 câu ngẫu nhiên
+      answers: {},            // { [examIdx]: selectedIndex }
+      currentIndex: 0,
+      timeLeft: 60 * 60,      // 3600 giây
+      durationUsed: 0,
+      timerId: null,
+      reviewFilter: 'all'     // 'all' | 'wrong'
+    };
+
+    let modalCallback = null;
+    let toastTimer = null;
+
+    function loadProgress() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object') {
+            state.userAnswers = parsed.userAnswers || {};
+            state.bookmarks = Array.isArray(parsed.bookmarks) ? parsed.bookmarks : [];
+          }
+        }
+      } catch (e) {
+        // Bỏ qua nếu môi trường chặn localStorage
+      }
+    }
+
+    function saveProgress() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          userAnswers: state.userAnswers,
+          bookmarks: state.bookmarks
+        }));
+      } catch (e) {
+        // Bỏ qua lỗi lưu trữ
+      }
+    }
+
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.add('hidden'), 2400);
+    }
+
+    // =========================================================================
+    // MODAL XÁC NHẬN (KHÔNG DÙNG ALERT / CONFIRM)
+    // =========================================================================
+    function openModal(title, message, confirmLabel, confirmColorClass, onConfirm) {
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-message').textContent = message;
+      const btn = document.getElementById('modal-confirm-btn');
+      btn.textContent = confirmLabel;
+      btn.className = `px-4 py-2 text-sm font-semibold text-white rounded-xl transition-colors ${confirmColorClass}`;
+      modalCallback = onConfirm;
+      document.getElementById('modal-backdrop').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('modal-backdrop').classList.add('hidden');
+      modalCallback = null;
+    }
+
+    document.getElementById('modal-confirm-btn').addEventListener('click', () => {
+      const cb = modalCallback;
+      closeModal();
+      if (typeof cb === 'function') cb();
+    });
+
+    function openResetModal() {
+      openModal(
+        'Đặt lại toàn bộ tiến độ?',
+        'Thao tác này sẽ xóa toàn bộ câu trả lời đã làm và danh sách câu đánh dấu sao của bạn trong chế độ Ôn tập.',
+        'Đặt lại ngay',
+        'bg-rose-600 hover:bg-rose-700',
+        () => {
+          state.userAnswers = {};
+          state.bookmarks = [];
+          saveProgress();
+          updateStats();
+          renderFilterButtons();
+          renderQuestions();
+          showToast('Đã đặt lại toàn bộ tiến độ ôn tập.');
+        }
+      );
+    }
+
+    // =========================================================================
+    // THỐNG KÊ & ĐIỀU HƯỚNG CHẾ ĐỘ
+    // =========================================================================
+    function updateStats() {
+      const answeredIds = Object.keys(state.userAnswers).map(Number);
+      const done = answeredIds.length;
+      let correct = 0;
+      for (const id of answeredIds) {
+        const q = QUESTIONS[id - 1];
+        if (q && state.userAnswers[id] === q.ans) correct++;
+      }
+      const acc = done > 0 ? Math.round((correct / done) * 100) : 0;
+      const pct = Math.round((done / QUESTIONS.length) * 100);
+
+      document.getElementById('stat-done').textContent = `${done}/${QUESTIONS.length}`;
+      document.getElementById('stat-acc').textContent = `${acc}%`;
+      document.getElementById('stat-star').textContent = `${state.bookmarks.length}`;
+      document.getElementById('progress-bar').style.width = `${pct}%`;
+    }
+
+    function switchMode(mode) {
+      state.mode = mode;
+      const studyView = document.getElementById('study-view');
+      const examView = document.getElementById('exam-view');
+      const tabStudy = document.getElementById('tab-study');
+      const tabExam = document.getElementById('tab-exam');
+
+      if (mode === 'study') {
+        studyView.classList.remove('hidden');
+        examView.classList.add('hidden');
+        tabStudy.className = 'px-3.5 py-2 text-sm font-semibold rounded-lg transition-all bg-white text-indigo-700 shadow-sm';
+        tabExam.className = 'px-3.5 py-2 text-sm font-semibold rounded-lg transition-all text-slate-600 hover:text-slate-900';
+      } else {
+        studyView.classList.add('hidden');
+        examView.classList.remove('hidden');
+        tabExam.className = 'px-3.5 py-2 text-sm font-semibold rounded-lg transition-all bg-white text-indigo-700 shadow-sm';
+        tabStudy.className = 'px-3.5 py-2 text-sm font-semibold rounded-lg transition-all text-slate-600 hover:text-slate-900';
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // =========================================================================
+    // CHẾ ĐỘ 1: ÔN TẬP 300 CÂU
+    // =========================================================================
+    function getWrongCount() {
+      let c = 0;
+      for (const [idStr, ans] of Object.entries(state.userAnswers)) {
+        const q = QUESTIONS[Number(idStr) - 1];
+        if (q && ans !== q.ans) c++;
+      }
+      return c;
+    }
+
+    function renderFilterButtons() {
+      const wrongCount = getWrongCount();
+      const starCount = state.bookmarks.length;
+      const items = [
+        { key: 'all',   label: `Tất cả (300)` },
+        { key: 'goc',   label: `Đề cương gốc (58)` },
+        { key: 'p1',    label: `Phần 1 (50)` },
+        { key: 'p2',    label: `Phần 2 (50)` },
+        { key: 'p3',    label: `Phần 3 (65)` },
+        { key: 'p4',    label: `Phần 4 (77)` },
+        { key: 'wrong', label: `Câu làm sai (${wrongCount})` },
+        { key: 'star',  label: `★ Đánh dấu (${starCount})` }
+      ];
+
+      const container = document.getElementById('filter-buttons');
+      container.innerHTML = items.map(item => {
+        const active = state.filter === item.key;
+        const cls = active
+          ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
+          : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50';
+        return `<button onclick="setFilter('${item.key}')" class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-xl border transition-colors ${cls}">${item.label}</button>`;
+      }).join('');
+    }
+
+    function setFilter(key) {
+      state.filter = key;
+      state.page = 1;
+      renderFilterButtons();
+      renderQuestions();
+    }
+
+    function handleSearch() {
+      const val = document.getElementById('search-input').value.trim();
+      state.search = val;
+      state.page = 1;
+      document.getElementById('clear-search-btn').classList.toggle('hidden', val === '');
+      renderQuestions();
+    }
+
+    function clearSearch() {
+      document.getElementById('search-input').value = '';
+      handleSearch();
+    }
+
+    function toggleShowAll() {
+      state.showAllAnswers = document.getElementById('show-all-toggle').checked;
+      renderQuestions();
+    }
+
+    function getFilteredQuestions() {
+      const kw = state.search.toLowerCase();
+      return QUESTIONS.filter(item => {
+        if (state.filter === 'wrong') {
+          if (state.userAnswers[item.id] === undefined || state.userAnswers[item.id] === item.ans) return false;
+        } else if (state.filter === 'star') {
+          if (!state.bookmarks.includes(item.id)) return false;
+        } else if (state.filter !== 'all') {
+          if (item.part !== state.filter) return false;
+        }
+
+        if (kw) {
+          if (/^\d+$/.test(kw)) {
+            return String(item.id) === kw || item.q.toLowerCase().includes(kw);
+          }
+          const inQ = item.q.toLowerCase().includes(kw);
+          const inOpts = item.opts.some(o => o.toLowerCase().includes(kw));
+          const inExp = item.exp.toLowerCase().includes(kw);
+          return inQ || inOpts || inExp;
+        }
+        return true;
+      });
+    }
+
+    function selectStudyAnswer(qId, optIdx) {
+      state.userAnswers[qId] = optIdx;
+      saveProgress();
+      updateStats();
+      renderFilterButtons();
+      renderQuestions();
+    }
+
+    function clearSingleAnswer(qId) {
+      delete state.userAnswers[qId];
+      saveProgress();
+      updateStats();
+      renderFilterButtons();
+      renderQuestions();
+    }
+
+    function toggleBookmark(qId) {
+      const idx = state.bookmarks.indexOf(qId);
+      if (idx === -1) {
+        state.bookmarks.push(qId);
+        showToast(`Đã đánh dấu Câu ${qId}`);
+      } else {
+        state.bookmarks.splice(idx, 1);
+      }
+      saveProgress();
+      updateStats();
+      renderFilterButtons();
+      renderQuestions();
+    }
+
+    function jumpToQuestion() {
+      const raw = document.getElementById('jump-input').value.trim();
+      const num = parseInt(raw, 10);
+      if (isNaN(num) || num < 1 || num > QUESTIONS.length) {
+        showToast('Vui lòng nhập số câu từ 1 đến 300.');
+        return;
+      }
+      // Chuyển về bộ lọc tất cả và xóa tìm kiếm để đảm bảo tìm thấy câu
+      state.filter = 'all';
+      state.search = '';
+      document.getElementById('search-input').value = '';
+      document.getElementById('clear-search-btn').classList.add('hidden');
+      state.page = Math.ceil(num / PAGE_SIZE);
+      renderFilterButtons();
+      renderQuestions();
+
+      setTimeout(() => {
+        const el = document.getElementById(`q-card-${num}`);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          el.classList.add('ring-2', 'ring-indigo-500');
+          setTimeout(() => el.classList.remove('ring-2', 'ring-indigo-500'), 1500);
+        }
+      }, 60);
+    }
+
+    function changePage(newPage) {
+      state.page = newPage;
+      renderQuestions();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function renderQuestions() {
+      const filtered = getFilteredQuestions();
+      const total = filtered.length;
+      const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+      if (state.page > totalPages) state.page = totalPages;
+
+      const start = (state.page - 1) * PAGE_SIZE;
+      const pageItems = filtered.slice(start, start + PAGE_SIZE);
+
+      const summary = document.getElementById('filter-summary');
+      summary.textContent = total === 0
+        ? 'Không tìm thấy câu hỏi phù hợp'
+        : `Hiển thị ${start + 1}–${Math.min(start + PAGE_SIZE, total)} trên tổng số ${total} câu hỏi`;
+
+      const listEl = document.getElementById('question-list');
+      if (pageItems.length === 0) {
+        listEl.innerHTML = `
+          <div class="bg-white rounded-2xl border border-slate-200 p-10 text-center space-y-2">
+            <div class="text-3xl">📭</div>
+            <p class="text-slate-700 font-semibold">Không có câu hỏi nào trong mục này</p>
+            <p class="text-xs text-slate-500">Thử đổi bộ lọc hoặc xóa từ khóa tìm kiếm để xem lại toàn bộ 300 câu.</p>
+          </div>`;
+      } else {
+        listEl.innerHTML = pageItems.map(item => {
+          const picked = state.userAnswers[item.id];
+          const hasPicked = picked !== undefined;
+          const reveal = hasPicked || state.showAllAnswers;
+          const isStar = state.bookmarks.includes(item.id);
+          const partBadge = PART_META[item.part]?.badge || '';
+
+          const optionsHtml = item.opts.map((opt, idx) => {
+            let optCls = 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700';
+            let badgeCls = 'bg-slate-100 text-slate-600';
+            let icon = '';
+
+            if (reveal) {
+              if (idx === item.ans) {
+                optCls = 'border-emerald-500 bg-emerald-50/80 text-emerald-900 font-medium';
+                badgeCls = 'bg-emerald-600 text-white';
+                icon = '<span class="ml-auto text-emerald-600 font-bold text-sm">✓</span>';
+              } else if (hasPicked && idx === picked && idx !== item.ans) {
+                optCls = 'border-rose-400 bg-rose-50/80 text-rose-900';
+                badgeCls = 'bg-rose-600 text-white';
+                icon = '<span class="ml-auto text-rose-600 font-bold text-sm">✕</span>';
+              } else {
+                optCls = 'border-slate-200 bg-white text-slate-500 opacity-80';
+              }
+            }
+
+            return `
+              <button onclick="selectStudyAnswer(${item.id}, ${idx})"
+                class="w-full text-left flex items-start gap-3 p-3 rounded-xl border transition-all ${optCls}">
+                <span class="w-6 h-6 shrink-0 rounded-lg text-xs font-bold flex items-center justify-center mt-0.5 ${badgeCls}">
+                  ${LETTERS[idx]}
+                </span>
+                <span class="text-sm leading-relaxed">${escapeHtml(opt)}</span>
+                ${icon}
+              </button>`;
+          }).join('');
+
+          const expHtml = reveal ? `
+            <div class="mt-3 p-3.5 rounded-xl bg-indigo-50/70 border border-indigo-100 text-sm text-slate-700 leading-relaxed">
+              <div class="flex items-center justify-between gap-2 mb-1">
+                <span class="font-semibold text-indigo-900">Đáp án đúng: ${LETTERS[item.ans]}</span>
+                ${hasPicked ? `<button onclick="clearSingleAnswer(${item.id})" class="text-xs text-slate-500 hover:text-indigo-700 underline">Làm lại câu này</button>` : ''}
+              </div>
+              <p><span class="font-semibold text-slate-800">Giải thích:</span> ${escapeHtml(item.exp)}</p>
+            </div>` : '';
+
+          return `
+            <article id="q-card-${item.id}" class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-xs transition-all">
+              <div class="flex items-start justify-between gap-3 mb-3">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="px-2.5 py-0.5 text-xs font-bold rounded-lg bg-slate-900 text-white">Câu ${item.id}</span>
+                  <span class="px-2.5 py-0.5 text-xs font-medium rounded-lg bg-slate-100 text-slate-600">${partBadge}</span>
+                </div>
+                <button onclick="toggleBookmark(${item.id})" title="Đánh dấu câu khó"
+                  class="p-1.5 rounded-lg transition-colors ${isStar ? 'text-amber-500 bg-amber-50' : 'text-slate-300 hover:text-amber-400 hover:bg-slate-50'}">
+                  <svg class="w-5 h-5" fill="${isStar ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                  </svg>
+                </button>
+              </div>
+              <h3 class="text-sm sm:text-base font-semibold text-slate-900 leading-relaxed mb-3.5">
+                ${escapeHtml(item.q)}
+              </h3>
+              <div class="space-y-2">${optionsHtml}</div>
+              ${expHtml}
+            </article>`;
+        }).join('');
+      }
+
+      // Render thanh phân trang
+      const pagEl = document.getElementById('pagination-bar');
+      if (total <= PAGE_SIZE) {
+        pagEl.classList.add('hidden');
+      } else {
+        pagEl.classList.remove('hidden');
+        let pagesHtml = '';
+        for (let p = 1; p <= totalPages; p++) {
+          if (p === 1 || p === totalPages || Math.abs(p - state.page) <= 1) {
+            const active = p === state.page;
+            pagesHtml += `<button onclick="changePage(${p})" class="w-8 h-8 text-xs font-semibold rounded-lg transition-colors ${active ? 'bg-indigo-600 text-white' : 'text-slate-600 hover:bg-slate-100'}">${p}</button>`;
+          } else if (Math.abs(p - state.page) === 2) {
+            pagesHtml += `<span class="px-1 text-slate-400 text-xs">…</span>`;
+          }
+        }
+        pagEl.innerHTML = `
+          <button onclick="changePage(${state.page - 1})" ${state.page <= 1 ? 'disabled' : ''}
+            class="px-3.5 py-2 text-xs sm:text-sm font-medium rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 disabled:opacity-40">
+            ← Trang trước
+          </button>
+          <div class="flex items-center gap-1">${pagesHtml}</div>
+          <button onclick="changePage(${state.page + 1})" ${state.page >= totalPages ? 'disabled' : ''}
+            class="px-3.5 py-2 text-xs sm:text-sm font-medium rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 disabled:opacity-40">
+            Trang sau →
+          </button>`;
+      }
+    }
+
+    // =========================================================================
+    // CHẾ ĐỘ 2: THI THỬ 40 CÂU - 60 PHÚT
+    // =========================================================================
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function startExam() {
+      clearInterval(exam.timerId);
+      exam.status = 'active';
+      exam.questions = shuffleArray(QUESTIONS).slice(0, 40);
+      exam.answers = {};
+      exam.currentIndex = 0;
+      exam.timeLeft = 60 * 60;
+      exam.durationUsed = 0;
+      exam.reviewFilter = 'all';
+
+      document.getElementById('exam-intro').classList.add('hidden');
+      document.getElementById('exam-result').classList.add('hidden');
+      document.getElementById('exam-active').classList.remove('hidden');
+
+      document.getElementById('exam-timer').textContent = formatTime(exam.timeLeft);
+      exam.timerId = setInterval(() => {
+        exam.timeLeft--;
+        exam.durationUsed++;
+        document.getElementById('exam-timer').textContent = formatTime(Math.max(0, exam.timeLeft));
+        if (exam.timeLeft <= 0) {
+          finishExam();
+          showToast('Đã hết thời gian 60 phút! Hệ thống tự động nộp bài.');
+        }
+      }, 1000);
+
+      renderExamQuestion();
+      renderExamNav();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderExamQuestion() {
+      const idx = exam.currentIndex;
+      const item = exam.questions[idx];
+      const picked = exam.answers[idx];
+
+      document.getElementById('exam-q-badge').textContent = `Câu ${idx + 1} / 40 (Ngân hàng #${item.id})`;
+      document.getElementById('exam-prev-btn').disabled = idx === 0;
+      document.getElementById('exam-next-btn').disabled = idx === exam.questions.length - 1;
+
+      const optsHtml = item.opts.map((opt, optIdx) => {
+        const selected = picked === optIdx;
+        const cls = selected
+          ? 'border-indigo-600 bg-indigo-50/80 text-indigo-950 font-medium ring-1 ring-indigo-600'
+          : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700';
+        const badge = selected ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600';
+        return `
+          <button onclick="selectExamAnswer(${idx}, ${optIdx})"
+            class="w-full text-left flex items-start gap-3 p-3.5 rounded-xl border transition-all ${cls}">
+            <span class="w-6 h-6 shrink-0 rounded-lg text-xs font-bold flex items-center justify-center mt-0.5 ${badge}">
+              ${LETTERS[optIdx]}
+            </span>
+            <span class="text-sm sm:text-base leading-relaxed">${escapeHtml(opt)}</span>
+          </button>`;
+      }).join('');
+
+      document.getElementById('exam-question-container').innerHTML = `
+        <h3 class="text-base sm:text-lg font-semibold text-slate-900 leading-relaxed">
+          ${escapeHtml(item.q)}
+        </h3>
+        <div class="space-y-2.5">${optsHtml}</div>`;
+    }
+
+    function selectExamAnswer(qIdx, optIdx) {
+      exam.answers[qIdx] = optIdx;
+      renderExamQuestion();
+      renderExamNav();
+    }
+
+    function moveExamQuestion(delta) {
+      const next = exam.currentIndex + delta;
+      if (next >= 0 && next < exam.questions.length) {
+        exam.currentIndex = next;
+        renderExamQuestion();
+        renderExamNav();
+      }
+    }
+
+    function goToExamQuestion(idx) {
+      exam.currentIndex = idx;
+      renderExamQuestion();
+      renderExamNav();
+    }
+
+    function renderExamNav() {
+      const answeredCount = Object.keys(exam.answers).length;
+      document.getElementById('exam-answered-count').textContent = `Đã làm ${answeredCount}/40`;
+
+      const grid = document.getElementById('exam-nav-grid');
+      grid.innerHTML = exam.questions.map((_, i) => {
+        const isCurrent = i === exam.currentIndex;
+        const isDone = exam.answers[i] !== undefined;
+        let cls = 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200';
+        if (isDone) cls = 'bg-indigo-600 text-white border-indigo-600';
+        if (isCurrent) cls += ' ring-2 ring-offset-1 ring-slate-900';
+        return `<button onclick="goToExamQuestion(${i})" class="h-9 text-xs font-semibold rounded-lg border transition-all ${cls}">${i + 1}</button>`;
+      }).join('');
+    }
+
+    function openSubmitExamModal() {
+      const answered = Object.keys(exam.answers).length;
+      const missing = 40 - answered;
+      const msg = missing > 0
+        ? `Bạn mới làm ${answered}/40 câu (còn ${missing} câu chưa chọn đáp án). Bạn có chắc chắn muốn nộp bài ngay không?`
+        : 'Bạn đã hoàn thành đủ 40/40 câu. Nhấn xác nhận để nộp bài và xem điểm ngay.';
+      openModal('Nộp bài thi thử?', msg, 'Nộp bài', 'bg-emerald-600 hover:bg-emerald-700', finishExam);
+    }
+
+    function finishExam() {
+      clearInterval(exam.timerId);
+      exam.status = 'result';
+
+      let correct = 0;
+      exam.questions.forEach((item, i) => {
+        if (exam.answers[i] === item.ans) correct++;
+      });
+
+      const score10 = ((correct / 40) * 10).toFixed(2);
+      document.getElementById('exam-score-10').textContent = score10;
+      document.getElementById('exam-score-raw').textContent = `${correct}/40`;
+      document.getElementById('exam-result-time').textContent = `Thời gian làm bài: ${formatTime(exam.durationUsed)}`;
+
+      document.getElementById('exam-active').classList.add('hidden');
+      document.getElementById('exam-result').classList.remove('hidden');
+
+      setExamReviewFilter('all');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function setExamReviewFilter(filter) {
+      exam.reviewFilter = filter;
+      const allBtn = document.getElementById('review-all-btn');
+      const wrongBtn = document.getElementById('review-wrong-btn');
+      if (filter === 'all') {
+        allBtn.className = 'px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-slate-900 text-white';
+        wrongBtn.className = 'px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200';
+      } else {
+        wrongBtn.className = 'px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-rose-600 text-white';
+        allBtn.className = 'px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200';
+      }
+      renderExamReview();
+    }
+
+    function renderExamReview() {
+      const container = document.getElementById('exam-review-list');
+      const rows = exam.questions
+        .map((item, i) => ({ item, i, picked: exam.answers[i] }))
+        .filter(({ item, picked }) => exam.reviewFilter === 'all' || picked !== item.ans);
+
+      if (rows.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white rounded-2xl border border-emerald-200 p-8 text-center">
+            <div class="text-3xl mb-2">🎉</div>
+            <p class="font-bold text-emerald-700">Xuất sắc! Bạn không làm sai câu nào trong đề thi này.</p>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = rows.map(({ item, i, picked }) => {
+        const isCorrect = picked === item.ans;
+        const statusBadge = isCorrect
+          ? '<span class="px-2.5 py-0.5 text-xs font-semibold rounded-lg bg-emerald-100 text-emerald-700">Đúng</span>'
+          : picked === undefined
+            ? '<span class="px-2.5 py-0.5 text-xs font-semibold rounded-lg bg-slate-200 text-slate-700">Chưa làm</span>'
+            : '<span class="px-2.5 py-0.5 text-xs font-semibold rounded-lg bg-rose-100 text-rose-700">Sai</span>';
+
+        const optsHtml = item.opts.map((opt, idx) => {
+          let cls = 'border-slate-200 bg-white text-slate-600';
+          let badge = 'bg-slate-100 text-slate-600';
+          if (idx === item.ans) {
+            cls = 'border-emerald-500 bg-emerald-50 text-emerald-900 font-medium';
+            badge = 'bg-emerald-600 text-white';
+          } else if (idx === picked && idx !== item.ans) {
+            cls = 'border-rose-400 bg-rose-50 text-rose-900';
+            badge = 'bg-rose-600 text-white';
+          }
+          return `
+            <div class="flex items-start gap-3 p-2.5 rounded-xl border ${cls}">
+              <span class="w-6 h-6 shrink-0 rounded-lg text-xs font-bold flex items-center justify-center ${badge}">${LETTERS[idx]}</span>
+              <span class="text-sm leading-relaxed">${escapeHtml(opt)}</span>
+            </div>`;
+        }).join('');
+
+        return `
+          <article class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-xs space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 text-xs font-bold rounded-lg bg-slate-900 text-white">Câu ${i + 1}</span>
+                <span class="text-xs text-slate-500">(Ngân hàng #${item.id})</span>
+              </div>
+              ${statusBadge}
+            </div>
+            <h4 class="text-sm sm:text-base font-semibold text-slate-900 leading-relaxed">${escapeHtml(item.q)}</h4>
+            <div class="space-y-2">${optsHtml}</div>
+            <div class="p-3 rounded-xl bg-indigo-50/70 border border-indigo-100 text-sm text-slate-700 leading-relaxed">
+              <span class="font-semibold text-indigo-900">Đáp án ${LETTERS[item.ans]} — Giải thích:</span> ${escapeHtml(item.exp)}
+            </div>
+          </article>`;
+      }).join('');
+    }
+
+    // =========================================================================
+    // KHỞI TẠO ỨNG DỤNG
+    // =========================================================================
+    window.addEventListener('DOMContentLoaded', () => {
+      loadProgress();
+      updateStats();
+      renderFilterButtons();
+      renderQuestions();
+    });
+  </script>
+</body>
+</html>
