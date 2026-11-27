@@ -4,19 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hệ Thống Ôn Tập Trắc Nghiệm</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,600;6..72,700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./css/home.css" />
 </head>
 <body>
   <div class="container">
-    <header>
-      <div>
-        <h1>Hệ Thống Ôn Tập Trắc Nghiệm</h1>
-        <p class="subtitle">Chọn môn học để bắt đầu ôn tập theo chương hoặc thi thử bấm giờ</p>
+    <header class="masthead">
+      <div class="brand-block">
+        <a href="./home.html" class="wordmark">Kho Lưu Trữ Ôn Tập</a>
+        <h1>Hệ thống ôn tập trắc nghiệm học phần</h1>
+        <p class="subtitle">Luyện tập theo từng chương đề cương hoặc thi thử bấm giờ 60 phút với ngân hàng 539 câu hỏi.</p>
       </div>
       <button class="theme-btn" id="theme-toggle" type="button">🌙 Chế độ tối</button>
     </header>
 
-    <!-- Widget Ngày giờ & Thời tiết TP.HCM -->
     <section class="info-bar" aria-label="Thông tin ngày giờ và thời tiết">
       <div class="date-time-box">
         <div class="today-text" id="today-date">Hôm nay là ...</div>
@@ -37,38 +40,44 @@
       </div>
     </section>
 
-    <div class="grid">
-      <a class="card" href="./triet.html">
-        <span class="badge triet">300 câu hỏi</span>
-        <h2>Triết Học Mác – Lênin</h2>
-        <p>Ngân hàng 300 câu hỏi trắc nghiệm gồm Đề cương gốc và 4 phần bổ sung, hỗ trợ luyện câu sai, đánh dấu sao và thi thử 40 câu.</p>
-        <div class="meta-row">
-          <span id="triet-exams">📝 Đã thi: 0 lượt</span>
+    <main class="grid" aria-label="Danh sách môn học">
+      <a class="card triet-card" href="./triet.html">
+        <div class="card-top">
+          <span class="subject-code">MLN111 • 300 câu hỏi</span>
+          <span class="exam-count" id="triet-exams">📝 Đã thi: 0 lượt</span>
         </div>
+        <h2>Triết Học Mác - Lênin</h2>
+        <p>Ngân hàng 300 câu hỏi trắc nghiệm gồm Đề cương gốc và 4 phần bổ sung, hỗ trợ luyện câu sai, đánh dấu sao và thi thử ngẫu nhiên 40 câu.</p>
         <div class="progress-wrap">
-          <div class="progress-meta"><span>Tiến độ ôn tập</span><span id="triet-stat">0 / 300 (0%)</span></div>
+          <div class="progress-meta">
+            <span>Tiến độ hoàn thành</span>
+            <span id="triet-stat">0 / 300 (0%)</span>
+          </div>
           <div class="bar"><div class="fill triet" id="triet-bar" style="width:0%"></div></div>
         </div>
-        <div class="cta">Vào ôn tập Triết học →</div>
+        <div class="cta">Mở không gian ôn tập Triết học →</div>
       </a>
 
       <a class="card pl-card" href="./pl-shtt.html">
-        <span class="badge pl">239 câu hỏi • 10 phần</span>
-        <h2>Pháp Luật Đại Cương &amp; SHTT</h2>
-        <p>Đầy đủ 10 phần: Nhà nước &amp; Pháp luật, Hiến pháp, Hành chính, Hình sự, Dân sự, HNGĐ, Lao động, Sở hữu trí tuệ, Thương mại, Đất đai.</p>
-        <div class="meta-row">
-          <span id="pl-exams">📝 Đã thi: 0 lượt</span>
+        <div class="card-top">
+          <span class="subject-code">LAW101 • 239 câu hỏi</span>
+          <span class="exam-count" id="pl-exams">📝 Đã thi: 0 lượt</span>
         </div>
+        <h2>Pháp Luật Đại Cương &amp; SHTT</h2>
+        <p>Đầy đủ 10 chuyên đề: Nhà nước và Pháp luật, Hiến pháp, Hành chính, Hình sự, Dân sự, Hôn nhân gia đình, Lao động, Sở hữu trí tuệ, Thương mại và Đất đai.</p>
         <div class="progress-wrap">
-          <div class="progress-meta"><span>Tiến độ ôn tập</span><span id="pl-stat">0 / 239 (0%)</span></div>
+          <div class="progress-meta">
+            <span>Tiến độ hoàn thành</span>
+            <span id="pl-stat">0 / 239 (0%)</span>
+          </div>
           <div class="bar"><div class="fill pl" id="pl-bar" style="width:0%"></div></div>
         </div>
-        <div class="cta">Vào ôn tập Pháp luật &amp; SHTT →</div>
+        <div class="cta">Mở không gian ôn tập Pháp luật &amp; SHTT →</div>
       </a>
-    </div>
+    </main>
 
     <footer>
-      Tiến độ ôn tập và lịch sử thi thử của từng môn được lưu riêng biệt trên trình duyệt hiện tại.
+      Tiến độ làm bài, câu đánh dấu sao và lịch sử thi thử của từng học phần được lưu cục bộ trên trình duyệt hiện tại.
     </footer>
   </div>
 
