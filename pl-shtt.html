@@ -197,7 +197,7 @@
 
         <!-- Tiện ích: Mèo bay / Dark Mode -->
         <div class="flex items-center gap-1">
-          <a href="../home.html" title="Quay về trang chủ chọn môn"
+          <a href="./home.html" title="Quay về trang chủ chọn môn"
             class="px-2 py-1 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shrink-0">
             🏠 Chọn môn
           </a>
@@ -800,7 +800,7 @@
     const STORAGE_SETTINGS_KEY = 'pl_shtt_239_settings_v1';
 
     // Đường dẫn tương đối sạch sẽ cho GitHub Pages (đặt meo.jpg cùng thư mục với index.html)
-    const CAT_IMAGE_SRC = '../meo.jpg';
+    const CAT_IMAGE_SRC = './meo.jpg';
 
     // =========================================================================
     // 2. TRẠNG THÁI ỨNG DỤNG & LƯU TRỮ AN TOÀN (TRY...CATCH)
@@ -1125,8 +1125,20 @@
       const vh = window.innerHeight;
       const catW = 80;
 
+      // Bay nhẹ nhàng từ trái sang phải hoặc phải sang trái với quỹ đạo sóng sin mềm
+      const fromLeft = Math.random() < 0.5;
+      const startX = fromLeft ? -catW - 14 : vw + 14;
+      const endX = fromLeft ? vw + 14 : -catW - 14;
+      const startY = 90 + Math.random() * Math.max(100, vh - 240);
+      const endY = 90 + Math.random() * Math.max(100, vh - 240);
+      const waveAmp = 22 + Math.random() * 24;
+      const waveFreq = 1.4 + Math.random() * 1.1;
+      const flightDuration = 7500 + Math.random() * 1800;
+
       const el = document.createElement('div');
       el.id = 'lockin-cat-sprite';
+      el.style.left = `${startX}px`;
+      el.style.top = `${startY}px`;
 
       const img = document.createElement('img');
       img.src = CAT_IMAGE_SRC;
@@ -1139,16 +1151,6 @@
       el.appendChild(img);
       document.body.appendChild(el);
       activeCatEl = el;
-
-      // Bay nhẹ nhàng từ trái sang phải hoặc phải sang trái với quỹ đạo sóng sin mềm
-      const fromLeft = Math.random() < 0.5;
-      const startX = fromLeft ? -catW - 14 : vw + 14;
-      const endX = fromLeft ? vw + 14 : -catW - 14;
-      const startY = 90 + Math.random() * Math.max(100, vh - 240);
-      const endY = 90 + Math.random() * Math.max(100, vh - 240);
-      const waveAmp = 22 + Math.random() * 24;
-      const waveFreq = 1.4 + Math.random() * 1.1;
-      const flightDuration = 7500 + Math.random() * 1800;
 
       const startTime = performance.now();
       function animateCat(now) {
