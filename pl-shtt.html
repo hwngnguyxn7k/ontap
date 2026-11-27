@@ -5,10 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ôn Tập 239 Câu Pháp Luật Đại Cương &amp; SHTT</title>
 
+  <!-- Font Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,600;6..72,700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -16,8 +18,7 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Be Vietnam Pro', 'system-ui', '-apple-system', 'sans-serif'],
-            serif: ['Newsreader', 'Georgia', 'serif']
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif']
           }
         }
       }
@@ -26,108 +27,121 @@
 
   <link rel="stylesheet" href="./css/quiz.css" />
 </head>
-<body class="bg-[#f6f5f0] dark:bg-[#0b0f17] text-[#14191f] dark:text-slate-100 min-h-screen transition-colors duration-200">
+<body class="bg-[#f8fafc] dark:bg-[#0b1120] text-[#0f172a] dark:text-slate-100 min-h-screen transition-colors duration-200">
+  <!-- Canvas hiệu ứng pháo giấy -->
   <canvas id="confetti-canvas"></canvas>
 
-  <header class="sticky top-0 z-40 bg-[#ffffff]/95 dark:bg-[#121824]/95 backdrop-blur-md border-b border-[#dcd8cc] dark:border-[#232f44]">
-    <div class="bg-[#eeece4]/80 dark:bg-[#0b0f17]/90 border-b border-[#dcd8cc]/70 dark:border-[#232f44] py-1 px-3">
+  <!-- Thanh tiêu đề cố định (gọn gàng) -->
+  <header class="sticky top-0 z-40 bg-white/90 dark:bg-[#0f172a]/90 backdrop-blur-md border-b border-[#e2e8f0] dark:border-slate-800">
+    <!-- Thanh Giờ • Thứ • Ngày Tháng Năm ở giữa trên cùng (cố định kích thước số) -->
+    <div class="bg-slate-50/90 dark:bg-slate-900/90 border-b border-slate-200/70 dark:border-slate-800/80 py-0.5 px-2">
       <div class="max-w-5xl mx-auto flex items-center justify-center">
-        <div id="live-datetime-bar" class="tabular-clock inline-flex items-center gap-2 px-3 py-0.5 rounded-full text-xs font-semibold bg-white dark:bg-[#192233] text-[#14191f] dark:text-slate-100 border border-[#dcd8cc] dark:border-[#232f44]">
-          <span class="w-1.5 h-1.5 rounded-full bg-[#0f766e] dark:bg-teal-400 shrink-0"></span>
+        <div id="live-datetime-bar" class="tabular-clock inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] sm:text-xs font-semibold bg-white dark:bg-slate-800 text-[#0f172a] dark:text-slate-100 border border-slate-200/80 dark:border-slate-700 shadow-2xs">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#2563eb] dark:bg-blue-400 animate-pulse shrink-0"></span>
           <span id="live-datetime-text" class="inline-flex items-center">
-            <span id="live-time-text" class="tabular-clock inline-block w-[58px] text-center">--:--:--</span>
-            <span class="mx-1.5 text-slate-400 dark:text-slate-500">•</span>
+            <span id="live-time-text" class="tabular-clock inline-block w-[52px] sm:w-[56px] text-center">--:--:--</span>
+            <span class="mx-1 text-slate-400 dark:text-slate-500">•</span>
             <span id="live-date-text" class="tabular-clock whitespace-nowrap">--, --/--/----</span>
           </span>
         </div>
       </div>
     </div>
-
-    <div class="max-w-5xl mx-auto px-3 sm:px-5 py-2.5 space-y-2">
-      <div class="flex flex-wrap items-center justify-between gap-2.5">
-        <div class="flex items-center gap-2.5">
-          <a href="./home.html" class="w-8 h-8 rounded-lg bg-[#0f766e] text-white flex items-center justify-center font-bold text-xs shadow-xs shrink-0 hover:bg-teal-800 transition-colors" title="Về trang chọn môn">
+    <div class="max-w-5xl mx-auto px-3 sm:px-5 py-1.5 sm:py-2 space-y-1.5">
+      <!-- Hàng 1: Logo + Tab chuyển chế độ + Nút tiện ích -->
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-[#2563eb] to-indigo-600 text-white flex items-center justify-center font-extrabold text-xs sm:text-sm shadow-sm shrink-0">
             239
-          </a>
-          <h1 class="font-display-serif text-base sm:text-lg font-bold tracking-tight text-[#14191f] dark:text-white leading-tight">
+          </div>
+          <h1 class="text-xs sm:text-sm font-extrabold tracking-tight text-[#0f172a] dark:text-white leading-tight">
             Pháp Luật Đại Cương &amp; SHTT
           </h1>
         </div>
 
-        <nav class="flex items-center p-1 rounded-xl bg-[#eeece4] dark:bg-[#192233] border border-[#dcd8cc] dark:border-[#232f44]">
+        <!-- Nút chuyển 3 Tab chính -->
+        <nav class="flex items-center p-0.5 rounded-lg bg-slate-100 dark:bg-slate-800/90 border border-slate-200/70 dark:border-slate-700/70">
           <button id="tab-study" type="button" onclick="switchMode('study')"
-            class="px-3 py-1 text-xs font-semibold rounded-lg transition-colors bg-white dark:bg-[#121824] text-[#0f766e] dark:text-teal-400 shadow-xs">
+            class="px-2.5 py-1 text-xs font-semibold rounded-md transition-all bg-white dark:bg-slate-900 text-[#2563eb] dark:text-blue-400 shadow-sm">
             Ôn tập
           </button>
           <button id="tab-exam" type="button" onclick="switchMode('exam')"
-            class="px-3 py-1 text-xs font-semibold rounded-lg transition-colors text-[#525b66] dark:text-slate-300 hover:text-[#14191f] dark:hover:text-white">
+            class="px-2.5 py-1 text-xs font-semibold rounded-md transition-all text-slate-600 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white">
             Thi thử
           </button>
           <button id="tab-history" type="button" onclick="switchMode('history')"
-            class="px-3 py-1 text-xs font-semibold rounded-lg transition-colors text-[#525b66] dark:text-slate-300 hover:text-[#14191f] dark:hover:text-white inline-flex items-center gap-1.5">
+            class="px-2.5 py-1 text-xs font-semibold rounded-md transition-all text-slate-600 dark:text-slate-300 hover:text-[#0f172a] dark:hover:text-white inline-flex items-center gap-1">
             <span>Lịch sử</span>
-            <span id="history-count-badge" class="tabular-clock px-1.5 py-0.5 text-xs font-bold rounded bg-teal-100 dark:bg-teal-950 text-[#0f766e] dark:text-teal-300">0</span>
+            <span id="history-count-badge" class="px-1.5 py-0 text-[10px] font-bold rounded bg-blue-100 dark:bg-blue-950 text-[#2563eb] dark:text-blue-300">0</span>
           </button>
         </nav>
 
-        <div class="flex items-center gap-1.5">
+        <!-- Tiện ích: Mèo bay / Dark Mode -->
+        <div class="flex items-center gap-1">
           <a href="./home.html" title="Quay về trang chủ chọn môn"
-            class="px-2.5 py-1.5 rounded-lg text-xs font-semibold border border-[#dcd8cc] dark:border-[#232f44] bg-white dark:bg-[#192233] text-[#14191f] dark:text-slate-200 hover:border-[#0f766e] transition-colors shrink-0">
+            class="px-2 py-1 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shrink-0">
             🏠 Chọn môn
           </a>
           <button id="btn-toggle-cat" type="button" onclick="toggleCatFeature()" title="Bật/tắt mèo 'time to lock in.' bay quanh màn hình"
-            class="px-2.5 py-1.5 rounded-lg text-xs font-semibold border border-[#dcd8cc] dark:border-[#232f44] bg-white dark:bg-[#192233] hover:border-[#0f766e] transition-colors">
+            class="px-2 py-1 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
             🐱 Bật
           </button>
           <button id="btn-toggle-dark" type="button" onclick="toggleDarkMode()" title="Chuyển chế độ Sáng / Tối"
-            class="px-2.5 py-1.5 rounded-lg text-xs font-semibold border border-[#dcd8cc] dark:border-[#232f44] bg-white dark:bg-[#192233] hover:border-[#0f766e] transition-colors">
+            class="px-2 py-1 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
             🌙
           </button>
         </div>
       </div>
 
-      <div class="space-y-1.5">
-        <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
-          <div class="tabular-clock flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span class="text-[#525b66] dark:text-slate-300">Đã làm: <strong id="stat-done" class="text-[#14191f] dark:text-white">0/239</strong></span>
-            <span class="text-[#15803d] dark:text-emerald-400">Đúng: <strong id="stat-correct">0</strong> <span id="stat-accuracy" class="opacity-85">(0%)</span></span>
-            <span class="text-[#b91c1c] dark:text-rose-400">Sai: <strong id="stat-wrong">0</strong></span>
-            <span id="stat-star" class="text-amber-700 dark:text-amber-400 font-semibold">⭐ 0</span>
+      <!-- Hàng 2: Thanh thống kê nhanh & Shimmer Progress Bar -->
+      <div class="space-y-1">
+        <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] sm:text-xs">
+          <div class="tabular-clock flex flex-wrap items-center gap-x-2.5 gap-y-0.5">
+            <span class="text-slate-600 dark:text-slate-300">Đã làm: <strong id="stat-done" class="text-[#0f172a] dark:text-white">0/239</strong></span>
+            <span class="text-[#16a34a] dark:text-emerald-400">Đúng: <strong id="stat-correct">0</strong> <span id="stat-accuracy" class="text-[10px] sm:text-[11px] opacity-85">(0%)</span></span>
+            <span class="text-[#dc2626] dark:text-rose-400">Sai: <strong id="stat-wrong">0</strong></span>
+            <span id="stat-star" class="text-amber-600 dark:text-amber-400 font-semibold">⭐ 0</span>
           </div>
-          <div id="combo-badge" class="tabular-clock inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#eeece4] dark:bg-[#192233] text-[#525b66] dark:text-slate-400 border border-[#dcd8cc] dark:border-[#232f44]">
+          <div id="combo-badge" class="tabular-clock inline-flex items-center gap-1 px-2 py-0 rounded-full text-[11px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
             🔥 <span id="stat-combo">0</span>
           </div>
         </div>
-        <div class="w-full h-1.5 rounded-full bg-[#eeece4] dark:bg-[#192233] overflow-hidden">
-          <div id="progress-bar" class="shimmer-bar h-full rounded-full bg-gradient-to-r from-[#0f766e] via-teal-500 to-emerald-500" style="width: 0%"></div>
+        <div class="w-full h-1.5 rounded-full bg-slate-200/80 dark:bg-slate-800 overflow-hidden">
+          <div id="progress-bar" class="shimmer-bar h-full rounded-full bg-gradient-to-r from-[#2563eb] via-sky-500 to-emerald-500" style="width: 0%"></div>
         </div>
       </div>
     </div>
   </header>
 
-  <main class="max-w-5xl mx-auto px-3 sm:px-5 py-6 pb-20">
-    <!-- TAB 1: CHẾ ĐỘ ÔN TẬP -->
+  <!-- Nội dung chính -->
+  <main class="max-w-5xl mx-auto px-3 sm:px-5 py-5 pb-20">
+    <!-- ========================================================= -->
+    <!-- TAB 1: CHẾ ĐỘ ÔN TẬP (300 CÂU)                           -->
+    <!-- ========================================================= -->
     <section id="study-view" class="space-y-4">
-      <div class="bg-white dark:bg-[#121824] rounded-2xl border border-[#dcd8cc] dark:border-[#232f44] p-4 sm:p-5 shadow-xs space-y-4">
-        <div class="space-y-2">
-          <div class="text-xs font-bold text-[#525b66] dark:text-slate-400">
+      <!-- Bảng điều khiển lọc & tìm kiếm -->
+      <div class="bg-white dark:bg-[#111827] rounded-2xl border border-[#e2e8f0] dark:border-slate-800 p-4 shadow-sm space-y-3.5">
+        <!-- Lọc theo phần đề cương -->
+        <div class="space-y-1.5">
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
             Lọc theo phần đề cương
           </div>
           <div id="part-filter-buttons" class="flex flex-wrap gap-1.5"></div>
         </div>
 
-        <div class="space-y-2">
-          <div class="text-xs font-bold text-[#525b66] dark:text-slate-400">
+        <!-- Lọc theo trạng thái -->
+        <div class="space-y-1.5">
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
             Lọc theo trạng thái làm bài
           </div>
           <div id="status-filter-buttons" class="flex flex-wrap gap-1.5"></div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-2.5 pt-2 border-t border-[#dcd8cc]/60 dark:border-[#232f44]">
+        <!-- Tìm kiếm + Nhảy tới câu + Tùy chọn hiển thị -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-2.5 pt-1">
           <div class="md:col-span-6 relative">
             <input id="search-input" type="text" oninput="handleSearch()"
               placeholder="Tìm từ khóa hoặc nhập số câu (VD: 125, hợp đồng, sáng chế...)"
-              class="w-full pl-3.5 pr-9 py-2 text-sm rounded-xl border border-[#dcd8cc] dark:border-[#232f44] bg-[#f6f5f0] dark:bg-[#192233] text-[#14191f] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0f766e]" />
+              class="w-full pl-3.5 pr-9 py-2 text-sm rounded-xl border border-[#e2e8f0] dark:border-slate-700 bg-[#f8fafc] dark:bg-slate-800/80 text-[#0f172a] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#2563eb]" />
             <button id="clear-search-btn" type="button" onclick="clearSearch()"
               class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 hover:text-slate-700 dark:hover:text-white px-1">
               ✕
@@ -137,57 +151,63 @@
           <div class="md:col-span-3 flex items-center gap-1.5">
             <input id="jump-input" type="number" min="1" max="239" placeholder="Câu (1-239)"
               onkeydown="if(event.key==='Enter') jumpToQuestion()"
-              class="w-full px-3 py-2 text-sm rounded-xl border border-[#dcd8cc] dark:border-[#232f44] bg-[#f6f5f0] dark:bg-[#192233] text-[#14191f] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0f766e]" />
+              class="w-full px-3 py-2 text-sm rounded-xl border border-[#e2e8f0] dark:border-slate-700 bg-[#f8fafc] dark:bg-slate-800/80 text-[#0f172a] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#2563eb]" />
             <button type="button" onclick="jumpToQuestion()"
-              class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-[#0f766e] hover:bg-teal-800 text-white shrink-0 transition-colors">
+              class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-[#2563eb] hover:bg-blue-700 text-white shrink-0 transition-colors">
               Đi tới
             </button>
           </div>
 
           <div class="md:col-span-3 flex items-center justify-between md:justify-end gap-2">
-            <label class="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-[#14191f] dark:text-slate-200 cursor-pointer select-none">
+            <label class="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 cursor-pointer select-none">
               <input id="show-all-toggle" type="checkbox" onchange="toggleShowAll()"
-                class="w-4 h-4 rounded text-[#0f766e] focus:ring-[#0f766e]" />
+                class="w-4 h-4 rounded text-[#2563eb] focus:ring-[#2563eb]" />
               <span>Hiện sẵn đáp án</span>
             </label>
             <button type="button" onclick="openResetModal()" title="Đặt lại tiến độ ôn tập"
-              class="px-2.5 py-1.5 text-xs font-semibold rounded-xl border border-red-200 dark:border-rose-900 text-[#b91c1c] dark:text-rose-400 hover:bg-red-50 dark:hover:bg-rose-950/50 transition-colors">
+              class="px-2.5 py-1.5 text-xs font-semibold rounded-xl border border-red-200 dark:border-rose-900 text-[#dc2626] dark:text-rose-400 hover:bg-red-50 dark:hover:bg-rose-950/50 transition-colors">
               Đặt lại
             </button>
           </div>
         </div>
       </div>
 
+      <!-- Dòng tóm tắt số câu đang hiển thị -->
       <div class="flex items-center justify-between px-1">
-        <div id="filter-summary" class="text-xs sm:text-sm text-[#525b66] dark:text-slate-400"></div>
+        <div id="filter-summary" class="text-xs sm:text-sm text-slate-500 dark:text-slate-400"></div>
       </div>
 
+      <!-- Danh sách thẻ câu hỏi -->
       <div id="question-list" class="space-y-3.5"></div>
 
-      <div id="pagination-bar" class="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-[#121824] rounded-2xl border border-[#dcd8cc] dark:border-[#232f44] px-4 py-3 shadow-xs"></div>
+      <!-- Thanh phân trang -->
+      <div id="pagination-bar" class="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-[#111827] rounded-2xl border border-[#e2e8f0] dark:border-slate-800 px-4 py-3 shadow-sm"></div>
     </section>
 
-    <!-- TAB 2: CHẾ ĐỘ THI THỬ -->
+    <!-- ========================================================= -->
+    <!-- TAB 2: CHẾ ĐỘ THI THỬ (40 CÂU - 60 PHÚT)                  -->
+    <!-- ========================================================= -->
     <section id="exam-view" class="hidden space-y-4">
-      <div id="exam-intro" class="bg-white dark:bg-[#121824] rounded-2xl border border-[#dcd8cc] dark:border-[#232f44] p-6 sm:p-8 shadow-xs max-w-2xl mx-auto text-center space-y-5">
-        <div class="w-14 h-14 mx-auto rounded-2xl bg-teal-50 dark:bg-teal-950/60 text-[#0f766e] dark:text-teal-400 flex items-center justify-center text-2xl font-bold">
+      <!-- Màn hình bắt đầu thi -->
+      <div id="exam-intro" class="bg-white dark:bg-[#111827] rounded-2xl border border-[#e2e8f0] dark:border-slate-800 p-6 sm:p-8 shadow-sm max-w-2xl mx-auto text-center space-y-5">
+        <div class="w-14 h-14 mx-auto rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-[#2563eb] dark:text-blue-400 flex items-center justify-center text-2xl font-bold">
           📝
         </div>
-        <div class="space-y-2">
-          <h2 class="font-display-serif text-2xl sm:text-3xl font-bold text-[#14191f] dark:text-white">
-            Thi thử Pháp luật Đại cương &amp; SHTT
+        <div class="space-y-1.5">
+          <h2 class="text-xl sm:text-2xl font-extrabold text-[#0f172a] dark:text-white">
+            Thi Thử Pháp Luật Đại Cương &amp; SHTT
           </h2>
-          <p class="text-sm text-[#525b66] dark:text-slate-300 leading-relaxed max-w-lg mx-auto">
-            Hệ thống bốc ngẫu nhiên tối đa <strong>40 câu hỏi</strong> (hoặc toàn bộ câu trong chuyên đề nếu có ít hơn 40 câu) trong <strong>60 phút</strong>. Kết quả sau khi nộp được tự động lưu vào mục <strong>Lịch sử</strong>.
+          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            Hệ thống sẽ bốc ngẫu nhiên tối đa <strong>40 câu hỏi</strong> (hoặc toàn bộ câu trong phần nếu phần có ít hơn 40 câu) với thời gian làm bài <strong>60 phút</strong>. Kết quả sau khi nộp sẽ được tự động lưu vào mục <strong>Lịch sử</strong>.
           </p>
         </div>
 
         <div class="max-w-sm mx-auto text-left space-y-1.5">
-          <label for="exam-source-select" class="block text-xs font-bold text-[#525b66] dark:text-slate-400">
+          <label for="exam-source-select" class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
             Chọn nguồn ngân hàng câu hỏi
           </label>
           <select id="exam-source-select"
-            class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-[#dcd8cc] dark:border-[#232f44] bg-[#f6f5f0] dark:bg-[#192233] text-[#14191f] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0f766e]">
+            class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-[#e2e8f0] dark:border-slate-700 bg-[#f8fafc] dark:bg-slate-800 text-[#0f172a] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#2563eb]">
             <option value="all">Toàn bộ ngân hàng (239 câu)</option>
             <option value="p1">Phần 1 - Nhà nước &amp; Pháp luật (35 câu)</option>
             <option value="p2">Phần 2 - Luật Hiến pháp (22 câu)</option>
@@ -203,20 +223,21 @@
         </div>
 
         <button type="button" onclick="startExam()"
-          class="px-7 py-3 bg-[#0f766e] hover:bg-teal-800 text-white font-bold text-sm sm:text-base rounded-xl shadow-xs transition-colors">
+          class="px-7 py-3 bg-[#2563eb] hover:bg-blue-700 text-white font-bold text-sm sm:text-base rounded-xl shadow-sm transition-all">
           Bắt đầu làm bài (40 câu • 60 phút)
         </button>
       </div>
 
+      <!-- Màn hình đang làm bài thi -->
       <div id="exam-active" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
-        <div class="lg:col-span-8 bg-white dark:bg-[#121824] rounded-2xl border border-[#dcd8cc] dark:border-[#232f44] p-4 sm:p-6 shadow-xs space-y-5">
-          <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-[#dcd8cc]/60 dark:border-[#232f44]">
-            <span id="exam-q-badge" class="px-3 py-1 rounded-lg text-xs font-bold bg-teal-50 dark:bg-teal-950/60 text-[#0f766e] dark:text-teal-400">
+        <div class="lg:col-span-8 bg-white dark:bg-[#111827] rounded-2xl border border-[#e2e8f0] dark:border-slate-800 p-4 sm:p-6 shadow-sm space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+            <span id="exam-q-badge" class="px-3 py-1 rounded-lg text-xs font-bold bg-blue-50 dark:bg-blue-950/60 text-[#2563eb] dark:text-blue-400">
               Câu 1 / 40
             </span>
             <div class="flex items-center gap-2">
-              <span class="text-xs text-[#525b66] dark:text-slate-400">Còn lại:</span>
-              <span id="exam-timer" class="tabular-clock px-3 py-1 rounded-lg text-sm font-extrabold bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+              <span class="text-xs text-slate-500 dark:text-slate-400">Còn lại:</span>
+              <span id="exam-timer" class="px-3 py-1 rounded-lg text-sm font-extrabold font-mono bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
                 60:00
               </span>
             </div>
@@ -224,64 +245,66 @@
 
           <div id="exam-question-container" class="space-y-4"></div>
 
-          <div class="flex items-center justify-between pt-3 border-t border-[#dcd8cc]/60 dark:border-[#232f44]">
+          <div class="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800">
             <button id="exam-prev-btn" type="button" onclick="moveExamQuestion(-1)"
-              class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl border border-[#dcd8cc] dark:border-[#232f44] text-[#14191f] dark:text-slate-200 hover:bg-[#f6f5f0] dark:hover:bg-[#192233] disabled:opacity-40">
+              class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl border border-[#e2e8f0] dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-40">
               ← Câu trước
             </button>
             <button id="exam-next-btn" type="button" onclick="moveExamQuestion(1)"
-              class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-[#0f766e] hover:bg-teal-800 text-white disabled:opacity-40">
+              class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-[#2563eb] hover:bg-blue-700 text-white disabled:opacity-40">
               Câu tiếp →
             </button>
           </div>
         </div>
 
-        <aside class="lg:col-span-4 bg-white dark:bg-[#121824] rounded-2xl border border-[#dcd8cc] dark:border-[#232f44] p-4 shadow-xs space-y-4">
+        <!-- Bảng chuyển nhanh 1 - 40 -->
+        <aside class="lg:col-span-4 bg-white dark:bg-[#111827] rounded-2xl border border-[#e2e8f0] dark:border-slate-800 p-4 shadow-sm space-y-4">
           <div class="flex items-center justify-between">
-            <h3 class="text-sm font-bold text-[#14191f] dark:text-white">Bảng câu hỏi</h3>
-            <span id="exam-answered-count" class="tabular-clock text-xs font-semibold text-[#0f766e] dark:text-teal-400">Đã làm 0/40</span>
+            <h3 class="text-sm font-bold text-[#0f172a] dark:text-white">Bảng câu hỏi</h3>
+            <span id="exam-answered-count" class="text-xs font-semibold text-[#2563eb] dark:text-blue-400">Đã làm 0/40</span>
           </div>
           <div id="exam-nav-grid" class="grid grid-cols-5 sm:grid-cols-8 lg:grid-cols-5 gap-1.5"></div>
           <button type="button" onclick="openSubmitExamModal()"
-            class="w-full py-2.5 bg-[#15803d] hover:bg-green-800 text-white font-bold text-sm rounded-xl shadow-xs transition-colors">
+            class="w-full py-2.5 bg-[#16a34a] hover:bg-green-700 text-white font-bold text-sm rounded-xl shadow-sm transition-colors">
             Nộp bài &amp; Chấm điểm
           </button>
         </aside>
       </div>
 
+      <!-- Màn hình kết quả sau khi nộp bài -->
       <div id="exam-result" class="hidden space-y-4">
-        <div class="bg-white dark:bg-[#121824] rounded-2xl border border-[#dcd8cc] dark:border-[#232f44] p-6 shadow-xs text-center space-y-4">
-          <div id="exam-record-badge" class="hidden inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-xs">
+        <div class="bg-white dark:bg-[#111827] rounded-2xl border border-[#e2e8f0] dark:border-slate-800 p-6 shadow-sm text-center space-y-4">
+          <div id="exam-record-badge" class="hidden inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-sm">
             🏆 KỶ LỤC ĐIỂM SỐ MỚI!
           </div>
           <div>
-            <div class="text-xs font-bold text-[#525b66] dark:text-slate-400">Điểm thi thử (Thang 10)</div>
-            <div id="exam-score-10" class="tabular-clock text-4xl sm:text-5xl font-extrabold text-[#0f766e] dark:text-teal-400 mt-1">0.00</div>
+            <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Điểm thi thử (Thang 10)</div>
+            <div id="exam-score-10" class="text-4xl sm:text-5xl font-extrabold text-[#2563eb] dark:text-blue-400 mt-1">0.00</div>
           </div>
-          <p id="exam-result-meta" class="text-xs sm:text-sm text-[#525b66] dark:text-slate-400"></p>
+          <p id="exam-result-meta" class="text-xs sm:text-sm text-slate-500 dark:text-slate-400"></p>
 
           <div class="grid grid-cols-2 max-w-xs mx-auto gap-3 pt-1">
-            <div class="p-3 rounded-xl bg-green-50 dark:bg-emerald-950/40 border border-green-200 dark:border-emerald-900">
-              <div class="text-xs text-[#525b66] dark:text-slate-400">Số câu đúng</div>
-              <div id="exam-score-correct" class="tabular-clock text-xl font-extrabold text-[#15803d] dark:text-emerald-400">0</div>
+            <div class="p-3 rounded-xl bg-green-50 dark:bg-emerald-950/40 border border-green-100 dark:border-emerald-900">
+              <div class="text-xs text-slate-500 dark:text-slate-400">Số câu đúng</div>
+              <div id="exam-score-correct" class="text-xl font-extrabold text-[#16a34a] dark:text-emerald-400">0</div>
             </div>
-            <div class="p-3 rounded-xl bg-red-50 dark:bg-rose-950/40 border border-red-200 dark:border-rose-900">
-              <div class="text-xs text-[#525b66] dark:text-slate-400">Sai / Bỏ trống</div>
-              <div id="exam-score-wrong" class="tabular-clock text-xl font-extrabold text-[#b91c1c] dark:text-rose-400">0</div>
+            <div class="p-3 rounded-xl bg-red-50 dark:bg-rose-950/40 border border-red-100 dark:border-rose-900">
+              <div class="text-xs text-slate-500 dark:text-slate-400">Sai / Bỏ trống</div>
+              <div id="exam-score-wrong" class="text-xl font-extrabold text-[#dc2626] dark:text-rose-400">0</div>
             </div>
           </div>
 
           <div class="flex flex-wrap items-center justify-center gap-2 pt-2">
             <button id="review-all-btn" type="button" onclick="setExamReviewFilter('all')"
-              class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-[#14191f] dark:bg-[#0f766e] text-white">
+              class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-[#0f172a] dark:bg-[#2563eb] text-white">
               Xem tất cả câu
             </button>
             <button id="review-wrong-btn" type="button" onclick="setExamReviewFilter('wrong')"
-              class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-[#eeece4] dark:bg-[#192233] text-[#14191f] dark:text-slate-200 hover:opacity-90">
+              class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700">
               Chỉ xem câu sai
             </button>
             <button type="button" onclick="resetExamToIntro()"
-              class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl border border-[#0f766e] text-[#0f766e] dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-950/40">
+              class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl border border-[#2563eb] text-[#2563eb] dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40">
               Thi đề mới
             </button>
           </div>
@@ -291,56 +314,60 @@
       </div>
     </section>
 
-    <!-- TAB 3: LỊCH SỬ THI THỬ -->
+    <!-- ========================================================= -->
+    <!-- TAB 3: LỊCH SỬ THI THỬ                                    -->
+    <!-- ========================================================= -->
     <section id="history-view" class="hidden space-y-4">
+      <!-- Danh sách các lần thi -->
       <div id="history-list-container" class="space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <h2 class="font-display-serif text-xl font-bold text-[#14191f] dark:text-white">Lịch sử các lần thi thử</h2>
-            <p class="text-xs text-[#525b66] dark:text-slate-400">Tự động lưu trên trình duyệt hiện tại bằng localStorage.</p>
+            <h2 class="text-lg font-extrabold text-[#0f172a] dark:text-white">Lịch Sử Các Lần Thi Thử</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Tự động lưu trên trình duyệt hiện tại bằng localStorage.</p>
           </div>
           <button id="clear-all-history-btn" type="button" onclick="openClearAllHistoryModal()"
-            class="hidden px-3.5 py-2 text-xs font-semibold rounded-xl border border-red-200 dark:border-rose-900 text-[#b91c1c] dark:text-rose-400 hover:bg-red-50 dark:hover:bg-rose-950/50">
+            class="hidden px-3.5 py-2 text-xs font-semibold rounded-xl border border-red-200 dark:border-rose-900 text-[#dc2626] dark:text-rose-400 hover:bg-red-50 dark:hover:bg-rose-950/50">
             Xóa toàn bộ lịch sử
           </button>
         </div>
 
         <div class="grid grid-cols-3 gap-3">
-          <div class="bg-white dark:bg-[#121824] rounded-2xl border border-[#dcd8cc] dark:border-[#232f44] p-4 text-center shadow-xs">
-            <div class="text-xs text-[#525b66] dark:text-slate-400">Số lần thi</div>
-            <div id="hist-total-count" class="tabular-clock text-2xl font-extrabold text-[#14191f] dark:text-white mt-0.5">0</div>
+          <div class="bg-white dark:bg-[#111827] rounded-2xl border border-[#e2e8f0] dark:border-slate-800 p-4 text-center shadow-sm">
+            <div class="text-xs text-slate-500 dark:text-slate-400">Số lần thi</div>
+            <div id="hist-total-count" class="text-2xl font-extrabold text-[#0f172a] dark:text-white mt-0.5">0</div>
           </div>
-          <div class="bg-white dark:bg-[#121824] rounded-2xl border border-[#dcd8cc] dark:border-[#232f44] p-4 text-center shadow-xs">
-            <div class="text-xs text-[#525b66] dark:text-slate-400">Điểm trung bình</div>
-            <div id="hist-avg-score" class="tabular-clock text-2xl font-extrabold text-[#0f766e] dark:text-teal-400 mt-0.5">--</div>
+          <div class="bg-white dark:bg-[#111827] rounded-2xl border border-[#e2e8f0] dark:border-slate-800 p-4 text-center shadow-sm">
+            <div class="text-xs text-slate-500 dark:text-slate-400">Điểm trung bình</div>
+            <div id="hist-avg-score" class="text-2xl font-extrabold text-[#2563eb] dark:text-blue-400 mt-0.5">--</div>
           </div>
-          <div class="bg-white dark:bg-[#121824] rounded-2xl border border-[#dcd8cc] dark:border-[#232f44] p-4 text-center shadow-xs">
-            <div class="text-xs text-[#525b66] dark:text-slate-400">Điểm cao nhất</div>
-            <div id="hist-max-score" class="tabular-clock text-2xl font-extrabold text-[#15803d] dark:text-emerald-400 mt-0.5">--</div>
+          <div class="bg-white dark:bg-[#111827] rounded-2xl border border-[#e2e8f0] dark:border-slate-800 p-4 text-center shadow-sm">
+            <div class="text-xs text-slate-500 dark:text-slate-400">Điểm cao nhất</div>
+            <div id="hist-max-score" class="text-2xl font-extrabold text-[#16a34a] dark:text-emerald-400 mt-0.5">--</div>
           </div>
         </div>
 
         <div id="history-items-wrapper"></div>
       </div>
 
+      <!-- Chi tiết 1 lượt thi cũ -->
       <div id="history-detail-container" class="hidden space-y-4">
-        <div class="bg-white dark:bg-[#121824] rounded-2xl border border-[#dcd8cc] dark:border-[#232f44] p-4 sm:p-5 shadow-xs flex flex-wrap items-center justify-between gap-3">
+        <div class="bg-white dark:bg-[#111827] rounded-2xl border border-[#e2e8f0] dark:border-slate-800 p-4 sm:p-5 shadow-sm flex flex-wrap items-center justify-between gap-3">
           <div class="space-y-1">
             <button type="button" onclick="closeHistoryDetail()"
-              class="text-xs font-semibold text-[#0f766e] dark:text-teal-400 hover:underline">
+              class="text-xs font-semibold text-[#2563eb] dark:text-blue-400 hover:underline">
               ← Quay lại danh sách lịch sử
             </button>
-            <h3 id="hist-detail-title" class="text-base sm:text-lg font-extrabold text-[#14191f] dark:text-white"></h3>
-            <p id="hist-detail-subtitle" class="text-xs text-[#525b66] dark:text-slate-400"></p>
+            <h3 id="hist-detail-title" class="text-base sm:text-lg font-extrabold text-[#0f172a] dark:text-white"></h3>
+            <p id="hist-detail-subtitle" class="text-xs text-slate-500 dark:text-slate-400"></p>
           </div>
           <div class="flex flex-wrap items-center gap-2">
-            <span id="hist-detail-score-badge" class="tabular-clock px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-teal-50 dark:bg-teal-950/60 text-[#0f766e] dark:text-teal-400 border border-teal-200 dark:border-teal-800"></span>
+            <span id="hist-detail-score-badge" class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-blue-50 dark:bg-blue-950/60 text-[#2563eb] dark:text-blue-400 border border-blue-200 dark:border-blue-800"></span>
             <button id="hist-filter-all-btn" type="button" onclick="setHistoryDetailFilter('all')"
-              class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-[#14191f] dark:bg-[#0f766e] text-white">
+              class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-[#0f172a] dark:bg-[#2563eb] text-white">
               Tất cả
             </button>
             <button id="hist-filter-wrong-btn" type="button" onclick="setHistoryDetailFilter('wrong')"
-              class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-[#eeece4] dark:bg-[#192233] text-[#14191f] dark:text-slate-200">
+              class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200">
               Chỉ câu sai
             </button>
           </div>
@@ -351,29 +378,32 @@
     </section>
   </main>
 
+  <!-- Nút cuộn nhanh lên đầu trang -->
   <button id="back-to-top-btn" type="button" onclick="scrollToTop()" title="Lên đầu trang"
-    class="hidden fixed bottom-5 right-5 z-40 w-11 h-11 rounded-full bg-[#0f766e] hover:bg-teal-800 text-white shadow-lg flex items-center justify-center font-bold text-lg transition-colors">
+    class="hidden fixed bottom-5 right-5 z-40 w-11 h-11 rounded-full bg-[#2563eb] hover:bg-blue-700 text-white shadow-lg flex items-center justify-center font-bold text-lg transition-all">
     ↑
   </button>
 
-  <div id="modal-backdrop" class="hidden fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-[#121824] rounded-2xl border border-[#dcd8cc] dark:border-[#232f44] max-w-md w-full p-5 shadow-xl space-y-4">
-      <h3 id="modal-title" class="text-base font-extrabold text-[#14191f] dark:text-white"></h3>
-      <p id="modal-message" class="text-sm text-[#525b66] dark:text-slate-300 leading-relaxed"></p>
+  <!-- Hộp thoại xác nhận tùy chỉnh (thay thế hoàn toàn alert/confirm) -->
+  <div id="modal-backdrop" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-[#111827] rounded-2xl border border-[#e2e8f0] dark:border-slate-700 max-w-md w-full p-5 shadow-xl space-y-4">
+      <h3 id="modal-title" class="text-base font-extrabold text-[#0f172a] dark:text-white"></h3>
+      <p id="modal-message" class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed"></p>
       <div class="flex items-center justify-end gap-2 pt-1">
         <button type="button" onclick="closeModal()"
-          class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl border border-[#dcd8cc] dark:border-[#232f44] text-[#14191f] dark:text-slate-200 hover:bg-[#f6f5f0] dark:hover:bg-[#192233]">
+          class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl border border-[#e2e8f0] dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800">
           Hủy
         </button>
         <button id="modal-confirm-btn" type="button"
-          class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-[#0f766e] hover:bg-teal-800 text-white">
+          class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-[#2563eb] hover:bg-blue-700 text-white">
           Xác nhận
         </button>
       </div>
     </div>
   </div>
 
-  <div id="toast" class="hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-xl bg-[#14191f] dark:bg-slate-100 text-white dark:text-[#14191f] text-xs sm:text-sm font-semibold shadow-lg"></div>
+  <!-- Thông báo nổi (Toast) -->
+  <div id="toast" class="hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-xl bg-[#0f172a] dark:bg-slate-100 text-white dark:text-[#0f172a] text-xs sm:text-sm font-semibold shadow-lg"></div>
 
   <script src="./js/data/pl-shtt-data.js"></script>
   <script src="./js/quiz-app.js"></script>
