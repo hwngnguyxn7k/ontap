@@ -1,0 +1,86 @@
+:root {
+  --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --muted: #64748b;
+  --border: #e2e8f0; --primary: #2563eb; --primary-soft: #eff6ff;
+  --accent: #0f766e; --accent-soft: #f0fdfa; --shadow: 0 10px 30px rgba(15,23,42,.07);
+  --pill-bg: #f1f5f9;
+}
+body.dark {
+  --bg: #0b1120; --card: #111827; --text: #f1f5f9; --muted: #94a3b8;
+  --border: #1e293b; --primary: #3b82f6; --primary-soft: rgba(59,130,246,.15);
+  --accent: #14b8a6; --accent-soft: rgba(20,184,166,.15); --shadow: 0 10px 30px rgba(0,0,0,.4);
+  --pill-bg: #1e293b;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 36px 16px; transition: background .2s, color .2s; }
+.container { width: 100%; max-width: 920px; }
+header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 16px; flex-wrap: wrap; }
+h1 { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em; }
+.subtitle { color: var(--muted); margin-top: 4px; font-size: .95rem; }
+.theme-btn { border: 1px solid var(--border); background: var(--card); color: var(--text); padding: 9px 14px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: .88rem; transition: .15s; }
+.theme-btn:hover { border-color: var(--primary); }
+
+/* Info Widget: Date, Time & Weather */
+.info-bar {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.date-time-box { display: flex; flex-direction: column; gap: 4px; }
+.today-text { font-size: .95rem; font-weight: 600; color: var(--text); }
+.clock-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.clock-time {
+  font-size: 1.55rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--primary);
+}
+.greeting { font-size: .85rem; color: var(--muted); font-weight: 500; }
+
+.weather-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--pill-bg);
+  padding: 10px 16px;
+  border-radius: 14px;
+  min-width: 220px;
+}
+.weather-icon { font-size: 1.9rem; line-height: 1; }
+.weather-details { display: flex; flex-direction: column; gap: 2px; }
+.weather-main { display: flex; align-items: baseline; gap: 8px; }
+.weather-temp { font-size: 1.25rem; font-weight: 800; color: var(--text); }
+.weather-city { font-size: .8rem; font-weight: 700; color: var(--muted); }
+.weather-desc { font-size: .82rem; color: var(--muted); }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 20px; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 24px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 14px; text-decoration: none; color: inherit; transition: transform .18s, border-color .18s, box-shadow .18s; }
+.card:hover { transform: translateY(-4px); border-color: var(--primary); }
+.card.pl-card:hover { border-color: var(--accent); }
+.badge { display: inline-block; width: fit-content; padding: 5px 12px; border-radius: 999px; font-size: .8rem; font-weight: 700; }
+.badge.triet { background: var(--primary-soft); color: var(--primary); }
+.badge.pl { background: var(--accent-soft); color: var(--accent); }
+.card h2 { font-size: 1.3rem; font-weight: 800; }
+.card p { color: var(--muted); font-size: .93rem; line-height: 1.55; }
+.meta-row { display: flex; gap: 12px; flex-wrap: wrap; font-size: .82rem; color: var(--muted); font-weight: 600; }
+.progress-wrap { margin-top: auto; padding-top: 8px; }
+.progress-meta { display: flex; justify-content: space-between; font-size: .84rem; color: var(--muted); margin-bottom: 6px; font-weight: 600; }
+.bar { height: 8px; background: var(--border); border-radius: 999px; overflow: hidden; }
+.fill { height: 100%; border-radius: 999px; transition: width .35s ease; }
+.fill.triet { background: linear-gradient(90deg, #2563eb, #38bdf8); }
+.fill.pl { background: linear-gradient(90deg, #0f766e, #14b8a6); }
+.cta { margin-top: 8px; font-weight: 700; color: var(--primary); font-size: .95rem; }
+.card.pl-card .cta { color: var(--accent); }
+footer { margin-top: 40px; text-align: center; color: var(--muted); font-size: .82rem; }
+
+@media (max-width: 600px) {
+  .weather-box { width: 100%; }
+}
