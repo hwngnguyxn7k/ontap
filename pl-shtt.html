@@ -80,15 +80,6 @@
       30%, 50%, 70% { transform: translate3d(-5px, 0, 0); }
       40%, 60% { transform: translate3d(5px, 0, 0); }
     }
-    .anim-combo-pop {
-      animation: comboPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    @keyframes comboPop {
-      0% { transform: scale(0.85); }
-      60% { transform: scale(1.12); }
-      100% { transform: scale(1); }
-    }
-
     /* Hiệu ứng gợn sóng & tia sáng khi click chuột / chạm màn hình */
     button:not(:disabled):active {
       transform: scale(0.97);
@@ -220,9 +211,6 @@
             <span class="text-[#16a34a] dark:text-emerald-400">Đúng: <strong id="stat-correct">0</strong> <span id="stat-accuracy" class="text-[10px] sm:text-[11px] opacity-85">(0%)</span></span>
             <span class="text-[#dc2626] dark:text-rose-400">Sai: <strong id="stat-wrong">0</strong></span>
             <span id="stat-star" class="text-amber-600 dark:text-amber-400 font-semibold">⭐ 0</span>
-          </div>
-          <div id="combo-badge" class="tabular-clock inline-flex items-center gap-1 px-2 py-0 rounded-full text-[11px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
-            🔥 <span id="stat-combo">0</span>
           </div>
         </div>
         <div class="w-full h-1.5 rounded-full bg-slate-200/80 dark:bg-slate-800 overflow-hidden">
@@ -813,8 +801,7 @@
       showAllAnswers: false,
       page: 1,
       userAnswers: {},
-      bookmarks: [],
-      comboStreak: 0
+      bookmarks: []
     };
 
     let prefs = {
@@ -856,9 +843,6 @@
             }
             if (Array.isArray(parsed.bookmarks)) {
               state.bookmarks = parsed.bookmarks.filter((id) => typeof id === 'number');
-            }
-            if (typeof parsed.comboStreak === 'number' && parsed.comboStreak >= 0) {
-              state.comboStreak = parsed.comboStreak;
             }
             if (typeof parsed.partFilter === 'string' && PART_META[parsed.partFilter]) {
               state.partFilter = parsed.partFilter;
@@ -912,7 +896,6 @@
         localStorage.setItem(STORAGE_PRACTICE_KEY, JSON.stringify({
           userAnswers: state.userAnswers,
           bookmarks: state.bookmarks,
-          comboStreak: state.comboStreak,
           partFilter: state.partFilter,
           statusFilter: state.statusFilter,
           showAllAnswers: state.showAllAnswers,
@@ -1291,19 +1274,6 @@
       document.getElementById('stat-wrong').textContent = String(wrong);
       document.getElementById('stat-star').textContent = `⭐ ${state.bookmarks.length}`;
 
-      const comboBadge = document.getElementById('combo-badge');
-      const comboText = document.getElementById('stat-combo');
-      if (comboBadge && comboText) {
-        if (state.comboStreak >= 3) {
-          comboText.textContent = `${state.comboStreak} câu thông suốt!`;
-          comboBadge.className = 'tabular-clock inline-flex items-center gap-1 px-2 py-0 rounded-full text-[11px] font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-sm anim-combo-pop';
-        } else if (state.comboStreak > 0) {
-          comboText.textContent = String(state.comboStreak);
-          comboBadge.className = 'tabular-clock inline-flex items-center gap-1 px-2 py-0 rounded-full text-[11px] font-bold bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800';
-        } else {
-          comboText.textContent = '0';
-          comboBadge.className = 'tabular-clock inline-flex items-center gap-1 px-2 py-0 rounded-full text-[11px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700';
-        }
       }
 
       const bar = document.getElementById('progress-bar');
@@ -1520,12 +1490,6 @@
       state.userAnswers[questionId] = optionIndex;
 
       const isCorrect = optionIndex === q.ans;
-      if (isCorrect) {
-        state.comboStreak += 1;
-      } else {
-        state.comboStreak = 0;
-      }
-
       savePracticeState();
       updateStats(wasUnanswered);
       renderFilterButtons();
@@ -1624,11 +1588,10 @@
     function openResetModal() {
       openModal(
         'Đặt lại tiến độ ôn tập?',
-        'Toàn bộ câu đã làm, câu đánh dấu sao và chuỗi đúng liên tiếp ở chế độ Ôn tập sẽ được xóa về 0 (Lịch sử thi thử vẫn được giữ nguyên). Bạn chắc chắn chứ?',
+        'Toàn bộ câu đã làm và câu đánh dấu sao ở chế độ Ôn tập sẽ được xóa về 0 (Lịch sử thi thử vẫn được giữ nguyên). Bạn chắc chắn chứ?',
         () => {
           state.userAnswers = {};
           state.bookmarks = [];
-          state.comboStreak = 0;
           state.page = 1;
           savePracticeState();
           updateStats(false);
